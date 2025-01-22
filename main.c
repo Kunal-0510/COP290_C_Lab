@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <ctype.h>
-
+#include "display.h"
 
 //* Input parsing part
 void parseInput(const char *input, char *cell, char *expression) {
