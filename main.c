@@ -11,12 +11,6 @@ int main() {
     if (parseInput(input, &cell, &expression)) {
         printf("Cell: %s\n", cell);
         printf("Expression: %s\n", expression);
-
-        int* index = giveIndex(cell);
-        if (index) {
-            printf("Row: %d, Column: %d\n", index[0], index[1]);
-            free(index);
-        }
     } else {
         printf("Invalid Command\n");
     }

@@ -3,6 +3,7 @@
 #include <string.h>
 #include <stdbool.h>
 #include <ctype.h>
+#include "hash.h";
 
 bool isValidCell(char* cell, int n) {
     
@@ -56,44 +57,6 @@ bool parseInput(char* input,char** cell,char** expression){
     (*expression)[exprLength]='\0';
 
     return true;
-}
-
-
-int* giveIndex(char* cell) {
-
-    int n=strlen(cell);
-    int m=1,p=1;
-
-    int* index=(int*)malloc(2*sizeof(int)); //? row, col
-    index[0]=-1;
-    index[1]=-1;
-
-    int x=0,y=0;
-    
-    if(!isValidCell(cell,n)){
-        free(index);
-        return NULL;
-    }
-
-    int i = 0;
-    //* Letters (column)
-    while (isalpha(cell[i])) {
-        int val=(cell[i]-'A'+1);
-        y=y*26+val;
-        i++;
-    }
-
-    //* Numbers (row)
-    while (isdigit(cell[i])) {
-        int val=(cell[i]-'0');
-        x=x*10+val;
-        i++;
-    }
-
-    index[0] = x;
-    index[1] = y;
-
-    return index;
 }
 
 
