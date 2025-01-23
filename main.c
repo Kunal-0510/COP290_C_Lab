@@ -1,23 +1,28 @@
 #include <stdio.h>
-#include <string.h>
-#include <ctype.h>
 
+int main() {
+    char input[100];
+    printf("Enter input : ");
+    scanf("%s", input);
 
-//* Input parsing part
-void parseInput(const char *input, char *cell, char *expression) {
-    const char *equalSign = strchr(input, '=');
-    if (equalSign) {
-        strncpy(cell, input, equalSign - input);
-        cell[equalSign - input] = '\0';  // Null-terminate
-        strcpy(expression, equalSign + 1);
+    char* cell = NULL;
+    char* expression = NULL;
+
+    if (parseInput(input, &cell, &expression)) {
+        printf("Cell: %s\n", cell);
+        printf("Expression: %s\n", expression);
+
+        int* index = giveIndex(cell);
+        if (index) {
+            printf("Row: %d, Column: %d\n", index[0], index[1]);
+            free(index);
+        }
     } else {
-        cell[0] = '\0';  // Indicate error
-        expression[0] = '\0';
+        printf("Invalid Command\n");
     }
-}
 
-int main(){
-
+    free(cell);
+    free(expression);
 
     return 0;
 }
