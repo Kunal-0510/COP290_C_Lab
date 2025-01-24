@@ -21,7 +21,7 @@ bool isValidNumber(char* num){
     return true;
 }
 
-bool isValidCell(char* cell) {
+bool isValidCell(char* cell, int rows, int cols) {
     
     int n=strlen(cell);
     if (n>6 || n<2) {
@@ -39,12 +39,27 @@ bool isValidCell(char* cell) {
 
     if (i!=n || letterCount==0 || digitCount==0 || letterCount>3 || digitCount>3)
         return false;
+    
+    char* letters[4];
+    char* numbers[4];
 
+    separate_cell(cell, letters, numbers);
+
+    int row= atoi(numbers);
+    int col = get_column(letters);
+
+    if(row>rows){
+        return false;
+    }
+    if(col>cols){
+        return false;
+    }
     return true;
 }
 
-bool isValidValue(char* val){
-    return isValidCell(val) || isValidNumber(val);
+
+bool isValidValue(char* val, int row, int col){
+    return isValidCell(val, row, col ) || isValidNumber(val);
 }
 
 //TODO

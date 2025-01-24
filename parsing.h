@@ -50,7 +50,7 @@ bool parse(char* input, char** first, char** second, char symbol) {
 
 */
 
-int parseExpr(char* expression) {
+int parseExpr(char* expression, int row, int col) {
     if (!isValidExpr(expression)) return -1;
 
     int n = strlen(expression);
@@ -106,7 +106,7 @@ int parseExpr(char* expression) {
     else if(isValidNumber(val2) && (strcmp(val1,"SLEEP")==0)){
         type=8;
     }
-    else if (op && isValidValue(val1) && isValidValue(val2)) {
+    else if (op && isValidValue(val1, row, col) && isValidValue(val2, row, col)) {
         if (isValidNumber(val1) && isValidNumber(val2)) {
             type = 0;
         } 
@@ -118,7 +118,7 @@ int parseExpr(char* expression) {
         if (isValidNumber(val1)) {
             type = 0;
         } 
-        else if(isValidCell(val1)) {
+        else if(isValidCell(val1, row, col)) {
             type = 1;
         }
     }
