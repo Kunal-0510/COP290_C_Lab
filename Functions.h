@@ -81,3 +81,9 @@ int SUM( int from_row,int from_col,int to_row,int to_col,int max_col,int* matrix
     return sum;
 
 }
+
+//* Change made by Kunal
+void evaluate(char* val1,char* val2,char* op,int type){
+
+    
+}
