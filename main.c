@@ -1,6 +1,6 @@
 #include <stdio.h>
 #include "parsing.h"
-#include "globals.h"
+
 
 int num_rows;
 int num_columns;

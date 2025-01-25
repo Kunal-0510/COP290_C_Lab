@@ -51,7 +51,7 @@ bool parse(char* input, char** first, char** second, char symbol) {
 
 */
 
-int parseExpr(char* expression, int row, int col) {
+int parseExpr(char* expression) {
     if (!isValidExpr(expression)) return -1;
 
     int n = strlen(expression);
