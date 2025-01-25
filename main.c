@@ -1,13 +1,3 @@
-<<<<<<< HEAD
-#include <stdio.h>
-#include <string.h>
-#include <ctype.h>
-#include "Functions.h"
-
-int main(){
-    return 0;
-}
-=======
 #include <stdio.h>
 #include "parsing.h"
 
@@ -34,4 +24,3 @@ int main() {
 
     return 0;
 }
->>>>>>> origin/nimit/interface
