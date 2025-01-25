@@ -1,6 +1,7 @@
 #include "validity.h"
 #include "Functions.h"
 
+
 bool parse(char* input, char** first, char** second, char symbol) {
     char* sign = strchr(input, symbol);
 
@@ -131,3 +132,4 @@ int parseExpr(char* expression) {
 
     return type;
 }
+
