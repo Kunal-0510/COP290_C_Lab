@@ -52,7 +52,6 @@ bool parse(char* input, char** first, char** second, char symbol) {
 */
 
 int parseExpr(char* expression) {
-    if (!isValidExpr(expression)) return -1;
 
     int n = strlen(expression);
     char* val1 = (char*)malloc((n + 1) * sizeof(char));
@@ -107,7 +106,7 @@ int parseExpr(char* expression) {
     else if(isValidNumber(val2) && (strcmp(val1,"SLEEP")==0)){
         type=8;
     }
-    else if (op && isValidValue(val1, row, col) && isValidValue(val2, row, col)) {
+    else if (op && isValidValue(val1) && isValidValue(val2)) {
         if (isValidNumber(val1) && isValidNumber(val2)) {
             type = 0;
         } 
@@ -119,7 +118,7 @@ int parseExpr(char* expression) {
         if (isValidNumber(val1)) {
             type = 0;
         } 
-        else if(isValidCell(val1, row, col)) {
+        else if(isValidCell(val1)) {
             type = 1;
         }
     }
@@ -133,4 +132,3 @@ int parseExpr(char* expression) {
 
     return type;
 }
-

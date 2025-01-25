@@ -1,11 +1,7 @@
 #include <stdio.h>
 #include "parsing.h"
 
-
-int num_rows;
-int num_columns;
 int main() {
-    scanf("%d %d", &num_rows, &num_columns);
     char input[100];
     printf("Enter input : ");
     scanf("%s", input);
