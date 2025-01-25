@@ -3,7 +3,7 @@
 #include <string.h>
 #include <stdbool.h>
 #include <ctype.h>
-#include "hash.h";
+#include "hash.h"
 
 bool isValidNumber(char* num){
 
@@ -47,14 +47,30 @@ bool isValidValue(char* val){
     return isValidCell(val) || isValidNumber(val);
 }
 
-//TODO
-bool isValidExpr(char* expression){
-
-    
-    return true;
-}
 
 bool isValidRange(char* first,char* second){
+
+    if(!isValidCell(first) || !isValidCell(second)){
+        return false;
+    }
+
+    char letter1[4];
+    char number1[4];
+    char letter2[4];
+    char number2[4];
+
+    separate_cell(first,letter1,number1);
+    separate_cell(second,letter2,number2);
+
+    int r1=atoi(number1)-1;
+    int c1=get_column(letter1)-1;
+
+    int r2=atoi(number2)-1;
+    int c2=get_column(letter2)-1;
+
+    if(r1>r2 || c1>c2){
+        return false;
+    }
 
     return true;
 }

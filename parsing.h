@@ -51,7 +51,6 @@ bool parse(char* input, char** first, char** second, char symbol) {
 */
 
 int parseExpr(char* expression) {
-    if (!isValidExpr(expression)) return -1;
 
     int n = strlen(expression);
     char* val1 = (char*)malloc((n + 1) * sizeof(char));
