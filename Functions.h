@@ -28,20 +28,6 @@ int SUM( int from_row,int from_col,int to_row,int to_col,int max_col,int* matrix
 int STDEV( int from_row,int from_col,int to_row,int to_col,int max_col,int* matrix );
 void SLEEP( int sec );
 
-Node* initialize_node(){
-
-    Node* cell;
-    cell->val = 0;
-    cell->InNeighbours = NULL;
-    cell->type = 1;
-    cell->cell1 = NULL;
-    cell->cell2 = NULL;
-    cell->op_val = NULL;
-
-    return cell;
-    
-}
-
 int MASTER( char* cell1,char* cell2,int func_type,int* matrix,int max_col,int val ){
     if( func_type == 0 ){
         //Will handle this later.

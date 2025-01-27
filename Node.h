@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include "linkedlist.h"
+
 typedef struct Node{
 
     int val ;
@@ -10,3 +11,17 @@ typedef struct Node{
     int *op_val;
 
 }Node;
+
+Node* initialize_node(){
+
+    Node* cell;
+    cell->val = 0;
+    cell->InNeighbours = NULL;
+    cell->type = 1;
+    cell->cell1 = NULL;
+    cell->cell2 = NULL;
+    cell->op_val = NULL;
+
+    return cell;
+    
+}
