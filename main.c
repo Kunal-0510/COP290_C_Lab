@@ -1,26 +1,34 @@
 #include <stdio.h>
-#include "parsing.h"
+#include <string.h>
+#include <ctype.h>
+#include "Node.h"
+#include "display.h"
 
-int main() {
-    char input[100];
-    printf("Enter input : ");
-    scanf("%s", input);
+struct Node* create_node_matrix(int R, int C) {
 
-    char* cell = NULL;
-    char* expression = NULL;
-
-    if (parse(input, &cell, &expression,'=')) {
-        printf("Cell: %s\n", cell);
-        printf("Expression: %s\n", expression);
-    } else {
-        printf("Invalid Command\n");
+    struct Node* matrix = (struct Node*)malloc(R * C * sizeof(struct Node));
+    if (!matrix) {
+        fprintf(stderr, "Memory allocation failed for matrix.\n");
+        exit(EXIT_FAILURE);
     }
 
-    int type=parseExpr(expression);
-    printf("Type : %d\n",type);
+    // Initialize each Node in the matrix.
+    for (int i = 0; i < R * C; i++) {
+        node(&matrix[i]); 
+    }
 
-    free(cell);
-    free(expression);
+    return matrix;
+}
+
+int main() {
+    int R;
+    int C;
+    scanf("%d", &R);
+    scanf("%d", &C);
+
+    struct Node* matrix= create_node_matrix(R,C);
+
+    display_sheet(matrix, 0, 0, R, C);
 
     return 0;
 }
