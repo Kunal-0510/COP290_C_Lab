@@ -1,9 +1,9 @@
 #include <stdio.h>
-
+#include "linkedlist.h"
 struct Node{
 
     int val = 0;
-    LinkedList *InNeighbours = Null;
+    LinkedList *InNeighbours = NULL;
     int type = 1;
     int *cell1 = NULL;
     int *cell2 = NULL;
