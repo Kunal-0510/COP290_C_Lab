@@ -21,6 +21,12 @@ Give val as null wherever not needed.
 5-STDEV
 6-SLEEP
 */
+int MIN( int from_row,int from_col,int to_row,int to_col,int max_col,int* matrix );
+int MAX( int from_row,int from_col,int to_row,int to_col,int max_col,int* matrix );
+int AVG( int from_row,int from_col,int to_row,int to_col,int max_col,int* matrix );
+int SUM( int from_row,int from_col,int to_row,int to_col,int max_col,int* matrix );
+int STDEV( int from_row,int from_col,int to_row,int to_col,int max_col,int* matrix );
+void SLEEP( int sec );
 
 int MASTER( char* cell1,char* cell2,int func_type,int* matrix,int max_col,int val ){
     if( func_type == 0 ){
