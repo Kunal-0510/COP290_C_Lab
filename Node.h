@@ -1,12 +1,12 @@
 #include <stdio.h>
 #include "linkedlist.h"
-struct Node{
+typedef struct Node{
 
-    int val = 0;
-    LinkedList *InNeighbours = NULL;
-    int type = 1;
-    int *cell1 = NULL;
-    int *cell2 = NULL;
-    int *op_val = NULL;
+    int val ;
+    LinkedList *InNeighbours;
+    int type;
+    int *cell1;
+    int *cell2;
+    int *op_val;
 
-};
+}Node;
