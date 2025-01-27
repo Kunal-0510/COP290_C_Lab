@@ -1,105 +1,134 @@
-<<<<<<< HEAD
-#include <stdio.h>
+#include "validity.h"
+#include "Functions.h"
 
 
-=======
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <stdbool.h>
-#include <ctype.h>
+bool parse(char* input, char** first, char** second, char symbol) {
+    char* sign = strchr(input, symbol);
 
-bool isValidCell(char* cell, int n) {
-    
-    if (n>6 || n<2) {
+    if (!sign || sign == input || *(sign + 1) == '\0') {
         return false;
     }
 
-    int i=0;
-    while(i<n && isupper(cell[i]))
-        i++;
-    int letterCount=i;
+    int firstLength = sign - input;
+    int secondLength = strlen(input) - firstLength - 1;
 
-    while (i<n && isdigit(cell[i]))
-        i++;
-    int digitCount=i-letterCount;
+    *first = (char*)malloc(firstLength + 1);
+    *second = (char*)malloc(secondLength + 1);
 
-    if (i!=n || letterCount==0 || digitCount==0 || letterCount>3 || digitCount>3)
+    if (!*first || !*second) {
+        free(*first);
+        free(*second);
         return false;
+    }
+
+    // Copy into first
+    for (int i = 0; i < firstLength; i++) {
+        (*first)[i] = input[i];
+    }
+    (*first)[firstLength] = '\0';
+
+    // Copy into second
+    for (int i = 0; i < secondLength; i++) {
+        (*second)[i] = sign[1 + i];
+    }
+    (*second)[secondLength] = '\0';
 
     return true;
 }
 
-bool parseInput(char* input,char** cell,char** expression){
+ /*
 
-    char* equalSign=strchr(input,'=');
+    Invalid = -1
+    Constant Assignment = 0
+    Cell Assignment = 1
+    Arithmetic Expression = 2
+    MIN = 3
+    MAX = 4
+    AVG = 5
+    SUM = 6
+    STDEV = 7
+    SLEEP = 8
 
-    if(!equalSign || equalSign==input || *(equalSign+1)=='\0');
-        return false;
+*/
 
-    int cellLength=equalSign-input;
-    int exprLength=strlen(input)-cellLength-1;
+int parseExpr(char* expression) {
 
-    *cell=(char*)malloc(cellLength+1);
-    *expression=(char*)malloc(exprLength+1);
+    int n = strlen(expression);
+    char* val1 = (char*)malloc((n + 1) * sizeof(char));
+    char* val2 = (char*)malloc((n + 1) * sizeof(char));
 
-    if(!*cell || !*expression){
-        free(*cell);
-        free(*expression);
-        return false;
+    if (!val1 || !val2) {
+        free(val1);
+        free(val2);
+        return -1;
     }
 
-    //* copy in cell and expresion
-    for(int i=0;i<cellLength;i++){
-        (*cell)[i]=input[i];
-    }
-    (*cell)[cellLength]='\0';
+    int len1 = 0, len2 = 0;
+    char* op = NULL;
 
-    for(int i=0;i<exprLength;i++){
-        (*expression)[i]=equalSign[i+1];
-    }
-    (*expression)[exprLength]='\0';
+    for (int i = 0; i < n; i++) {
+        char c = expression[i];
 
-    return true;
+        if (c == '(') {
+            int j = i + 1;
+            while (j < n && expression[j] != ')') {
+                val2[len2++] = expression[j];
+                j++;
+            }
+            val2[len2] = '\0';
+            break;
+        }
+
+        if (c=='+' || c=='-' || c=='*' || c=='/') op = &c;
+        else if (op) val2[len2++] = c;
+        else val1[len1++] = c;
+    }
+
+    val1[len1] = '\0';
+
+    int type = -1;
+
+    if (strchr(val2, ':')) {
+        char* first = NULL;
+        char* second = NULL;
+
+        if (parse(val2, &first, &second, ':') && isValidRange(first, second)) {
+            if (strcmp(val1, "MIN") == 0) type = 3;
+            else if (strcmp(val1, "MAX") == 0) type = 4;
+            else if (strcmp(val1, "AVG") == 0) type = 5;
+            else if (strcmp(val1, "SUM") == 0) type = 6;
+            else if (strcmp(val1, "STDEV") == 0) type = 7;
+        }
+
+        free(first);
+        free(second);
+    }
+    else if(isValidNumber(val2) && (strcmp(val1,"SLEEP")==0)){
+        type=8;
+    }
+    else if (op && isValidValue(val1) && isValidValue(val2)) {
+        if (isValidNumber(val1) && isValidNumber(val2)) {
+            type = 0;
+        } 
+        else {
+            type = 2;
+        }
+    }
+    else if (len2 == 0) {
+        if (isValidNumber(val1)) {
+            type = 0;
+        } 
+        else if(isValidCell(val1)) {
+            type = 1;
+        }
+    }
+
+    if (type != -1) {
+        evaluate(val1, val2, op, type);
+    }
+
+    free(val1);
+    free(val2);
+
+    return type;
 }
-
-
-int* giveIndex(char* cell) {
-
-    int n=strlen(cell);
-    int m=1,p=1;
-
-    int* index=(int*)malloc(2*sizeof(int)); //? row, col
-    index[0]=-1;
-    index[1]=-1;
-
-    int x=0,y=0;
-    
-    if(!isValidCell(cell,n)){
-        free(index);
-        return NULL;
-    }
-
-    int i = 0;
-    //* Letters (column)
-    while (isalpha(cell[i])) {
-        int val=(cell[i]-'A'+1);
-        y=y*26+val;
-        i++;
-    }
-
-    //* Numbers (row)
-    while (isdigit(cell[i])) {
-        int val=(cell[i]-'0');
-        x=x*10+val;
-        i++;
-    }
-
-    index[0] = x;
-    index[1] = y;
-
-    return index;
-}
-
-
->>>>>>> origin/nimit/interface
