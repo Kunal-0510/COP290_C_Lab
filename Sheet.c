@@ -8,7 +8,7 @@ struct Node* create_node_matrix(int R, int C) {
         exit(EXIT_FAILURE);
     }
     for (int i = 0; i < R * C; i++) {
-        node(&matrix[i]); // Initialize each Node
+        initialize_node(&matrix[i]); // Initialize each Node
     }
     return matrix;
 }

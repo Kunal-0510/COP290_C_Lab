@@ -4,9 +4,18 @@
 #include <stdio.h>
 #include "linkedlist.h"
 
-typedef struct Node Node;
+typedef struct Node{
 
-struct Node* initialize_node();
+    int val ;
+    LinkedList *InNeighbours;
+    int type;
+    int *cell1;
+    int *cell2;
+    int *op_val;
+
+}Node;
+
+void initialize_node(struct Node *node);
 
 #endif
 
