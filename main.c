@@ -1,34 +1,24 @@
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 #include <ctype.h>
 #include "Node.h"
 #include "display.h"
 
-struct Node* create_node_matrix(int R, int C) {
-
-    struct Node* matrix = (struct Node*)malloc(R * C * sizeof(struct Node));
-    if (!matrix) {
-        fprintf(stderr, "Memory allocation failed for matrix.\n");
-        exit(EXIT_FAILURE);
-    }
-
-    // Initialize each Node in the matrix.
-    for (int i = 0; i < R * C; i++) {
-        node(&matrix[i]); 
-    }
-
-    return matrix;
-}
 
 int main() {
-    int R;
-    int C;
-    scanf("%d", &R);
-    scanf("%d", &C);
+    int R, C;
+    scanf("%d %d", &R, &C);
 
-    struct Node* matrix= create_node_matrix(R,C);
+    struct Sheet* sheet = (struct Sheet*)malloc(sizeof(struct Sheet));
+    if (!sheet) {
+        fprintf(stderr, "Memory allocation failed for Sheet.\n");
+        return EXIT_FAILURE;
+    }
 
-    display_sheet(matrix, 0, 0, R, C);
+    create_sheet(R, C, sheet); // Initialize the sheet
+    display_sheet(sheet);      // Display the sheet (assuming this function is defined)
 
+    free(sheet); // Free allocated memory
     return 0;
 }

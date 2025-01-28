@@ -1,3 +1,7 @@
+#ifndef PARSING_H
+#define PARSING_H
+
+
 #include "validity.h"
 #include "Functions.h"
 
@@ -132,3 +136,5 @@ int parseExpr(char* expression) {
 
     return type;
 }
+
+#endif

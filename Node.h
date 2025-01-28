@@ -13,13 +13,6 @@ typedef struct Node {
     int *op_val;                 // Pointer for operation value (e.g., addition result).
 }Node;
 
-void node(struct Node *node) {
-    node->val = 0;
-    node->InNeighbours = NULL;
-    node->type = 0;
-    node->cell1 = NULL;
-    node->cell2 = NULL;
-    node->op_val = NULL;
-}
+void node(struct Node *node);
 
 #endif
