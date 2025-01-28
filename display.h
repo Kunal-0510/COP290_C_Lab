@@ -1,14 +1,6 @@
 #ifndef DISPLAY_H
 #define DISPLAY_H
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <math.h>
-#include <string.h>
-#include "Node.h"
-#include "Sheet.h"
-#include "hash.h"
-
 int min(int a, int b);
 char* mapping(int col);
 void display_sheet(struct Sheet* sheet);
