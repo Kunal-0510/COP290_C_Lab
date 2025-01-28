@@ -2,13 +2,6 @@
 #define FUNCTIONS_H
 
 
-#include <stdio.h>
-#include <math.h>
-#include <limits.h>
-#include <time.h>
-#include "hash.h"
-#include "Node.h"
-
 /*
 Master function accepts arguments as strings of the cell name , the type of operation to be done , the matrix 
 and number of collumns.
