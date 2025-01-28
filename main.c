@@ -10,7 +10,7 @@ int main() {
     int R, C;
     scanf("%d %d", &R, &C);
 
-    struct Sheet* sheet = (struct Sheet*)malloc(sizeof(struct Sheet));
+    Sheet* sheet = (Sheet*)malloc(sizeof(Sheet));
     if (!sheet) {
         fprintf(stderr, "Memory allocation failed for Sheet.\n");
         return EXIT_FAILURE;
