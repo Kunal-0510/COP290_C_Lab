@@ -1,7 +1,6 @@
 #ifndef FUNCTIONS_H
 #define FUNCTIONS_H
 
-
 /*
 Master function accepts arguments as strings of the cell name , the type of operation to be done , the matrix 
 and number of collumns.
