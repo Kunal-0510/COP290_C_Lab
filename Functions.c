@@ -1,7 +1,11 @@
 #include <stdio.h>
 #include "Functions.h"
-
-
+#include <stdio.h>
+#include <math.h>
+#include <limits.h>
+#include <time.h>
+#include "hash.h"
+#include "Node.h"
 
 int MASTER( char* cell1,char* cell2,int func_type,int* matrix,int max_col,int val ){
     if( func_type == 0 ){
