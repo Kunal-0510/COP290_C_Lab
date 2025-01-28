@@ -18,7 +18,13 @@ int main() {
 
     create_sheet(R, C, sheet); // Initialize the sheet
     display_sheet(sheet);      // Display the sheet (assuming this function is defined)
-
+    scroll_up(sheet);
+    disable_display(sheet);
+    scroll_right(sheet);
+    scroll_right(sheet);
+    enable_display(sheet);
+    display_sheet(sheet);
+    
     free(sheet); // Free allocated memory
     return 0;
 }

@@ -4,10 +4,6 @@
 int min(int a, int b){
     return (a>b) ? b : a;
 }
-int max(int a, int b){
-    return (a>b) ? a : b;
-}
-
 
 char* mapping(int col){//Args: Column number
     
@@ -63,7 +59,7 @@ void display_sheet(struct Sheet* sheet){ // args: The sheet itself
     }
 }  // Displays the excel sheet in 10*10 grid
 void scroll_up(struct Sheet* sheet){
-    sheet->rowtop= max(sheet->rowtop+10, sheet->rows);
+    sheet->rowtop= min(sheet->rowtop+10, sheet->rows);
     display_sheet(sheet);
 }
 
@@ -73,12 +69,12 @@ void scroll_down(struct Sheet* sheet){
 }
 
 void scroll_right(struct Sheet* sheet){
-    sheet->coltop= max(sheet->coltop+10, sheet->cols);
+    sheet->coltop= min(sheet->coltop+10, sheet->cols);
     display_sheet(sheet);
 }
 
 void scroll_left(struct Sheet* sheet){
-    sheet->coltop= max(sheet->coltop-10, 0);
+    sheet->coltop= min(sheet->coltop-10, 0);
     display_sheet(sheet);
 }
 

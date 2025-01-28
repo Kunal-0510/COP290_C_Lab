@@ -10,7 +10,7 @@
 #include "hash.h"
 
 int min(int a, int b);
-int max(int a, int b);
+
 char* mapping(int col);
 void display_sheet(struct Sheet* sheet);
 void scroll_up(struct Sheet* sheet);
