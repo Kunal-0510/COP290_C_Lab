@@ -2,6 +2,7 @@
 #include<stdlib.h>
 #include<math.h>
 #include<string.h>
+#include "Node.h"
 // Self Explanatory
 int min(int a, int b){
     return (a>b) ? b : a;
@@ -41,7 +42,7 @@ char* mapping(int col){//Args: Column number
 
 }//Returns the string correspondind to the corresponding column number. Ex:- 0->'A'; 25->'Z'; 27->'AB'
 
-void display_sheet(int* matrix, int rowtop, int coltop, int numrows, int numcols ){ // args: The sheet itself, current top left cell, number of rows and columns
+void display_sheet(struct Node* matrix, int rowtop, int coltop, int numrows, int numcols ){ // args: The sheet itself, current top left cell, number of rows and columns
     printf("   ");
     for(int j=coltop; j<min(coltop+10, numcols); j++){
         printf("%10s", mapping(j));
@@ -50,7 +51,7 @@ void display_sheet(int* matrix, int rowtop, int coltop, int numrows, int numcols
     for(int i=rowtop; i<min(rowtop+10, numrows); i++){
         printf("%3d", i+1);
         for(int j= coltop; j<min(coltop+10, numcols); j++){
-            printf("%10d", *(matrix+i*numcols+j));
+            printf("%10d", (matrix+i*numcols+j)->val);
         }
         printf("\n");
     }
