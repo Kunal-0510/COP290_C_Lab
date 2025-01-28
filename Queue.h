@@ -9,7 +9,7 @@ typedef struct QueueNode{
     Node* node;
     Node* next;
 
-};
+}QueueNode;
 
 typedef struct Queue{
 
@@ -18,7 +18,9 @@ typedef struct Queue{
 
 }Queue;
 
-void QueuePush( Node* node , Queue* queue );
+void QueuePush( QueueNode* node , Queue* queue );
 void QueuePop( Queue* queue ); 
+void QueueInit( Queue* queue );
+void QueueNodeInit( QueueNode* node );
 
 #endif
