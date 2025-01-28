@@ -4,6 +4,7 @@
 #include <ctype.h>
 #include "Node.h"
 #include "display.h"
+#include "Sheet.h"
 
 
 int main() {
