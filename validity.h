@@ -1,3 +1,6 @@
+#ifndef VALIDITY_H
+#define VALIDITY_H
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -74,3 +77,5 @@ bool isValidRange(char* first,char* second){
 
     return true;
 }
+
+#endif
