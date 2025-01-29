@@ -6,6 +6,7 @@
 
 typedef struct Node{
 
+
     int val ;
     LinkedList *InNeighbours;
     int type;
@@ -13,7 +14,7 @@ typedef struct Node{
     int *cell2;
     int *op_val;
 
-}Node;
+};
 
 void initialize_node(struct Node *node);
 
