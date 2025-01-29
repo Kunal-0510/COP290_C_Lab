@@ -5,7 +5,9 @@
 #include <limits.h>
 #include <time.h>
 #include "hash.h"
+#include "Queue.h"
 #include "Node.h"
+#include "Sheet.h"
 
 int MASTER( char* cell1,char* cell2,int func_type,int* matrix,int max_col,int val ){
     if( func_type == 0 ){
@@ -170,7 +172,83 @@ void SLEEP( int sec ){
 
 }
 
-int CHECK_CYCLE( Node* matrix ){
+int CHECK_CYCLE( Sheet* sheet ){
     
+    Queue* q = (Queue*)(malloc(sizeof(Queue)));
+    QueueInit(q);
+    int max_cols = sheet->cols;
+    int max_rows = sheet->rows;
+
+    for( int i = 0 ; i<max_rows ; i++ ){
+
+        for( int j = 0 ; j<max_cols ; j++ ){
+
+            Node* node = (sheet->matrix + i*max_cols + j );
+
+            if( node->in_size == 0 ){
+
+                QueueNode* newNode = (QueueNode*)(malloc(sizeof(QueueNode)));
+                QueueNodeInit(newNode);
+                newNode->node = (sheet->matrix + i*max_cols + j );
+                QueuePush(q,newNode);
+
+            }
+        }
+
+    }
+
+    int n = 0;
+
+    while( isEmpty(q) == 0 ){
+
+        QueueNode* Node = QueuePop(q);
+        n++;
+        LinkedList* top = Node->node->OutNeighbours;
+        
+        while( top!= NULL ){
+
+            (sheet->matrix + top->data)->in_size--;
+
+            if((sheet->matrix + top->data)->in_size == 0){
+                
+                QueueNode* newNode = (QueueNode*)(malloc(sizeof(QueueNode)));
+                newNode->node = (sheet->matrix + top->data);
+                QueuePush(newNode,q);
+
+            }
+
+        }
+
+        free(Node);
+
+    }
+
+    free(q);
+
+    for( int i = 0 ; i<max_cols ; i++ ){
+
+        int count = 0;
+
+        for( int j = 0 ; j<max_cols ; j++ ){
+
+            LinkedList* inNeighbours = (sheet->matrix + i*max_cols + j )->InNeighbours;
+
+            while( inNeighbours!=NULL ){
+
+                count++;
+                inNeighbours = inNeighbours->next;
+
+            }
+
+        }
+
+    }
+
+    if( n == max_cols*max_cols ){
+        return 1;
+    }
+
+    return 0;
+
 }
 
