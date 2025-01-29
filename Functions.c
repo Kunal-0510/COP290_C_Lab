@@ -18,7 +18,6 @@ int MASTER( Node* node, Sheet* sheet ){
     int to_col = index_2%max_col;
     int from_row = index_1/max_col;
     int to_row = index_2/max_col;
-
     if( func_type == 0 ){
         //Will handle this later.
     }
