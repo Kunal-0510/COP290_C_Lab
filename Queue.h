@@ -19,7 +19,7 @@ typedef struct Queue{
 }Queue;
 
 void QueuePush( QueueNode* node , Queue* queue );
-void QueuePop( Queue* queue ); 
+QueueNode* QueuePop( Queue* queue ); 
 void QueueInit( Queue* queue );
 void QueueNodeInit( QueueNode* node );
 
