@@ -9,116 +9,94 @@
 #include "Node.h"
 #include "Sheet.h"
 
-int MASTER( char* cell1,char* cell2,int func_type,int* matrix,int max_col,int val ){
+int MASTER( Node* node, Sheet* sheet ){
+    int func_type= node->type;
+    int max_col = sheet->cols;
+    int index_1 = node->cell1;
+    int index_2 = node->cell2;
+    int from_col = index_1%max_col;
+    int to_col = index_2%max_col;
+    int from_row = index_1/max_col;
+    int to_row = index_2/max_col;
+
     if( func_type == 0 ){
         //Will handle this later.
     }
-    if( func_type == 1 ){
 
-        int index_1 = get_hash( cell1,max_col );
-        int index_2 = get_hash( cell2,max_col );
-        int from_col = index_1%max_col;
-        int to_col = index_2%max_col;
-        int from_row = index_1/max_col;
-        int to_row = index_2/max_col;
-
-        return MIN( from_row,from_col,to_row,to_col,max_col,matrix );
+    else if( func_type == 5){
+        return MIN( from_row,from_col,to_row,to_col,max_col, sheet );
 
     }
-    if( func_type == 2 ){
+    else if( func_type == 6 ){
 
-        int index_1 = get_hash( cell1,max_col );
-        int index_2 = get_hash( cell2,max_col );
-        int from_col = index_1%max_col;
-        int to_col = index_2%max_col;
-        int from_row = index_1/max_col;
-        int to_row = index_2/max_col;
-
-        return MAX( from_row,from_col,to_row,to_col,max_col,matrix );
+        return MAX( from_row,from_col,to_row,to_col,max_col, sheet );
 
     }
-    if( func_type == 3 ){
-        
-        int index_1 = get_hash( cell1,max_col );
-        int index_2 = get_hash( cell2,max_col );
-        int from_col = index_1%max_col;
-        int to_col = index_2%max_col;
-        int from_row = index_1/max_col;
-        int to_row = index_2/max_col;
+    else if( func_type == 7 ){
+        return AVG( from_row,from_col,to_row,to_col,max_col, sheet );
+    }
+    else if( func_type == 8 ){
 
-        return AVG( from_row,from_col,to_row,to_col,max_col,matrix );
+        return SUM( from_row,from_col,to_row,to_col,max_col, sheet );
 
     }
-    if( func_type == 4 ){
-        
-        int index_1 = get_hash( cell1,max_col );
-        int index_2 = get_hash( cell2,max_col );
-        int from_col = index_1%max_col;
-        int to_col = index_2%max_col;
-        int from_row = index_1/max_col;
-        int to_row = index_2/max_col;
 
-        return SUM( from_row,from_col,to_row,to_col,max_col,matrix );
+    else if( func_type == 9 ){
 
+        return STDEV( from_row,from_col,to_row,to_col,max_col, sheet );
     }
-    if( func_type == 5 ){
-        
-        int index_1 = get_hash( cell1,max_col );
-        int index_2 = get_hash( cell2,max_col );
-        int from_col = index_1%max_col;
-        int to_col = index_2%max_col;
-        int from_row = index_1/max_col;
-        int to_row = index_2/max_col;
 
-        return STDEV( from_row,from_col,to_row,to_col,max_col,matrix );
-
+    else if( func_type == 10){
+        SLEEP(node);
+    }
+    else{
+        printf("Error\n");
     }
     
-    SLEEP( val );
     return 1;
 }
 
-int MIN( int from_row,int from_col,int to_row,int to_col,int max_col,int* matrix ){
+int MAX( int from_row,int from_col,int to_row,int to_col,int max_col, Sheet* sheet ){
 
-    int max = INT_MIN;
-
+    int mx = INT_MIN;
+    Node* matrix= sheet->matrix;
     for( int i = from_row; i <= to_row; i++ ){
         for( int j = from_col; j<=to_col; j++ ){
-            int element = *( matrix + i*max_col +j );
-            if( max < element ){
-                max = element;
+            int element = ( matrix + i*max_col +j )->val;
+            if( mx < element ){
+                mx = element;
             }
         }
     }
-
-    return max;
+    return mx;
 
 }
 
-int MAX( int from_row,int from_col,int to_row,int to_col,int max_col,int* matrix ){
+int MIN( int from_row,int from_col,int to_row,int to_col,int max_col, Sheet* sheet ){
     
-    int min = INT_MAX;
-
+    int mn = INT_MAX;
+    Node* matrix= sheet->matrix;
     for( int i = from_row; i <= to_row; i++ ){
         for( int j = from_col; j<=to_col; j++ ){
-            int element = *( matrix + i*max_col +j );
-            if( min > element ){
-                min = element;
+            int element = ( matrix + i*max_col +j )->val;
+            if( mn > element ){
+                mn = element;
             }
         }
     }
 
-    return min;
+    return mn;
 
 }
 
-int AVG( int from_row,int from_col,int to_row,int to_col,int max_col,int* matrix ){
+int AVG( int from_row,int from_col,int to_row,int to_col,int max_col, Sheet* sheet ){
     
     int avg_sum = 0;
+    Node* matrix= sheet->matrix;
 
     for( int i = from_row; i <= to_row; i++ ){
         for( int j = from_col; j<=to_col; j++ ){
-            avg_sum += *( matrix + i*max_col +j );
+            avg_sum += ( matrix + i*max_col +j )->val;
         }
     }
 
@@ -129,13 +107,13 @@ int AVG( int from_row,int from_col,int to_row,int to_col,int max_col,int* matrix
 
 }
 
-int SUM( int from_row,int from_col,int to_row,int to_col,int max_col,int* matrix ){
+int SUM( int from_row,int from_col,int to_row,int to_col,int max_col,Sheet* sheet ){
     
     int sum = 0;
-
+    Node* matrix= sheet->matrix;
     for( int i = from_row; i <= to_row; i++ ){
         for( int j = from_col; j<=to_col; j++ ){
-            sum += *( matrix + i*max_col +j );
+            sum += ( matrix + i*max_col +j )->val;
         }
     }
 
@@ -143,8 +121,8 @@ int SUM( int from_row,int from_col,int to_row,int to_col,int max_col,int* matrix
 
 }
 
-int STDEV( int from_row,int from_col,int to_row,int to_col,int max_col,int* matrix ){
-
+int STDEV( int from_row,int from_col,int to_row,int to_col,int max_col, Sheet* sheet ){
+    Node* matrix= sheet->matrix;
     int sum = SUM(from_row, from_col, to_row, to_col, max_col, matrix);
     int num_of_terms = ( to_col - from_col )*( to_row - from_row );
     int mean = sum / num_of_terms;
@@ -152,7 +130,7 @@ int STDEV( int from_row,int from_col,int to_row,int to_col,int max_col,int* matr
 
     for( int i = from_row; i <= to_row; i++ ){
         for( int j = from_col; j<=to_col; j++ ){
-            var += (*( matrix + i*max_col +j ) - mean )*(*( matrix + i*max_col +j ) - mean );
+            var += ((( matrix + i*max_col +j )->val) - mean )*((( matrix + i*max_col +j )->val) - mean );
         }
     }
     
@@ -163,8 +141,9 @@ int STDEV( int from_row,int from_col,int to_row,int to_col,int max_col,int* matr
 
 }
 
-void SLEEP( int sec ){
+void SLEEP(Node* node){
 
+    int sec= node->op_val;
     clock_t strt_time =  clock(); // Initialising the start time of the program as the current time.
     clock_t end_time = strt_time + sec * CLOCKS_PER_SEC; //Marking the end time when the program must restart.
 
@@ -251,4 +230,3 @@ int CHECK_CYCLE( Sheet* sheet ){
     return 0;
 
 }
-

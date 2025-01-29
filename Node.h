@@ -10,9 +10,9 @@ typedef struct Node{
     LinkedList *InNeighbours;
     LinkedList *OutNeighbours;
     int type;
-    int *cell1;
-    int *cell2;
-    int *op_val;
+    int cell1;
+    int cell2;
+    int op_val;
     int in_size;
     
 }Node;

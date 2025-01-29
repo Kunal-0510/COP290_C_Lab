@@ -10,14 +10,18 @@ Give cell2 null for assignment and both cells null for sleep.
 Give val as null wherever not needed.
 **READ THIS KUNAL**
 0-ASSIGNMENT
-1-MIN
-2-MAX
-3-AVG
-4-SUM
-5-STDEV
-6-SLEEP
+1-Arithematic sum
+2-Arithematic difference
+3-Arithematic product
+4-Arithematic division
+5-MIN
+6-MAX
+7-AVG
+8-SUM
+9-STDEV
+10-SLEEP
 */
-int MASTER( char* cell1,char* cell2,int func_type,int* matrix,int max_col,int val );
+int MASTER( Node* node, Sheet* sheet );
 /*
 This is the max function will use a pointer for 2d array
 and expects the collumns and rows in the input.
