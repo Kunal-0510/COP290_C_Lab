@@ -41,17 +41,36 @@ bool parse(char* input, char** first, char** second, char symbol) {
 }
 
  /*
-
     Invalid = -1
-    Constant Assignment = 0
-    Cell Assignment = 1
-    Arithmetic Expression = 2
-    MIN = 3
-    MAX = 4
-    AVG = 5
-    SUM = 6
-    STDEV = 7
-    SLEEP = 8
+    Constant Assignment = 0 // set op_val to the assignment value. All the operations of cell= value +-/* value are included in this type
+
+    Arithmetic sum = 1 
+    if value + cell or cell + value -> op_val= value and cell1= hash(cell) else -> op_val=0 and cell1,cell2 = hash(cells).
+    ***Cell assignments (like (A1=A2)) are also of this type, with op_val =0 and cell1= hash(cell assigned)***
+
+    Arithmetic diff= 2 
+    if(cell= cell - val)-> cell1=hash(cell), cell2=-1, op_val= val
+    if(cell= val- cell)-> cell1=-1, cell2=hash(cell), op_val= val
+    else-> cell1 and cell2= hash values, op_val= 0
+
+    Arithmetic product= 3
+    if value * cell or cell * value -> op_val= value and cell1= hash(cell) else -> op_val=1 and cell1,cell2 = hash(cells).
+   
+    Arithmetic division= 4 
+    if(cell= cell/val)-> cell1=hash(cell), cell2=-1, op_val= val **return error if val=0
+    if(cell= val/cell)-> cell1=-1, cell2=hash(cell), op_val= val ** return error if cell->val=0
+    else(cell=cell1/cell2)-> cell1 and cell2= hash values, op_val= 1 **return error if cell2->val=0
+
+    MIN = 5
+    MAX = 6
+    AVG = 7
+    SUM = 8
+    STDEV = 9
+    cell= func(c1:c2)-> cell1= hash(c1) cell2= hash(c2). set corresponding types
+
+    SLEEP = 10
+    cell = SLEEP(c1)-> cell1= hash(c1)  cell2=-1
+    cell= SLEEP(val)-> cell1=cell2=-1 op_val=val
 
 */
 

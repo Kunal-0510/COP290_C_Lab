@@ -18,41 +18,50 @@ int MASTER( Node* node, Sheet* sheet ){
     int to_col = index_2%max_col;
     int from_row = index_1/max_col;
     int to_row = index_2/max_col;
+    int success= 1;
     if( func_type == 0 ){
         //Will handle this later.
+        
+
+    }
+    else if(func_type==1){
+        if()
     }
 
     else if( func_type == 5){
-        return MIN( from_row,from_col,to_row,to_col,max_col, sheet );
+        int ans=  MIN( from_row,from_col,to_row,to_col,max_col, sheet );
+        node->val= ans;
 
     }
     else if( func_type == 6 ){
 
-        return MAX( from_row,from_col,to_row,to_col,max_col, sheet );
+        int ans= MAX( from_row,from_col,to_row,to_col,max_col, sheet );
+        node->val= ans;
 
     }
     else if( func_type == 7 ){
-        return AVG( from_row,from_col,to_row,to_col,max_col, sheet );
+        node->val= AVG( from_row,from_col,to_row,to_col,max_col, sheet );
     }
     else if( func_type == 8 ){
 
-        return SUM( from_row,from_col,to_row,to_col,max_col, sheet );
+        node->val= SUM( from_row,from_col,to_row,to_col,max_col, sheet );
 
     }
 
     else if( func_type == 9 ){
 
-        return STDEV( from_row,from_col,to_row,to_col,max_col, sheet );
+        node->val= STDEV( from_row,from_col,to_row,to_col,max_col, sheet );
     }
 
     else if( func_type == 10){
-        SLEEP(node);
+        SLEEP(node,sheet);
     }
     else{
-        printf("Error\n");
+        success=0;
+
     }
     
-    return 1;
+    return success;
 }
 
 int MAX( int from_row,int from_col,int to_row,int to_col,int max_col, Sheet* sheet ){
@@ -140,13 +149,24 @@ int STDEV( int from_row,int from_col,int to_row,int to_col,int max_col, Sheet* s
 
 }
 
-void SLEEP(Node* node){
+void SLEEP(Node* node, Sheet* sheet){
 
-    int sec= node->op_val;
-    clock_t strt_time =  clock(); // Initialising the start time of the program as the current time.
-    clock_t end_time = strt_time + sec * CLOCKS_PER_SEC; //Marking the end time when the program must restart.
-
-    while( clock() < end_time ) {}//Delaying using while loop.
+    
+    if(node->cell1==-1){
+        int sec= node->op_val;
+        clock_t strt_time =  clock(); // Initialising the start time of the program as the current time.
+        clock_t end_time = strt_time + sec * CLOCKS_PER_SEC; //Marking the end time when the program must restart.
+        node->val= sec;
+        while( clock() < end_time ) {}//Delaying using while loop.
+    }
+    else{
+        int sec= ((sheet->matrix)+node->cell1)->val;
+        clock_t strt_time =  clock(); // Initialising the start time of the program as the current time.
+        clock_t end_time = strt_time + sec * CLOCKS_PER_SEC; //Marking the end time when the program must restart.
+        node->val= sec;
+        while( clock() < end_time ) {}//Delaying using while loop. 
+    }
+    
 
 }
 

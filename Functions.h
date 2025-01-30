@@ -29,28 +29,28 @@ and expects the collumns and rows in the input.
 */
 
 
-int MIN( int from_row,int from_col,int to_row,int to_col,int max_col,int* matrix );
+int MIN( int from_row,int from_col,int to_row,int to_col,int max_col, Sheet* sheet );
 /*
 Min Function is similar to max.
 Expects same inputs.
 */
 
-int MAX( int from_row,int from_col,int to_row,int to_col,int max_col,int* matrix );
+int MAX( int from_row,int from_col,int to_row,int to_col,int max_col, Sheet* sheet );
 
 /*
 Average also takes the same inputs.
 */
 
-int AVG( int from_row,int from_col,int to_row,int to_col,int max_col,int* matrix );
+int AVG( int from_row,int from_col,int to_row,int to_col,int max_col, Sheet* sheet );
 
-int SUM( int from_row,int from_col,int to_row,int to_col,int max_col,int* matrix );
+int SUM( int from_row,int from_col,int to_row,int to_col,int max_col,Sheet* sheet );
 
-int STDEV( int from_row,int from_col,int to_row,int to_col,int max_col,int* matrix );
+int STDEV( int from_row,int from_col,int to_row,int to_col,int max_col, Sheet* sheet );
 
-void SLEEP( int sec );
+void SLEEP( Node* node );
 
 // Check cycle function checks for cycle in the graph using kahns. Gives 1 for true 0 for false.
-int CHECK_CYCLE( Node* matrix );
+int CHECK_CYCLE( Sheet* sheet );
 
 
 
