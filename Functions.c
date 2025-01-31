@@ -19,41 +19,76 @@ int MASTER( Node* node, Sheet* sheet ){
     int from_row = index_1/max_col;
     int to_row = index_2/max_col;
     int success= 1;
-    if( func_type == 0 ){
-        //Will handle this later.
-        
-
+    if( func_type == 0 ){ // Constant assignment
+        node->val = node->op_val;
     }
-    else if(func_type==1){
-        if()
+    else if(func_type==1){ //Addition
+        if(node->cell2==-1){
+            node->val= (sheet->matrix+ node->cell1)->val + node->op_val;
+        }
+        else{
+            node->val= (sheet->matrix+ node->cell1)->val + (sheet->matrix+ node->cell2)->val;
+        }
+    }
+    else if(func_type==2){ //Subtraction
+        if(node->cell2==-1){
+            node->val= (sheet->matrix+ node->cell1)->val - node->op_val;
+        }
+        if(node->cell1==-1){
+            node->val= node->op_val- (sheet->matrix+ node->cell2)->val ;
+        }
+        else{
+            node->val= (sheet->matrix+ node->cell1)->val - (sheet->matrix+ node->cell2)->val;
+        }
     }
 
-    else if( func_type == 5){
+    else if(func_type==3){ //Product
+        if(node->cell2==-1){
+            node->val= ((sheet->matrix+ node->cell1)->val) * (node->op_val);
+        }
+        else{
+            node->val= ((sheet->matrix+ node->cell1)->val) * ((sheet->matrix+ node->cell2)->val);
+        }
+    }
+
+    else if(func_type==4){ //Division
+        if(node->cell2==-1){
+            node->val= ((sheet->matrix+ node->cell1)->val)/(node->op_val);
+        }
+        if(node->cell1==-1){
+            node->val= (node->op_val)/((sheet->matrix+ node->cell2)->val) ;
+        }
+        else{
+            node->val= ((sheet->matrix+ node->cell1)->val)/((sheet->matrix+ node->cell2)->val);
+        }
+    }
+    
+    else if( func_type == 5){ // MIN(RANGE)
         int ans=  MIN( from_row,from_col,to_row,to_col,max_col, sheet );
         node->val= ans;
 
     }
-    else if( func_type == 6 ){
+    else if( func_type == 6 ){ // MAX(RANGE)
 
         int ans= MAX( from_row,from_col,to_row,to_col,max_col, sheet );
         node->val= ans;
 
     }
-    else if( func_type == 7 ){
+    else if( func_type == 7 ){ // AVG(RANGE)
         node->val= AVG( from_row,from_col,to_row,to_col,max_col, sheet );
     }
-    else if( func_type == 8 ){
+    else if( func_type == 8 ){ // SUM(RANGE)
 
         node->val= SUM( from_row,from_col,to_row,to_col,max_col, sheet );
 
     }
 
-    else if( func_type == 9 ){
+    else if( func_type == 9 ){ // STDEV(RANGE)
 
         node->val= STDEV( from_row,from_col,to_row,to_col,max_col, sheet );
     }
 
-    else if( func_type == 10){
+    else if( func_type == 10){ // SLEEP(RANGE)
         SLEEP(node,sheet);
     }
     else{
@@ -154,17 +189,17 @@ void SLEEP(Node* node, Sheet* sheet){
     
     if(node->cell1==-1){
         int sec= node->op_val;
-        clock_t strt_time =  clock(); // Initialising the start time of the program as the current time.
-        clock_t end_time = strt_time + sec * CLOCKS_PER_SEC; //Marking the end time when the program must restart.
+        clock_t strt_time =  clock(); 
+        clock_t end_time = strt_time + sec * CLOCKS_PER_SEC; 
         node->val= sec;
-        while( clock() < end_time ) {}//Delaying using while loop.
+        while( clock() < end_time ) {}
     }
     else{
         int sec= ((sheet->matrix)+node->cell1)->val;
-        clock_t strt_time =  clock(); // Initialising the start time of the program as the current time.
-        clock_t end_time = strt_time + sec * CLOCKS_PER_SEC; //Marking the end time when the program must restart.
+        clock_t strt_time =  clock();
+        clock_t end_time = strt_time + sec * CLOCKS_PER_SEC;
         node->val= sec;
-        while( clock() < end_time ) {}//Delaying using while loop. 
+        while( clock() < end_time ) {}
     }
     
 

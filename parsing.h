@@ -45,7 +45,7 @@ bool parse(char* input, char** first, char** second, char symbol) {
     Constant Assignment = 0 // set op_val to the assignment value. All the operations of cell= value +-/* value are included in this type
 
     Arithmetic sum = 1 
-    if value + cell or cell + value -> op_val= value and cell1= hash(cell) else -> op_val=0 and cell1,cell2 = hash(cells).
+    if cell = value + cell or cell = cell + value -> op_val= value and cell1= hash(cell) else -> op_val=0 and cell1,cell2 = hash(cells).
     ***Cell assignments (like (A1=A2)) are also of this type, with op_val =0 and cell1= hash(cell assigned)***
 
     Arithmetic diff= 2 
@@ -55,7 +55,8 @@ bool parse(char* input, char** first, char** second, char symbol) {
 
     Arithmetic product= 3
     if value * cell or cell * value -> op_val= value and cell1= hash(cell) else -> op_val=1 and cell1,cell2 = hash(cells).
-   
+    *** if cell= cell*0 then the cell is type 0 and constant assigned =0 ***
+
     Arithmetic division= 4 
     if(cell= cell/val)-> cell1=hash(cell), cell2=-1, op_val= val **return error if val=0
     if(cell= val/cell)-> cell1=-1, cell2=hash(cell), op_val= val ** return error if cell->val=0
