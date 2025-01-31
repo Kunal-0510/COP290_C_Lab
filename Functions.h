@@ -52,6 +52,6 @@ void SLEEP( Node* node, Sheet* sheet );
 // Check cycle function checks for cycle in the graph using kahns. Gives 1 for true 0 for false.
 int CHECK_CYCLE( Sheet* sheet );
 
-
+int add_edge(Node* node, Sheet* sheet);
 
 #endif

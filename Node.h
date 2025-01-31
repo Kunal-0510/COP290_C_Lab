@@ -7,6 +7,7 @@
 typedef struct Node{
 
     int val ;
+    int id;
     LinkedList *InNeighbours;
     LinkedList *OutNeighbours;
     int type;
@@ -19,7 +20,7 @@ typedef struct Node{
 
 
 
-void initialize_node(struct Node *node);
+void initialize_node(struct Node *node, int index);
 
 #endif
 

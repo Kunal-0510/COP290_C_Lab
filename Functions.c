@@ -5,6 +5,7 @@
 #include <limits.h>
 #include <time.h>
 #include "hash.h"
+#include "linkedlist.h"
 #include "Queue.h"
 #include "Node.h"
 #include "Sheet.h"
@@ -282,5 +283,58 @@ int CHECK_CYCLE( Sheet* sheet ){
     }
 
     return 0;
+
+}
+
+int add_edge(Node* node, Sheet* sheet){
+    LinkedList* curr_head= node->InNeighbours;
+    int temp_size= node->in_size;
+    node->InNeighbours= NULL;
+    node->in_size=0;
+    
+    if(node->type<=4){
+        if(node->cell1!=-1){
+            node->InNeighbours= add_node(node->InNeighbours, node->cell1);
+            node->in_size++;
+            if(find_node(((sheet->matrix)+(node->cell1))->OutNeighbours, node->id)==0){
+                ((sheet->matrix)+node->cell1)->OutNeighbours= add_node(((sheet->matrix)+node->cell1)->OutNeighbours, node->id);
+            }
+        }
+        if(node->cell2!=-1){
+            node->InNeighbours= add_node(node->InNeighbours, node->cell2);
+            node->in_size++;
+            if(find_node(((sheet->matrix)+(node->cell2))->OutNeighbours, node->id)==0){
+                ((sheet->matrix)+node->cell2)->OutNeighbours= add_node(((sheet->matrix)+node->cell2)->OutNeighbours, node->id);
+            }
+        }
+    }
+    else{
+        int max_col = sheet->cols;
+        int index_1 = node->cell1;
+        int index_2 = node->cell2;
+        int from_col = index_1%max_col;
+        int to_col = index_2%max_col;
+        int from_row = index_1/max_col;
+        int to_row = index_2/max_col;
+
+        for( int i = from_row; i <= to_row; i++ ){
+            for( int j = from_col; j<=to_col; j++ ){
+                int cell= i*max_col+j;
+                node->InNeighbours= add_node(node->InNeighbours, node->cell1);
+                node->in_size++;
+                if(find_node(((sheet->matrix)+cell)->OutNeighbours, node->id)==0){
+                    ((sheet->matrix)+ cell)->OutNeighbours= add_node(((sheet->matrix)+ cell)->OutNeighbours, node->id);
+                }
+            }
+        }
+    }
+    if(CHECK_CYCLE(sheet)==1){
+            // will do this later
+            return 0;
+        }
+    else{
+        free_list(curr_head);
+        return 1;
+    }
 
 }
