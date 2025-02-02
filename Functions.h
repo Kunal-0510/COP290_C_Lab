@@ -50,7 +50,8 @@ int STDEV( int from_row,int from_col,int to_row,int to_col,int max_col, Sheet* s
 void SLEEP( Node* node, Sheet* sheet );
 
 // Check cycle function checks for cycle in the graph using kahns. Gives 1 for true 0 for false.
-int CHECK_CYCLE( Sheet* sheet );
+
+int CHECK_CYCLE( Sheet* Sheet );
 
 int add_edge(Node* node, Sheet* sheet);
 
