@@ -1,5 +1,12 @@
 #include "display.h"
 #include "hash.h"
+#include <stdio.h>
+#include <stdlib.h>
+#include <math.h>
+#include <string.h>
+#include "Node.h"
+#include "Sheet.h"
+#include "hash.h"
 
 int min(int a, int b){
     return (a>b) ? b : a;

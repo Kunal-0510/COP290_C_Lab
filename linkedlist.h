@@ -6,4 +6,9 @@ typedef struct LinkedList {
     struct LinkedList* next;
 }LinkedList;
 
+LinkedList* add_node(LinkedList* head, int hash);
+LinkedList* delete_node(LinkedList* head, int hash);
+void free_list(LinkedList* head);
+int find_node(LinkedList* head, int hash);
+
 #endif
