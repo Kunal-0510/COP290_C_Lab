@@ -5,118 +5,142 @@
 #include <limits.h>
 #include <time.h>
 #include "hash.h"
+#include "linkedlist.h"
+#include "Queue.h"
 #include "Node.h"
+#include "Sheet.h"
 
-int MASTER( char* cell1,char* cell2,int func_type,int* matrix,int max_col,int val ){
-    if( func_type == 0 ){
-        //Will handle this later.
+int MASTER( Node* node, Sheet* sheet ){
+    int func_type= node->type;
+    int max_col = sheet->cols;
+    int index_1 = node->cell1;
+    int index_2 = node->cell2;
+    int from_col = index_1%max_col;
+    int to_col = index_2%max_col;
+    int from_row = index_1/max_col;
+    int to_row = index_2/max_col;
+    int success= 1;
+    if( func_type == 0 ){ // Constant assignment
+        node->val = node->op_val;
     }
-    if( func_type == 1 ){
+    else if(func_type==1){ //Addition
+        if(node->cell2==-1){
+            node->val= (sheet->matrix+ node->cell1)->val + node->op_val;
+        }
+        else{
+            node->val= (sheet->matrix+ node->cell1)->val + (sheet->matrix+ node->cell2)->val;
+        }
+    }
+    else if(func_type==2){ //Subtraction
+        if(node->cell2==-1){
+            node->val= (sheet->matrix+ node->cell1)->val - node->op_val;
+        }
+        if(node->cell1==-1){
+            node->val= node->op_val- (sheet->matrix+ node->cell2)->val ;
+        }
+        else{
+            node->val= (sheet->matrix+ node->cell1)->val - (sheet->matrix+ node->cell2)->val;
+        }
+    }
 
-        int index_1 = get_hash( cell1,max_col );
-        int index_2 = get_hash( cell2,max_col );
-        int from_col = index_1%max_col;
-        int to_col = index_2%max_col;
-        int from_row = index_1/max_col;
-        int to_row = index_2/max_col;
+    else if(func_type==3){ //Product
+        if(node->cell2==-1){
+            node->val= ((sheet->matrix+ node->cell1)->val) * (node->op_val);
+        }
+        else{
+            node->val= ((sheet->matrix+ node->cell1)->val) * ((sheet->matrix+ node->cell2)->val);
+        }
+    }
 
-        return MIN( from_row,from_col,to_row,to_col,max_col,matrix );
+    else if(func_type==4){ //Division
+        if(node->cell2==-1){
+            node->val= ((sheet->matrix+ node->cell1)->val)/(node->op_val);
+        }
+        if(node->cell1==-1){
+            node->val= (node->op_val)/((sheet->matrix+ node->cell2)->val) ;
+        }
+        else{
+            node->val= ((sheet->matrix+ node->cell1)->val)/((sheet->matrix+ node->cell2)->val);
+        }
+    }
+    
+    else if( func_type == 5){ // MIN(RANGE)
+        int ans=  MIN( from_row,from_col,to_row,to_col,max_col, sheet );
+        node->val= ans;
 
     }
-    if( func_type == 2 ){
+    else if( func_type == 6 ){ // MAX(RANGE)
 
-        int index_1 = get_hash( cell1,max_col );
-        int index_2 = get_hash( cell2,max_col );
-        int from_col = index_1%max_col;
-        int to_col = index_2%max_col;
-        int from_row = index_1/max_col;
-        int to_row = index_2/max_col;
-
-        return MAX( from_row,from_col,to_row,to_col,max_col,matrix );
+        int ans= MAX( from_row,from_col,to_row,to_col,max_col, sheet );
+        node->val= ans;
 
     }
-    if( func_type == 3 ){
-        
-        int index_1 = get_hash( cell1,max_col );
-        int index_2 = get_hash( cell2,max_col );
-        int from_col = index_1%max_col;
-        int to_col = index_2%max_col;
-        int from_row = index_1/max_col;
-        int to_row = index_2/max_col;
+    else if( func_type == 7 ){ // AVG(RANGE)
+        node->val= AVG( from_row,from_col,to_row,to_col,max_col, sheet );
+    }
+    else if( func_type == 8 ){ // SUM(RANGE)
 
-        return AVG( from_row,from_col,to_row,to_col,max_col,matrix );
+        node->val= SUM( from_row,from_col,to_row,to_col,max_col, sheet );
 
     }
-    if( func_type == 4 ){
-        
-        int index_1 = get_hash( cell1,max_col );
-        int index_2 = get_hash( cell2,max_col );
-        int from_col = index_1%max_col;
-        int to_col = index_2%max_col;
-        int from_row = index_1/max_col;
-        int to_row = index_2/max_col;
 
-        return SUM( from_row,from_col,to_row,to_col,max_col,matrix );
+    else if( func_type == 9 ){ // STDEV(RANGE)
 
+        node->val= STDEV( from_row,from_col,to_row,to_col,max_col, sheet );
     }
-    if( func_type == 5 ){
-        
-        int index_1 = get_hash( cell1,max_col );
-        int index_2 = get_hash( cell2,max_col );
-        int from_col = index_1%max_col;
-        int to_col = index_2%max_col;
-        int from_row = index_1/max_col;
-        int to_row = index_2/max_col;
 
-        return STDEV( from_row,from_col,to_row,to_col,max_col,matrix );
+    else if( func_type == 10){ // SLEEP(RANGE)
+        SLEEP(node,sheet);
+    }
+    else{
+        success=0;
 
     }
     
-    SLEEP( val );
-    return 1;
+    return success;
 }
 
-int MIN( int from_row,int from_col,int to_row,int to_col,int max_col,int* matrix ){
+int MAX( int from_row,int from_col,int to_row,int to_col,int max_col, Sheet* sheet ){
 
-    int max = INT_MIN;
-
+    int mx = INT_MIN;
+    Node* matrix= sheet->matrix;
     for( int i = from_row; i <= to_row; i++ ){
         for( int j = from_col; j<=to_col; j++ ){
-            int element = *( matrix + i*max_col +j );
-            if( max < element ){
-                max = element;
+            int element = ( matrix + i*max_col +j )->val;
+            if( mx < element ){
+                mx = element;
+            }
+        }
+    }
+    return mx;
+
+}
+
+int MIN( int from_row,int from_col,int to_row,int to_col,int max_col, Sheet* sheet ){
+    
+    int mn = INT_MAX;
+    Node* matrix= sheet->matrix;
+    for( int i = from_row; i <= to_row; i++ ){
+        for( int j = from_col; j<=to_col; j++ ){
+            int element = ( matrix + i*max_col +j )->val;
+            if( mn > element ){
+                mn = element;
             }
         }
     }
 
-    return max;
+    return mn;
 
 }
 
-int MAX( int from_row,int from_col,int to_row,int to_col,int max_col,int* matrix ){
-    
-    int min = INT_MAX;
-
-    for( int i = from_row; i <= to_row; i++ ){
-        for( int j = from_col; j<=to_col; j++ ){
-            int element = *( matrix + i*max_col +j );
-            if( min > element ){
-                min = element;
-            }
-        }
-    }
-
-    return min;
-
-}
-
-int AVG( int from_row,int from_col,int to_row,int to_col,int max_col,int* matrix ){
+int AVG( int from_row,int from_col,int to_row,int to_col,int max_col, Sheet* sheet ){
     
     int avg_sum = 0;
+    Node* matrix= sheet->matrix;
 
     for( int i = from_row; i <= to_row; i++ ){
         for( int j = from_col; j<=to_col; j++ ){
-            avg_sum += *( matrix + i*max_col +j );
+            avg_sum += ( matrix + i*max_col +j )->val;
         }
     }
 
@@ -127,13 +151,13 @@ int AVG( int from_row,int from_col,int to_row,int to_col,int max_col,int* matrix
 
 }
 
-int SUM( int from_row,int from_col,int to_row,int to_col,int max_col,int* matrix ){
+int SUM( int from_row,int from_col,int to_row,int to_col,int max_col,Sheet* sheet ){
     
     int sum = 0;
-
+    Node* matrix= sheet->matrix;
     for( int i = from_row; i <= to_row; i++ ){
         for( int j = from_col; j<=to_col; j++ ){
-            sum += *( matrix + i*max_col +j );
+            sum += ( matrix + i*max_col +j )->val;
         }
     }
 
@@ -141,8 +165,8 @@ int SUM( int from_row,int from_col,int to_row,int to_col,int max_col,int* matrix
 
 }
 
-int STDEV( int from_row,int from_col,int to_row,int to_col,int max_col,int* matrix ){
-
+int STDEV( int from_row,int from_col,int to_row,int to_col,int max_col, Sheet* sheet ){
+    Node* matrix= sheet->matrix;
     int sum = SUM(from_row, from_col, to_row, to_col, max_col, matrix);
     int num_of_terms = ( to_col - from_col )*( to_row - from_row );
     int mean = sum / num_of_terms;
@@ -150,7 +174,7 @@ int STDEV( int from_row,int from_col,int to_row,int to_col,int max_col,int* matr
 
     for( int i = from_row; i <= to_row; i++ ){
         for( int j = from_col; j<=to_col; j++ ){
-            var += (*( matrix + i*max_col +j ) - mean )*(*( matrix + i*max_col +j ) - mean );
+            var += ((( matrix + i*max_col +j )->val) - mean )*((( matrix + i*max_col +j )->val) - mean );
         }
     }
     
@@ -161,16 +185,156 @@ int STDEV( int from_row,int from_col,int to_row,int to_col,int max_col,int* matr
 
 }
 
-void SLEEP( int sec ){
+void SLEEP(Node* node, Sheet* sheet){
 
-    clock_t strt_time =  clock(); // Initialising the start time of the program as the current time.
-    clock_t end_time = strt_time + sec * CLOCKS_PER_SEC; //Marking the end time when the program must restart.
-
-    while( clock() < end_time ) {}//Delaying using while loop.
-
-}
-
-int CHECK_CYCLE( Node* matrix ){
     
+    if(node->cell1==-1){
+        int sec= node->op_val;
+        clock_t strt_time =  clock(); 
+        clock_t end_time = strt_time + sec * CLOCKS_PER_SEC; 
+        node->val= sec;
+        while( clock() < end_time ) {}
+    }
+    else{
+        int sec= ((sheet->matrix)+node->cell1)->val;
+        clock_t strt_time =  clock();
+        clock_t end_time = strt_time + sec * CLOCKS_PER_SEC;
+        node->val= sec;
+        while( clock() < end_time ) {}
+    }
+    
+
 }
 
+int CHECK_CYCLE( Sheet* sheet ){
+    
+    Queue* q = (Queue*)(malloc(sizeof(Queue)));
+    QueueInit(q);
+    int max_cols = sheet->cols;
+    int max_rows = sheet->rows;
+
+    for( int i = 0 ; i<max_rows ; i++ ){
+
+        for( int j = 0 ; j<max_cols ; j++ ){
+
+            Node* node = (sheet->matrix + i*max_cols + j );
+
+            if( node->in_size == 0 ){
+
+                QueueNode* newNode = (QueueNode*)(malloc(sizeof(QueueNode)));
+                QueueNodeInit(newNode);
+                newNode->node = (sheet->matrix + i*max_cols + j );
+                QueuePush(q,newNode);
+
+            }
+        }
+
+    }
+
+    int n = 0;
+
+    while( isEmpty(q) == 0 ){
+
+        QueueNode* Node = QueuePop(q);
+        n++;
+        LinkedList* top = Node->node->OutNeighbours;
+        
+        while( top!= NULL ){
+
+            (sheet->matrix + top->data)->in_size--;
+
+            if((sheet->matrix + top->data)->in_size == 0){
+                
+                QueueNode* newNode = (QueueNode*)(malloc(sizeof(QueueNode)));
+                newNode->node = (sheet->matrix + top->data);
+                QueuePush(newNode,q);
+
+            }
+
+        }
+
+        free(Node);
+
+    }
+
+    free(q);
+
+    for( int i = 0 ; i<max_cols ; i++ ){
+
+        int count = 0;
+
+        for( int j = 0 ; j<max_cols ; j++ ){
+
+            LinkedList* inNeighbours = (sheet->matrix + i*max_cols + j )->InNeighbours;
+
+            while( inNeighbours!=NULL ){
+
+                count++;
+                inNeighbours = inNeighbours->next;
+
+            }
+
+        }
+
+    }
+
+    if( n == max_cols*max_cols ){
+        return 1;
+    }
+
+    return 0;
+
+}
+
+int add_edge(Node* node, Sheet* sheet){
+    LinkedList* curr_head= node->InNeighbours;
+    int temp_size= node->in_size;
+    node->InNeighbours= NULL;
+    node->in_size=0;
+    
+    if(node->type<=4){
+        if(node->cell1!=-1){
+            node->InNeighbours= add_node(node->InNeighbours, node->cell1);
+            node->in_size++;
+            if(find_node(((sheet->matrix)+(node->cell1))->OutNeighbours, node->id)==0){
+                ((sheet->matrix)+node->cell1)->OutNeighbours= add_node(((sheet->matrix)+node->cell1)->OutNeighbours, node->id);
+            }
+        }
+        if(node->cell2!=-1){
+            node->InNeighbours= add_node(node->InNeighbours, node->cell2);
+            node->in_size++;
+            if(find_node(((sheet->matrix)+(node->cell2))->OutNeighbours, node->id)==0){
+                ((sheet->matrix)+node->cell2)->OutNeighbours= add_node(((sheet->matrix)+node->cell2)->OutNeighbours, node->id);
+            }
+        }
+    }
+    else{
+        int max_col = sheet->cols;
+        int index_1 = node->cell1;
+        int index_2 = node->cell2;
+        int from_col = index_1%max_col;
+        int to_col = index_2%max_col;
+        int from_row = index_1/max_col;
+        int to_row = index_2/max_col;
+
+        for( int i = from_row; i <= to_row; i++ ){
+            for( int j = from_col; j<=to_col; j++ ){
+                int cell= i*max_col+j;
+                node->InNeighbours= add_node(node->InNeighbours, node->cell1);
+                node->in_size++;
+                if(find_node(((sheet->matrix)+cell)->OutNeighbours, node->id)==0){
+                    ((sheet->matrix)+ cell)->OutNeighbours= add_node(((sheet->matrix)+ cell)->OutNeighbours, node->id);
+                }
+            }
+        }
+    }
+    if(CHECK_CYCLE(sheet)==1){
+            // will do this later
+            return 0;
+        }
+    else{
+        free_list(curr_head);
+        return 1;
+    }
+
+}

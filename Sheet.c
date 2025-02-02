@@ -7,8 +7,11 @@ struct Node* create_node_matrix(int R, int C) {
         fprintf(stderr, "Memory allocation failed for matrix.\n");
         exit(EXIT_FAILURE);
     }
-    for (int i = 0; i < R * C; i++) {
-        initialize_node(&matrix[i]); // Initialize each Node
+    for (int i = 0; i < R; i++) {
+        for (int j = 0; j < C; j++) {
+            int index = i * C + j;
+            initialize_node(&matrix[index], index); 
+        }
     }
     return matrix;
 }

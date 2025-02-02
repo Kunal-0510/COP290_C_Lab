@@ -6,6 +6,19 @@
 #include "display.h"
 #include "Sheet.h"
 
+//Input-> parsing-> assign cell properties-> call add_edge -> call recalculate -> display file
+//                                                 ^Nimit            ^Gogo
+/*
+TBD:
+- Parsing (Kunal)
+- Add_edge (Nimit)
+- Recalculate (Gogo)
+- Time funtionality in Display.h and final formatting to match display style (Nimit)
+- Error Handling: MAJOR (Each of us in our respective files)
+- main.c file (Dekh lenge)
+- make file (Kunal)
+*/
+
 
 int main() {
     int R, C;
