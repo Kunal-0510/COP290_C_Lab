@@ -151,7 +151,7 @@ int STDEV( int from_row,int from_col,int to_row,int to_col,int max_col,int* matr
     }
     
     var /= num_of_terms;
-    int std_dev = sqrt( var );;
+    int std_dev = sqrt( var );
     
     return std_dev;
 

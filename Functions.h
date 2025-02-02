@@ -54,7 +54,7 @@ int STDEV( int from_row,int from_col,int to_row,int to_col,int max_col,int* matr
 void SLEEP( int sec );
 
 // Check cycle function checks for cycle in the graph using kahns. Gives 1 for true 0 for false.
-int CHECK_CYCLE( Node* matrix );
+int CHECK_CYCLE( Sheet* Sheet );
 
 
 
