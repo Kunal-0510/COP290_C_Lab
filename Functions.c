@@ -246,6 +246,7 @@ int CHECK_CYCLE( Sheet* sheet ){
             if((sheet->matrix + top->data)->in_size == 0){
                 
                 QueueNode* newNode = (QueueNode*)(malloc(sizeof(QueueNode)));
+                QueueInit(newNode);
                 newNode->node = (sheet->matrix + top->data);
                 QueuePush(newNode,q);
 
@@ -336,5 +337,77 @@ int add_edge(Node* node, Sheet* sheet){
         free_list(curr_head);
         return 1;
     }
+
+}
+
+/* Doiing recalculation on the nodes not the entire sheet*/
+
+void recalculate_node( Node* node , Sheet* sheet ){
+
+    Queue* q = (Queue*)(malloc(sizeof(Queue)));
+    QueueInit(q);
+    int max_cols = sheet->cols;
+    int max_rows = sheet->rows;
+
+    QueueNode* n1 = (QueueNode*)(malloc (sizeof(QueueNode)));
+    QueueNodeInit(n1);
+    QueuePush(n1,sheet);
+
+    Queue* q1 = (Queue*)(malloc(sizeof(Queue)));
+    QueueInit(q1);
+
+    while( isEmpty(q) == 0 ){
+
+        QueueNode* Node = QueuePop(q);
+        LinkedList* top = Node->node->OutNeighbours;
+        QueuePush(Node,q1);
+
+        while( top!= NULL ){
+
+            (sheet->matrix + top->data)->in_size--;
+
+            if((sheet->matrix + top->data)->in_size == 0){
+                
+                QueueNode* newNode = (QueueNode*)(malloc(sizeof(QueueNode)));
+                QueueInit(newNode);
+                newNode->node = (sheet->matrix + top->data);
+                QueuePush(newNode,q);
+
+            }
+
+        }
+
+    }
+
+    free(q);
+
+    for( int i = 0 ; i<max_cols ; i++ ){
+
+        int count = 0;
+
+        for( int j = 0 ; j<max_cols ; j++ ){
+
+            LinkedList* inNeighbours = (sheet->matrix + i*max_cols + j )->InNeighbours;
+
+            while( inNeighbours!=NULL ){
+
+                count++;
+                inNeighbours = inNeighbours->next;
+
+            }
+
+        }
+
+    }
+
+    while( isEmpty(q1) == 0 ){
+
+        QueueNode* head = QueuePop(q1);
+        MASTER( head->node ,sheet );
+        free(head);
+
+    }
+    
+    free(q1);
 
 }
