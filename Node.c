@@ -10,4 +10,5 @@ void initialize_node(struct Node *node, int id) {
     node->cell1 = -1;
     node->cell2 = -1;
     node->op_val = 0;
+    node->operator='\0';
 }
