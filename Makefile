@@ -1,6 +1,6 @@
 # Compiler and flags
 CC = gcc
-CFLAGS = -Wall -Wextra -g
+CFLAGS = -w -g  # Suppress warnings (-w) and include debugging information (-g)
 
 # Target executable
 TARGET = sheet
@@ -34,10 +34,10 @@ linkedlist.o: linkedlist.c linkedlist.h
 Queue.o: Queue.c Queue.h
 	$(CC) $(CFLAGS) -c $<
 
-hash.o: hash.c hash.h Sheet.h
+hash.o: hash.c hash.h
 	$(CC) $(CFLAGS) -c $<
 
-validity.o: validity.c validity.h
+validity.o: validity.c validity.h hash.h Sheet.h
 	$(CC) $(CFLAGS) -c $<
 
 parsing.o: parsing.c parsing.h hash.h validity.h Node.h Sheet.h Functions.h
@@ -54,7 +54,7 @@ main.o: main.c $(HEADERS)
 
 # Clean up build artifacts
 clean:
-	rm -f $(OBJ) $(TARGET) main  # Deletes object files, sheet, and main if it exists
+	rm -f $(OBJ) $(TARGET)
 
 # Phony targets (not actual files)
 .PHONY: all clean
