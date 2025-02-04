@@ -147,12 +147,13 @@ void assign_cell(char* cellAddress,char* expr,Sheet* sheet){
             }
             else if(isValidNumber(val2)){ //* cell const
                 cell->op_val=atoi(val2);
+                cell->cell2=-1;
             }
         }
         else if(isValidNumber(val1)){
 
             cell->op_val=atoi(val1);
-
+            cell->cell1=-1;
             if(isValidCell(val2)){ //* const cell
                 cell->cell2=get_hash(val2,sheet->cols);
             }
