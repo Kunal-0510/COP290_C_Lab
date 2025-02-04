@@ -127,7 +127,7 @@ bool assign_cell(char* cellAddress,char* expr,Sheet* sheet){
     char val1[15]={0};
     char val2[15]={0};
 
-    parseExpr(expr,op,val1,val2);
+    parseExpr(expr, &op,val1,val2);
 
     int type=-1;
 
