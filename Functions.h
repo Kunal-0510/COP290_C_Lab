@@ -1,9 +1,5 @@
 #ifndef FUNCTIONS_H
 #define FUNCTIONS_H
-<<<<<<< HEAD
-=======
-
->>>>>>> ee31c1e230711d7f0ac1749c7e9ece32a20a90cb
 #include <stdio.h>
 #include <math.h>
 #include <limits.h>
