@@ -119,7 +119,7 @@ Node* str_to_node(char* cellAddress,Sheet* sheet){
 
 }
 
-void assign_cell(char* cellAddress,char* expr,Sheet* sheet){
+bool assign_cell(char* cellAddress,char* expr,Sheet* sheet){
 
     Node* cell=str_to_node(cellAddress,sheet);
 
@@ -144,26 +144,73 @@ void assign_cell(char* cellAddress,char* expr,Sheet* sheet){
 
             if(isValidCell(val2)){ //* cell cell
                 cell->cell2=get_hash(val2,sheet->cols);
+                cell->op_val=0;
             }
             else if(isValidNumber(val2)){ //* cell const
-                cell->op_val=atoi(val2);
+
+                int num=atoi(val2);
+
+                if(num==0 && op=='*'){
+                    type=0;
+                    cell->cell1=-1;
+                    cell->cell2=-1;
+                    cell->op_val=0;
+                    return;
+                }
+
+                cell->op_val=num;
                 cell->cell2=-1;
             }
         }
         else if(isValidNumber(val1)){
 
-            cell->op_val=atoi(val1);
+            int num=atoi(val1);
+
+            cell->op_val=num;
             cell->cell1=-1;
+
             if(isValidCell(val2)){ //* const cell
+
+                if(num==0 && op=='*'){
+
+                    type=0;
+                    cell->cell1=-1;
+                    cell->cell2=-1;
+                    cell->op_val=0;
+                    return;
+                }
+
                 cell->cell2=get_hash(val2,sheet->cols);
             }
+
             else if(isValidNumber(val2)){ //* const const
 
-                //TODO Find the value to assign
                 type=0;
+                int num1=atoi(val1);
+                int num2=atoi(val2);
+
+                int ans=0;
+
+                if(op=='+'){
+                    ans=num1+num2;
+                }
+                else if(op=='-'){
+                    ans=num1-num2;
+                }
+                else if(op=='*'){
+                    ans=num1*num2;
+                }
+                else if(op=='/' && num2!=0){
+                    ans=num1/num2;
+                }
+
+                cell->cell1=-1;
+                cell->cell2=-1;
+                cell->op_val=ans;
                 
             }
         }
+        else type=-1;
     }
 
     else{
@@ -221,13 +268,37 @@ void assign_cell(char* cellAddress,char* expr,Sheet* sheet){
 
                     cell->cell1=get_hash(first,sheet->cols);
                     cell->cell2=get_hash(second,sheet->cols);
+                    cell->op_val=0;
                 }
 
                 free(first);
                 free(second);
             }
         }
+
     }
+
+    cell->type=type;
+
+    free(cell);
+
+    return (type!=-1);
+}
+
+bool parseInput(char* input,Sheet* sheet){
+
+    char cellAddress[15];
+    char expression[15];
+
+    if(!parse(input,&cellAddress,&expression,'=')){
+        return false;
+    }
+
+    if(!assign_cell(cellAddress,expression,sheet)){
+        return false;
+    }
+
+    return true;
 
 }
 
