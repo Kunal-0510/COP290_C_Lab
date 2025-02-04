@@ -1,6 +1,7 @@
 # Compiler and flags
 CC = gcc
 CFLAGS = -w -g  # Suppress warnings (-w) and include debugging information (-g)
+LDFLAGS = -lm   # Linker flag for math library
 
 # Target executable
 TARGET = sheet
@@ -19,7 +20,7 @@ all: $(TARGET)
 
 # Rule to build the target executable
 $(TARGET): $(OBJ)
-	$(CC) $(CFLAGS) -o $@ $^
+	$(CC) $(CFLAGS) -o $@ $^ $(LDFLAGS)
 
 # Rules for individual object files
 Node.o: Node.c Node.h linkedlist.h

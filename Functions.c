@@ -23,7 +23,7 @@ int MASTER( Node* node, Sheet* sheet ){
     if( func_type == 0 ){ // Constant assignment
         node->val = node->op_val;
     }
-    else if(func_type==1){ //arithmatic
+    else if(func_type==1){ //arithmetic
         if(node->operator=='+'){
             if(node->cell1==-1){
                 node->val= (sheet->matrix+ node->cell2)->val + node->op_val;
