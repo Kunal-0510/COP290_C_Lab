@@ -22,5 +22,6 @@ void QueuePush( QueueNode* node , Queue* queue );
 QueueNode* QueuePop( Queue* queue ); 
 void QueueInit( Queue* queue );
 void QueueNodeInit( QueueNode* node );
+int isEmpty( Queue* queue );
 
 #endif

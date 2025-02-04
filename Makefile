@@ -1,44 +1,57 @@
+# Compiler and flags
 CC = gcc
-CFLAGS = -Wall -g
+CFLAGS = -Wall -Wextra -g
 
-OBJECTS = main.o Node.o linkedlist.o Queue.o Sheet.o hash.o validity.o functions.o parsing.o display.o
+# Target executable
+TARGET = main
 
-all: myprogram
+# Source files
+SRC = Node.c Sheet.c linkedlist.c Queue.c hash.c validity.c parsing.c Functions.c main.c
 
-myprogram: $(OBJECTS)
-	$(CC) $(CFLAGS) -o myprogram $(OBJECTS)
+# Object files (replace .c with .o for each source file)
+OBJ = $(SRC:.c=.o)
 
+# Header files
+HEADERS = Node.h Sheet.h linkedlist.h Queue.h hash.h validity.h parsing.h Functions.h display.h
+
+# Default target
+all: $(TARGET)
+
+# Rule to build the target executable
+$(TARGET): $(OBJ)
+	$(CC) $(CFLAGS) -o $@ $^
+
+# Rules for individual object files
 Node.o: Node.c Node.h
-	$(CC) $(CFLAGS) -c Node.c
-
-linkedlist.o: linkedlist.c linkedlist.h
-	$(CC) $(CFLAGS) -c linkedlist.c
-
-Queue.o: Queue.c Queue.h
-	$(CC) $(CFLAGS) -c Queue.c
-
-validity.o: validity.c validity.h
-	$(CC) $(CFLAGS) -c validity.c
+	$(CC) $(CFLAGS) -c $<
 
 Sheet.o: Sheet.c Sheet.h Node.h
-	$(CC) $(CFLAGS) -c Sheet.c
+	$(CC) $(CFLAGS) -c $<
 
-hash.o: hash.c hash.h Sheet.h Node.h
-	$(CC) $(CFLAGS) -c hash.c
+linkedlist.o: linkedlist.c linkedlist.h
+	$(CC) $(CFLAGS) -c $<
 
-functions.o: functions.c Functions.h Node.h Sheet.h hash.h linkedlist.h Queue.h
-	$(CC) $(CFLAGS) -c functions.c
+Queue.o: Queue.c Queue.h
+	$(CC) $(CFLAGS) -c $<
+
+hash.o: hash.c hash.h Sheet.h
+	$(CC) $(CFLAGS) -c $<
+
+validity.o: validity.c validity.h
+	$(CC) $(CFLAGS) -c $<
 
 parsing.o: parsing.c parsing.h hash.h validity.h Node.h Sheet.h Functions.h
-	$(CC) $(CFLAGS) -c parsing.c
+	$(CC) $(CFLAGS) -c $<
 
-display.o: display.c display.h Node.h Sheet.h
-	$(CC) $(CFLAGS) -c display.c
+Functions.o: Functions.c Functions.h Node.h Sheet.h hash.h linkedlist.h Queue.h
+	$(CC) $(CFLAGS) -c $<
 
-main.o: main.c Functions.h Node.h Sheet.h display.h hash.h linkedlist.h parsing.h Queue.h validity.h
-	$(CC) $(CFLAGS) -c main.c
+main.o: main.c $(HEADERS)
+	$(CC) $(CFLAGS) -c $<
 
+# Clean up build artifacts
 clean:
-	rm -f *.o myprogram
+	rm -f $(OBJ) $(TARGET)
 
+# Phony targets (not actual files)
 .PHONY: all clean

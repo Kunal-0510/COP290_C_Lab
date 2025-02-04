@@ -173,7 +173,7 @@ void assign_cell(char* cellAddress,char* expr,Sheet* sheet){
 
             if(isValidNumber(val1)){
                 type=0;
-                cell->op_val=stoi(val1); //* cell = constant
+                cell->op_val= atoi(val1); //* cell = constant
             }
             else if(isValidCell(val1)){
                 type=0;

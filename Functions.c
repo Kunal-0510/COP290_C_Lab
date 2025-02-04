@@ -1,14 +1,6 @@
 #include <stdio.h>
 #include "Functions.h"
-#include <stdio.h>
-#include <math.h>
-#include <limits.h>
-#include <time.h>
-#include "hash.h"
-#include "linkedlist.h"
-#include "Queue.h"
-#include "Node.h"
-#include "Sheet.h"
+
 /*
 0- constant 
 1- arithmetic
