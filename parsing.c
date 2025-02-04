@@ -155,7 +155,7 @@ bool assign_cell(char* cellAddress,char* expr,Sheet* sheet){
                     cell->cell1=-1;
                     cell->cell2=-1;
                     cell->op_val=0;
-                    return;
+                    return true;
                 }
 
                 cell->op_val=num;
@@ -177,7 +177,7 @@ bool assign_cell(char* cellAddress,char* expr,Sheet* sheet){
                     cell->cell1=-1;
                     cell->cell2=-1;
                     cell->op_val=0;
-                    return;
+                    return true;
                 }
 
                 cell->cell2=get_hash(val2,sheet->cols);

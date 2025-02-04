@@ -5,7 +5,8 @@
 #include "Node.h"
 #include "display.h"
 #include "Sheet.h"
-
+#include "Functions.h"
+#include "hash.h"
 //Input-> parsing-> assign cell properties-> call add_edge -> call recalculate -> display file
 //                                                 ^Nimit            ^Gogo
 /*

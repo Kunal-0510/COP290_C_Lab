@@ -1,12 +1,4 @@
 #include "display.h"
-#include "hash.h"
-#include <stdio.h>
-#include <stdlib.h>
-#include <math.h>
-#include <string.h>
-#include "Node.h"
-#include "Sheet.h"
-#include "hash.h"
 
 int min(int a, int b){
     return (a>b) ? b : a;
@@ -65,33 +57,33 @@ void display_sheet(struct Sheet* sheet){ // args: The sheet itself
         }
     }
 }  // Displays the excel sheet in 10*10 grid
-void scroll_up(struct Sheet* sheet){
+void scroll_up(Sheet* sheet){
     sheet->rowtop= min(sheet->rowtop+10, sheet->rows);
     display_sheet(sheet);
 }
 
-void scroll_down(struct Sheet* sheet){
+void scroll_down( Sheet* sheet){
     sheet->rowtop= min(sheet->rowtop-10, 0);
     display_sheet(sheet);
 }
 
-void scroll_right(struct Sheet* sheet){
+void scroll_right(Sheet* sheet){
     sheet->coltop= min(sheet->coltop+10, sheet->cols);
     display_sheet(sheet);
 }
 
-void scroll_left(struct Sheet* sheet){
+void scroll_left(Sheet* sheet){
     sheet->coltop= min(sheet->coltop-10, 0);
     display_sheet(sheet);
 }
 
-void disable_display(struct Sheet*  sheet){
+void disable_display( Sheet*  sheet){
     sheet->display=0;
 }
-void enable_display(struct Sheet* sheet){
+void enable_display(Sheet* sheet){
     sheet->display=1;
 }
-void scroll_to(char* cell, struct Sheet* sheet){
+void scroll_to(char* cell,  Sheet* sheet){
     char letters[4];
     char numbers[4];
     separate_cell(cell, letters, numbers);
