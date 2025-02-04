@@ -1,14 +1,6 @@
 #include <stdio.h>
 #include "Functions.h"
-#include <stdio.h>
-#include <math.h>
-#include <limits.h>
-#include <time.h>
-#include "hash.h"
-#include "linkedlist.h"
-#include "Queue.h"
-#include "Node.h"
-#include "Sheet.h"
+
 /*
 0- constant 
 1- arithmetic
@@ -204,8 +196,6 @@ int STDEV( int from_row,int from_col,int to_row,int to_col,int max_col, Sheet* s
 }
 
 void SLEEP(Node* node, Sheet* sheet){
-
-    
     if(node->cell1==-1){
         int sec= node->op_val;
         if(sec>0){
@@ -283,28 +273,18 @@ int CHECK_CYCLE( Sheet* sheet ){
     free(q);
 
     for( int i = 0 ; i<max_cols ; i++ ){
-
         int count = 0;
-
         for( int j = 0 ; j<max_cols ; j++ ){
-
             LinkedList* inNeighbours = (sheet->matrix + i*max_cols + j )->InNeighbours;
-
             while( inNeighbours!=NULL ){
-
                 count++;
                 inNeighbours = inNeighbours->next;
-
             }
-
         }
-
     }
-
     if( n == max_cols*max_cols ){
         return 1;
     }
-
     return 0;
 
 }
@@ -314,13 +294,15 @@ int add_edge(Node* node, Sheet* sheet){
     int temp_size= node->in_size;
     node->InNeighbours= NULL;
     node->in_size=0;
-    
-    if(node->type<=4){
+    LinkedList* tempList = NULL; // list of cells which did not have the current node in their outneighbour prior to the add edge operation
+
+    if(node->type<=1){
         if(node->cell1!=-1){
             node->InNeighbours= add_node(node->InNeighbours, node->cell1);
             node->in_size++;
             if(find_node(((sheet->matrix)+(node->cell1))->OutNeighbours, node->id)==0){
                 ((sheet->matrix)+node->cell1)->OutNeighbours= add_node(((sheet->matrix)+node->cell1)->OutNeighbours, node->id);
+                tempList= add_node(tempList, node->cell1);
             }
         }
         if(node->cell2!=-1){
@@ -328,6 +310,7 @@ int add_edge(Node* node, Sheet* sheet){
             node->in_size++;
             if(find_node(((sheet->matrix)+(node->cell2))->OutNeighbours, node->id)==0){
                 ((sheet->matrix)+node->cell2)->OutNeighbours= add_node(((sheet->matrix)+node->cell2)->OutNeighbours, node->id);
+                tempList= add_node(tempList, node->cell2);
             }
         }
     }
@@ -347,16 +330,27 @@ int add_edge(Node* node, Sheet* sheet){
                 node->in_size++;
                 if(find_node(((sheet->matrix)+cell)->OutNeighbours, node->id)==0){
                     ((sheet->matrix)+ cell)->OutNeighbours= add_node(((sheet->matrix)+ cell)->OutNeighbours, node->id);
+                    tempList= add_node(tempList, cell);
                 }
             }
         }
     }
     if(CHECK_CYCLE(sheet)==1){
-            // will do this later
+            LinkedList* tmp= tempList;
+            while(tmp!=NULL){
+                delete_node(((sheet->matrix)+tmp->data)->OutNeighbours, node->id);
+                tmp=tmp->next;
+            }
+            free_list(tmp);
+            LinkedList* tmp2= node->InNeighbours;
+            node->InNeighbours= curr_head;
+            free_list(tmp2);
+            node->in_size= temp_size;
             return 0;
         }
     else{
         free_list(curr_head);
+        free_list(tempList);
         return 1;
     }
 
@@ -429,7 +423,6 @@ void recalculate_node( Node* node , Sheet* sheet ){
         free(head);
 
     }
-    
     free(q1);
 
 }

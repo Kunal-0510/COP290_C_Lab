@@ -1,5 +1,13 @@
 #ifndef FUNCTIONS_H
 #define FUNCTIONS_H
+#include <math.h>
+#include <limits.h>
+#include <time.h>
+#include "hash.h"
+#include "linkedlist.h"
+#include "Queue.h"
+#include "Node.h"
+#include "Sheet.h"
 
 /*
 Master function accepts arguments as strings of the cell name , the type of operation to be done , the matrix 
