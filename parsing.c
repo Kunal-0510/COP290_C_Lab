@@ -297,7 +297,8 @@ bool parseInput(char* input,Sheet* sheet){
     if(!assign_cell(cellAddress,expression,sheet)){
         return false;
     }
-
+    //add_edge()
+    //recalculate()
     return true;
 
 }
