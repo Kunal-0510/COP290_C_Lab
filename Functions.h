@@ -1,5 +1,6 @@
 #ifndef FUNCTIONS_H
 #define FUNCTIONS_H
+#include <stdio.h>
 #include <math.h>
 #include <limits.h>
 #include <time.h>
