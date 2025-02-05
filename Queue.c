@@ -16,37 +16,39 @@ int isEmpty( Queue* queue ){
     return 0; 
 
 }
-void QueueNodeInit( QueueNode* qNode ){
 
+void QueueNodeInit(QueueNode* qNode) {
+    if (qNode == NULL) return;  // Prevent segfaults
     qNode->node = NULL;
     qNode->next = NULL;
-
 }
 
-void QueuePush( QueueNode* node, Queue* queue){
+void QueuePush(QueueNode* node, Queue* queue) {
 
-    if( isEmpty( queue ) == 1 ){
-        
+    node->next = NULL;  // Important to prevent undefined behavior
+    // printf("I reached here!!11111\n");
+    if (isEmpty(queue)==1) {
         queue->head = node;
         queue->tail = node;
-
-        return;
-
+    } else {
+        // printf("I reached here!!11112\n");
+        
+        queue->tail->next = node;
+        // printf("I reached here!!11113\n");
     }
-
-    queue->tail->next = node;
-    queue->tail = node;
-
 }
 
-QueueNode* QueuePop( Queue* queue ){
-    
-    if( isEmpty( queue ) == 1 ){
+QueueNode* QueuePop(Queue* queue) {
+    if (isEmpty(queue)) {
         return NULL;
     }
+
     QueueNode* temp = queue->head;
     queue->head = temp->next;
-    
-    return temp;
 
+    if (queue->head == NULL) {  // If queue becomes empty
+        queue->tail = NULL;
+    }
+
+    return temp;  // Caller must free the node after use
 }

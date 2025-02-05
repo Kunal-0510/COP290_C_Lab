@@ -218,28 +218,29 @@ void SLEEP(Node* node, Sheet* sheet){
 }
 
 int CHECK_CYCLE( Sheet* sheet ){
-    
+    // printf("I reached here!!111\n");
     Queue* q = (Queue*)(malloc(sizeof(Queue)));
     QueueInit(q);
     int max_cols = sheet->cols;
     int max_rows = sheet->rows;
-
+    // printf("I reached here!!112\n");
     for( int i = 0 ; i<max_rows ; i++ ){
 
         for( int j = 0 ; j<max_cols ; j++ ){
-
+            // printf("I reached here!!11 i: %d j: %d\n", i, j);
             Node* node = (sheet->matrix + i*max_cols + j );
-
+            // printf("insize:%d\n", node->in_size);
             if( node->in_size == 0 ){
 
                 QueueNode* newNode = (QueueNode*)(malloc(sizeof(QueueNode)));
                 QueueNodeInit(newNode);
+                // printf("I reached here!!1111\n");
                 newNode->node = (sheet->matrix + i*max_cols + j );
-                QueuePush(q,newNode);
-
+                // printf("I reached here!!1112\n");
+                QueuePush(newNode,q);
+                // printf("I reached here!!1113\n");
             }
         }
-
     }
 
     int n = 0;
@@ -289,87 +290,116 @@ int CHECK_CYCLE( Sheet* sheet ){
 }
 
 int add_edge(Node* node, Sheet* sheet){
-    LinkedList* curr_head= node->InNeighbours;
-    int temp_size= node->in_size;
-    node->InNeighbours= NULL;
-    node->in_size=0;
-    LinkedList* tempList = NULL; // list of cells which did not have the current node in their outneighbour prior to the add edge operation
-
-    if(node->type<=1){
-        if(node->cell1!=-1){
-            node->InNeighbours= add_node(node->InNeighbours, node->cell1);
-            node->in_size++;
-            if(find_node(((sheet->matrix)+(node->cell1))->OutNeighbours, node->id)==0){
-                ((sheet->matrix)+node->cell1)->OutNeighbours= add_node(((sheet->matrix)+node->cell1)->OutNeighbours, node->id);
-                tempList= add_node(tempList, node->cell1);
-            }
-        }
-        if(node->cell2!=-1){
-            node->InNeighbours= add_node(node->InNeighbours, node->cell2);
-            node->in_size++;
-            if(find_node(((sheet->matrix)+(node->cell2))->OutNeighbours, node->id)==0){
-                ((sheet->matrix)+node->cell2)->OutNeighbours= add_node(((sheet->matrix)+node->cell2)->OutNeighbours, node->id);
-                tempList= add_node(tempList, node->cell2);
-            }
-        }
-    }
-    else{
-        int max_col = sheet->cols;
-        int index_1 = node->cell1;
-        int index_2 = node->cell2;
-        int from_col = index_1%max_col;
-        int to_col = index_2%max_col;
-        int from_row = index_1/max_col;
-        int to_row = index_2/max_col;
-
-        for( int i = from_row; i <= to_row; i++ ){
-            for( int j = from_col; j<=to_col; j++ ){
-                int cell= i*max_col+j;
+    if(node->type>0){
+        // printf("I reached here!!13\n");
+        LinkedList* curr_head= node->InNeighbours;
+        int temp_size= node->in_size;
+        node->InNeighbours= NULL;
+        node->in_size=0;
+        LinkedList* tempList = NULL; // list of cells which did not have the current node in their outneighbour prior to the add edge operation
+        // printf("I reached here!!14\n");
+        if(node->type==1){
+            if(node->cell1!=-1){
                 node->InNeighbours= add_node(node->InNeighbours, node->cell1);
                 node->in_size++;
-                if(find_node(((sheet->matrix)+cell)->OutNeighbours, node->id)==0){
-                    ((sheet->matrix)+ cell)->OutNeighbours= add_node(((sheet->matrix)+ cell)->OutNeighbours, node->id);
-                    tempList= add_node(tempList, cell);
+                if(find_node(((sheet->matrix)+(node->cell1))->OutNeighbours, node->id)==0){
+                    ((sheet->matrix)+node->cell1)->OutNeighbours= add_node(((sheet->matrix)+node->cell1)->OutNeighbours, node->id);
+                    tempList= add_node(tempList, node->cell1);
+                }
+            }
+            if(node->cell2!=-1){
+                node->InNeighbours= add_node(node->InNeighbours, node->cell2);
+                node->in_size++;
+                if(find_node(((sheet->matrix)+(node->cell2))->OutNeighbours, node->id)==0){
+                    ((sheet->matrix)+node->cell2)->OutNeighbours= add_node(((sheet->matrix)+node->cell2)->OutNeighbours, node->id);
+                    tempList= add_node(tempList, node->cell2);
                 }
             }
         }
-    }
-    if(CHECK_CYCLE(sheet)==1){
-            LinkedList* tmp= tempList;
-            while(tmp!=NULL){
-                delete_node(((sheet->matrix)+tmp->data)->OutNeighbours, node->id);
-                tmp=tmp->next;
+        
+        else{
+            int max_col = sheet->cols;
+            int index_1 = node->cell1;
+            int index_2 = node->cell2;
+            int from_col = index_1%max_col;
+            int to_col = index_2%max_col;
+            int from_row = index_1/max_col;
+            int to_row = index_2/max_col;
+
+            for( int i = from_row; i <= to_row; i++ ){
+                for( int j = from_col; j<=to_col; j++ ){
+                    int cell= i*max_col+j;
+                    node->InNeighbours= add_node(node->InNeighbours, node->cell1);
+                    node->in_size++;
+                    if(find_node(((sheet->matrix)+cell)->OutNeighbours, node->id)==0){
+                        ((sheet->matrix)+ cell)->OutNeighbours= add_node(((sheet->matrix)+ cell)->OutNeighbours, node->id);
+                        tempList= add_node(tempList, cell);
+                    }
+                }
             }
-            free_list(tmp);
-            LinkedList* tmp2= node->InNeighbours;
-            node->InNeighbours= curr_head;
-            free_list(tmp2);
-            node->in_size= temp_size;
-            return 0;
         }
+        // printf("I reached here!!15\n");
+        if(CHECK_CYCLE(sheet)==1){
+                LinkedList* tmp= tempList;
+                while(tmp!=NULL){
+                    delete_node(((sheet->matrix)+tmp->data)->OutNeighbours, node->id);
+                    tmp=tmp->next;
+                }
+                free_list(tmp);
+                LinkedList* tmp2= node->InNeighbours;
+                node->InNeighbours= curr_head;
+                free_list(tmp2);
+                node->in_size= temp_size;
+                return 0;
+            }
+        else{
+            free_list(curr_head);
+            free_list(tempList);
+            return 1;
+        }
+        // printf("I reached here!!16\n");
+    }
     else{
-        free_list(curr_head);
-        free_list(tempList);
         return 1;
     }
+    
 
 }
 
-/* Doiing recalculation on the nodes not the entire sheet*/
+/* Doing recalculation on the nodes not the entire sheet*/
 
 void recalculate_node( Node* node , Sheet* sheet ){
+    // printf("I reached here!!1\n");
 
-    Queue* q = (Queue*)(malloc(sizeof(Queue)));
+    Queue* q = (Queue*)malloc(sizeof(Queue));
+    if (q == NULL) {
+        fprintf(stderr, "Memory allocation failed for Queue q\n");
+        return;
+    }
     QueueInit(q);
+
     int max_cols = sheet->cols;
-    int max_rows = sheet->rows;
 
-    QueueNode* n1 = (QueueNode*)(malloc (sizeof(QueueNode)));
+    QueueNode* n1 = (QueueNode*)malloc(sizeof(QueueNode));
+    if (n1 == NULL) {
+        fprintf(stderr, "Memory allocation failed for QueueNode n1\n");
+        free(q);
+        return;
+    }
     QueueNodeInit(n1);
-    QueuePush(n1,sheet);
+    n1->node = node;
+    QueuePush(n1, q);
 
-    Queue* q1 = (Queue*)(malloc(sizeof(Queue)));
+    Queue* q1 = (Queue*)malloc(sizeof(Queue));
+    if (q1 == NULL) {
+        fprintf(stderr, "Memory allocation failed for Queue q1\n");
+        free(n1);
+        free(q);
+        return;
+    }
     QueueInit(q1);
+
+    // printf("I reached here!!2\n");
 
     while( isEmpty(q) == 0 ){
 

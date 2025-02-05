@@ -39,13 +39,16 @@ int main(int argc, char* argv[]) {
         fprintf(stderr, "Memory allocation failed for Sheet.\n");
         return EXIT_FAILURE;
     }
-
+    clock_t st = clock();
     create_sheet(rows, cols, sheet); // Initialize the sheet
     display_sheet(sheet);      // Display the sheet (assuming this function is defined)
-    printf("[0.0] (ok) > ");
+    clock_t en = clock();
+    double el = ((double)(en - st)) / CLOCKS_PER_SEC;
+    printf("[%0.1f] (ok) > ", el);
 
     char input[MAX_INPUT_LENGTH];
     while (1) {
+        // printf("%d\n", strlen(input));
         if (!fgets(input, MAX_INPUT_LENGTH, stdin)) {
             printf("[0.0] (error reading input) >");
             continue;
@@ -75,10 +78,14 @@ int main(int argc, char* argv[]) {
             scroll_to(cell, sheet);
         } else {
             // Assume it's a formula or operation
+            // printf("%d\n", strlen(input));
             int result = parseInput(input, sheet); // Assuming parse_input is implemented in parser.h
-            if (result != 0) {
+            if (result == 0) {
                 printf("[0.0] (error parsing input) >");
                 continue;
+            }
+            else{
+                display_sheet(sheet);
             }
         }
 
