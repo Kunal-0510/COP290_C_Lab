@@ -150,7 +150,6 @@ bool assign_cell(char* cellAddress, char* expr, Sheet* sheet) {
                     cell->cell1 = -1;
                     cell->cell2 = -1;
                     cell->op_val = 0;
-                    return true;
                 }
                 cell->op_val = num;
                 cell->cell2 = -1;
@@ -166,7 +165,7 @@ bool assign_cell(char* cellAddress, char* expr, Sheet* sheet) {
                     cell->cell1 = -1;
                     cell->cell2 = -1;
                     cell->op_val = 0;
-                    return true;
+
                 }
                 cell->cell2 = get_hash(val2, sheet->cols);
             } else if (isValidNumber(val2)) {
@@ -202,12 +201,12 @@ bool assign_cell(char* cellAddress, char* expr, Sheet* sheet) {
         } else {
             if (strcmp(val1, "SLEEP") == 0) {
                 if (isValidCell(val2)) {
-                    type = 10;
+                    type = 7;
                     cell->cell1 = get_hash(val2, sheet->cols);
                     cell->cell2 = -1;
                     cell->op_val = 0;
                 } else if (isValidNumber(val2)) {
-                    type = 10;
+                    type = 7;
                     cell->cell1 = -1;
                     cell->cell2 = -1;
                     cell->op_val = atoi(val2);
@@ -217,11 +216,11 @@ bool assign_cell(char* cellAddress, char* expr, Sheet* sheet) {
                 char* second = NULL;
 
                 if (parse(val2, &first, &second, ':') && isValidRange(first, second, sheet)) {
-                    if (strcmp(val1, "MIN") == 0) type = 5;
-                    else if (strcmp(val1, "MAX") == 0) type = 6;
-                    else if (strcmp(val1, "AVG") == 0) type = 7;
-                    else if (strcmp(val1, "SUM") == 0) type = 8;
-                    else if (strcmp(val1, "STDEV") == 0) type = 9;
+                    if (strcmp(val1, "MIN") == 0) type = 2;
+                    else if (strcmp(val1, "MAX") == 0) type = 3;
+                    else if (strcmp(val1, "AVG") == 0) type = 4;
+                    else if (strcmp(val1, "SUM") == 0) type = 5;
+                    else if (strcmp(val1, "STDEV") == 0) type = 6;
 
                     cell->cell1 = get_hash(first, sheet->cols);
                     cell->cell2 = get_hash(second, sheet->cols);
@@ -235,7 +234,7 @@ bool assign_cell(char* cellAddress, char* expr, Sheet* sheet) {
     }
 
     cell->type = type;
-    // printf("type: %d\n" , cell->type);
+    printf("type: %d\n" , cell->type);
 
     if (add_edge(cell, sheet) == 0) {
         // printf("I reached here!!fe\n");

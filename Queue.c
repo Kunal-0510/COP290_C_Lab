@@ -52,3 +52,19 @@ QueueNode* QueuePop(Queue* queue) {
 
     return temp;  // Caller must free the node after use
 }
+void PrintQueue(Queue* queue) {
+    if (isEmpty(queue)) {
+        printf("Queue is empty\n");
+        return;
+    }
+
+    QueueNode* current = queue->head;
+    int count = 0;
+    printf("Queue contents:\n");
+    while (current != NULL) {
+        printf("Node %d: ID = %d\n", count, current->node->id);
+        current = current->next;
+        count++;
+    }
+    printf("Total nodes in queue: %d\n", count);
+}

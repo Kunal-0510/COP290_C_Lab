@@ -47,11 +47,14 @@ int MASTER( Node* node, Sheet* sheet ){
             }
         }
         else if(node->operator=='*'){
-            if(node->cell2==-1){
-                node->val= ((sheet->matrix+ node->cell1)->val) * (node->op_val);
+            if(node->cell1==-1){
+                node->val= (sheet->matrix+ node->cell2)->val * node->op_val;
+            }
+            else if(node->cell2==-1){
+                node->val= (sheet->matrix+ node->cell1)->val * node->op_val;
             }
             else{
-                node->val= ((sheet->matrix+ node->cell1)->val) * ((sheet->matrix+ node->cell2)->val);
+                node->val= (sheet->matrix+ node->cell1)->val * (sheet->matrix+ node->cell2)->val;
             }
         }
         else if(node->operator=='/'){ //TODO: Handle division by zero.
@@ -263,6 +266,7 @@ int CHECK_CYCLE( Sheet* sheet ){
                 QueuePush(newNode,q);
 
             }
+            top=top->next; //Gogo mistake counter:4
 
         }
 
@@ -296,8 +300,7 @@ int add_edge(Node* node, Sheet* sheet){
         int temp_size= node->in_size;
         node->InNeighbours= NULL;
         node->in_size=0;
-        LinkedList* tempList = NULL; // list of cells which did not have the current node in their outneighbour prior to the add edge operation
-        // printf("I reached here!!14\n");
+        LinkedList* tempList = NULL; 
         if(node->type==1){
             if(node->cell1!=-1){
                 node->InNeighbours= add_node(node->InNeighbours, node->cell1);
@@ -329,7 +332,7 @@ int add_edge(Node* node, Sheet* sheet){
             for( int i = from_row; i <= to_row; i++ ){
                 for( int j = from_col; j<=to_col; j++ ){
                     int cell= i*max_col+j;
-                    node->InNeighbours= add_node(node->InNeighbours, node->cell1);
+                    node->InNeighbours= add_node(node->InNeighbours, cell);
                     node->in_size++;
                     if(find_node(((sheet->matrix)+cell)->OutNeighbours, node->id)==0){
                         ((sheet->matrix)+ cell)->OutNeighbours= add_node(((sheet->matrix)+ cell)->OutNeighbours, node->id);
@@ -339,6 +342,8 @@ int add_edge(Node* node, Sheet* sheet){
             }
         }
         // printf("I reached here!!15\n");
+        printf("indegree of %d: %d\n", node->id, node->in_size);
+        print_list(node->InNeighbours);
         if(CHECK_CYCLE(sheet)==1){
                 LinkedList* tmp= tempList;
                 while(tmp!=NULL){
@@ -419,6 +424,7 @@ void recalculate_node( Node* node , Sheet* sheet ){
                 QueuePush(newNode,q);
 
             }
+            top=top->next;
 
         }
 
@@ -444,7 +450,7 @@ void recalculate_node( Node* node , Sheet* sheet ){
         }
 
     }
-
+    PrintQueue(q1);
     while( isEmpty(q1) == 0 ){
 
         QueueNode* head = QueuePop(q1);

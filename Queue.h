@@ -21,5 +21,6 @@ QueueNode* QueuePop( Queue* queue );
 void QueueInit( Queue* queue );
 void QueueNodeInit( QueueNode* node );
 int isEmpty( Queue* queue );
+void PrintQueue(Queue* queue);
 
 #endif
