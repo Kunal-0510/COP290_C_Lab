@@ -3,6 +3,9 @@
 int min(int a, int b){
     return (a>b) ? b : a;
 }
+int max(int a, int b){
+    return (a<b) ? b : a;
+}
 
 char* mapping(int col){//Args: Column number
     
@@ -63,7 +66,7 @@ void scroll_up(Sheet* sheet){
 }
 
 void scroll_down( Sheet* sheet){
-    sheet->rowtop= min(sheet->rowtop-10, 0);
+    sheet->rowtop= max(sheet->rowtop-10, 0);
     display_sheet(sheet);
 }
 
@@ -73,7 +76,7 @@ void scroll_right(Sheet* sheet){
 }
 
 void scroll_left(Sheet* sheet){
-    sheet->coltop= min(sheet->coltop-10, 0);
+    sheet->coltop= max(sheet->coltop-10, 0);
     display_sheet(sheet);
 }
 
@@ -93,5 +96,5 @@ void scroll_to(char* cell,  Sheet* sheet){
     sheet->rowtop= row;
     sheet->coltop= col;
 
-    disable_display(sheet);
+    display_sheet(sheet);
 }

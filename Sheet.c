@@ -1,8 +1,8 @@
 #include "Sheet.h"
 
 // Function to create a matrix of Nodes
-struct Node* create_node_matrix(int R, int C) {
-    struct Node* matrix = (struct Node*)malloc(R * C * sizeof(struct Node));
+Node* create_node_matrix(int R, int C) {
+    Node* matrix = (Node*)malloc(R * C * sizeof(struct Node));
     if (!matrix) {
         fprintf(stderr, "Memory allocation failed for matrix.\n");
         exit(EXIT_FAILURE);
