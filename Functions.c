@@ -367,8 +367,6 @@ int add_edge(Node* node, Sheet* sheet){
     else{
         return 1;
     }
-    
-
 }
 
 /* Doing recalculation on the nodes not the entire sheet*/
