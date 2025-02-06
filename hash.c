@@ -22,7 +22,7 @@ void separate_cell(char *input, char *letters, char *numbers) {//Seperates the c
 int get_column(char *letters) {//gives the column number
     int column = 0;
     for (int i = 0; letters[i] != '\0'; i++) {
-        column = column * 26 + (letters[i] - 'A' + 1);
+        column = column * 26 + (letters[i] - 'A'+1);
     }
     return column;
 }

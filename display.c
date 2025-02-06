@@ -26,13 +26,17 @@ char* mapping(int col){//Args: Column number
 
     else{
 
-        int x= col-(26*26)-26;
+        // int x= col-(26*26)-26;
         int mod1= col%(26);
-        int mod2= (col/(26))%26;
-        int div= col/(26*26);
+        col=col/26;
+        col--;
+        int mod2= (col)%26;
+        col=col/26;
+        col--;
+        int div= (col)%26;
         result[2] = 'A'+mod1;
         result[1] = 'A'+mod2;
-        result[0] = 'A'+div-1;
+        result[0] = 'A'+div;
         result[3] = '\0';
 
     }
@@ -90,6 +94,7 @@ void scroll_to(char* cell,  Sheet* sheet){
     char letters[4];
     char numbers[4];
     separate_cell(cell, letters, numbers);
+    // printf("%s\n", letters);
     int row= atoi(numbers)-1;
     int col = get_column(letters)-1;
 
