@@ -366,6 +366,8 @@ int add_edge(Node* node, Sheet* sheet){
         // printf("I reached here!!16\n");
     }
     else{
+        free_list(node->InNeighbours);
+        node->in_size=0;
         return 1;
     }
 }
