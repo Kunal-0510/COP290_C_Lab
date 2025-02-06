@@ -289,7 +289,7 @@ int CHECK_CYCLE( Sheet* sheet ){
             (sheet->matrix + i*max_cols + j )->in_size = count;
         }
     }
-    if( n == max_cols*max_cols ){
+    if( n == max_cols*max_rows ){
         return 1;
     }
     return 0;
@@ -368,7 +368,7 @@ int add_edge(Node* node, Sheet* sheet){
         //         node->in_size= temp_size;
         //         return 0;
         //     }
-        
+       
         free_list(curr_head);
         free_list(tempList);
         printf("hello A1: ");
