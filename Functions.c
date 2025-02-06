@@ -6,10 +6,12 @@
 2- MIN
 3- MAX
 4- AVG
-5- SUM
+5- SUM 
 6- STDEV
 7- SLEEP
 */
+
+// A1> graph>  topological sort>  
 int MASTER( Node* node, Sheet* sheet ){
     int func_type= node->type;
     int max_col = sheet->cols;
