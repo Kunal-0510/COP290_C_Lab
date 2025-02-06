@@ -19,7 +19,7 @@ void push(Stack* stack, int value) {
 
 // Pop an element from the stack
 int pop(Stack* stack) {
-    if (isEmpty(stack)) {
+    if (isempty(stack)) {
         fprintf(stderr, "Stack underflow\n");
         return -1; // Return an error value
     }
@@ -31,13 +31,13 @@ int pop(Stack* stack) {
 }
 
 // Check if the stack is empty
-int isEmpty(Stack* stack) {
+int isempty(Stack* stack) {
     return (stack->top == NULL);
 }
 
 // Peek at the top element of the stack without popping it
 int peek(Stack* stack) {
-    if (isEmpty(stack)) {
+    if (isempty(stack)) {
         fprintf(stderr, "Stack is empty\n");
         return -1;
     }

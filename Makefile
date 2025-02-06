@@ -7,13 +7,13 @@ LDFLAGS = -lm   # Linker flag for math library
 TARGET = sheet
 
 # Source files
-SRC = Node.c Sheet.c linkedlist.c Queue.c hash.c validity.c parsing.c Functions.c display.c main.c
+SRC = Node.c Sheet.c linkedlist.c Queue.c hash.c validity.c parsing.c Functions.c display.c main.c stack.c
 
 # Object files (replace .c with .o for each source file)
 OBJ = $(SRC:.c=.o)
 
 # Header files
-HEADERS = Node.h Sheet.h linkedlist.h Queue.h hash.h validity.h parsing.h Functions.h display.h
+HEADERS = Node.h Sheet.h linkedlist.h Queue.h hash.h validity.h parsing.h Functions.h display.h stack.h
 
 # Default target
 all: $(TARGET)
@@ -44,10 +44,13 @@ validity.o: validity.c validity.h hash.h Sheet.h
 parsing.o: parsing.c parsing.h hash.h validity.h Node.h Sheet.h Functions.h
 	$(CC) $(CFLAGS) -c $<
 
-Functions.o: Functions.c Functions.h Node.h Sheet.h hash.h linkedlist.h Queue.h
+Functions.o: Functions.c Functions.h stack.h hash.h linkedlist.h Queue.h Node.h Sheet.h
 	$(CC) $(CFLAGS) -c $<
 
 display.o: display.c display.h Node.h Sheet.h
+	$(CC) $(CFLAGS) -c $<
+
+stack.o: stack.c stack.h
 	$(CC) $(CFLAGS) -c $<
 
 main.o: main.c $(HEADERS)

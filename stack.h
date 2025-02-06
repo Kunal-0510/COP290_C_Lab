@@ -19,7 +19,7 @@ typedef struct Stack {
 void StackInit(Stack* stack);
 void push(Stack* stack, int value);
 int pop(Stack* stack);
-int isEmpty(Stack* stack);
+int isempty(Stack* stack);
 int peek(Stack* stack);
 
 #endif

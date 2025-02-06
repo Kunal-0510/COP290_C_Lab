@@ -8,8 +8,9 @@
 #include "linkedlist.h"
 #include "Queue.h"
 #include "Node.h"
-#include "Sheet.h"
 #include "stack.h"
+#include "Sheet.h"
+#include <string.h>
 
 /*
 Master function accepts arguments as strings of the cell name , the type of operation to be done , the matrix 
@@ -64,6 +65,7 @@ void SLEEP( Node* node, Sheet* sheet );
 int CHECK_CYCLE( Sheet* Sheet );
 
 int add_edge(Node* node, Sheet* sheet);
+void topo_sort( int id , int* vis , Stack* st ,Sheet* sh );
 void recalculate_node( Node* node , Sheet* sheet );
 
 #endif
