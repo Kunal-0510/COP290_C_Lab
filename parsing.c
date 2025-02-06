@@ -236,7 +236,7 @@ bool assign_cell(char* cellAddress, char* expr, Sheet* sheet) {
     }
 
     cell->type = type;
-    // printf("type: %d\n" , cell->type);
+    printf("type: %d\n" , cell->type);
 
     if (add_edge(cell, sheet) == 0) {
         // printf("I reached here!!fe\n");
