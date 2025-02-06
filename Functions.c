@@ -392,8 +392,9 @@ void topo_sort( int id , int* vis , Stack* st ,Sheet* sh ){
     LinkedList* in = (sh->matrix+id)->OutNeighbours;
     while( in!= NULL ){
         if( vis[in->data]==0 ){
-            dfs( in->data , vis , st , sh );
+            topo_sort( in->data , vis , st , sh );
         }
+        in=in->next; //Gogo Stupidity counter- infinity
     }
     push( st, id );
 }
@@ -407,7 +408,7 @@ void recalculate_node( Node* node , Sheet* sheet ){
     memset( vis,0,sizeof(vis));
     topo_sort( node->id, vis, st, sheet );
 
-    while(isEmpty(st) == 0){
+    while(isempty(st) == 0){
         MASTER((sheet->matrix+pop(st)),sheet);
     }
 }
