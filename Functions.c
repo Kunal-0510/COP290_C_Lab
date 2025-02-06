@@ -261,7 +261,7 @@ int CHECK_CYCLE( Sheet* sheet ){
             if((sheet->matrix + top->data)->in_size == 0){
                 
                 QueueNode* newNode = (QueueNode*)(malloc(sizeof(QueueNode)));
-                QueueInit(newNode);
+                QueueNodeInit(newNode);
                 newNode->node = (sheet->matrix + top->data);
                 QueuePush(newNode,q);
 
@@ -276,7 +276,7 @@ int CHECK_CYCLE( Sheet* sheet ){
 
     free(q);
 
-    for( int i = 0 ; i<max_cols ; i++ ){
+    for( int i = 0 ; i<max_rows ; i++ ){
         for( int j = 0 ; j<max_cols ; j++ ){
             int count = 0;
             LinkedList* inNeighbours = (sheet->matrix + i*max_cols + j )->InNeighbours;
@@ -287,7 +287,7 @@ int CHECK_CYCLE( Sheet* sheet ){
             (sheet->matrix + i*max_cols + j )->in_size = count;
         }
     }
-    if( n == max_cols*max_cols ){
+    if( n == max_cols*max_rows ){
         return 1;
     }
     return 0;
@@ -383,7 +383,7 @@ void recalculate_node( Node* node , Sheet* sheet ){
     QueueInit(q);
 
     int max_cols = sheet->cols;
-
+    int max_rows = sheet->rows;
     QueueNode* n1 = (QueueNode*)malloc(sizeof(QueueNode));
     if (n1 == NULL) {
         fprintf(stderr, "Memory allocation failed for QueueNode n1\n");
@@ -418,7 +418,7 @@ void recalculate_node( Node* node , Sheet* sheet ){
             if((sheet->matrix + top->data)->in_size == 0){
                 
                 QueueNode* newNode = (QueueNode*)(malloc(sizeof(QueueNode)));
-                QueueInit(newNode);
+                QueueNodeInit(newNode);
                 newNode->node = (sheet->matrix + top->data);
                 QueuePush(newNode,q);
 
@@ -431,7 +431,7 @@ void recalculate_node( Node* node , Sheet* sheet ){
 
     free(q);
 
-    for( int i = 0 ; i<max_cols ; i++ ){
+    for( int i = 0 ; i<max_rows ; i++ ){
 
 
         for( int j = 0 ; j<max_cols ; j++ ){
