@@ -145,7 +145,9 @@ bool assign_cell(char* cellAddress, char* expr, Sheet* sheet) {
             if (isValidCell(val2)) {
                 cell->cell2 = get_hash(val2, sheet->cols);
                 cell->op_val = 0;
-            } else if (isValidNumber(val2)) {
+            }
+            
+            else if (isValidNumber(val2)) {
                 int num = atoi(val2);
                 if (num == 0 && op == '*') {
                     type = 0;
@@ -156,7 +158,9 @@ bool assign_cell(char* cellAddress, char* expr, Sheet* sheet) {
                 cell->op_val = num;
                 cell->cell2 = -1;
             }
-        } else if (isValidNumber(val1)) {
+        }
+        
+        else if (isValidNumber(val1)) {
             int num = atoi(val1);
             cell->op_val = num;
             cell->cell1 = -1;
@@ -170,7 +174,9 @@ bool assign_cell(char* cellAddress, char* expr, Sheet* sheet) {
 
                 }
                 cell->cell2 = get_hash(val2, sheet->cols);
-            } else if (isValidNumber(val2)) {
+            }
+            
+            else if (isValidNumber(val2)) {
                 type = 0;
                 int num1 = atoi(val1);
                 int num2 = atoi(val2);
@@ -185,8 +191,12 @@ bool assign_cell(char* cellAddress, char* expr, Sheet* sheet) {
                 cell->cell2 = -1;
                 cell->op_val = ans;
             }
-        } else type = -1;
-    } else {
+        } 
+        
+        else type = -1;
+    } 
+    
+    else {
         // printf("I am here\n");
         if (val2[0] == '\0') {
             if (isValidNumber(val1)) {
@@ -194,26 +204,35 @@ bool assign_cell(char* cellAddress, char* expr, Sheet* sheet) {
                 cell->op_val = atoi(val1);
                 // printf("%d %d\n", cell->op_val, cell->id);
                 // printf("I am here\n");
-            } else if (isValidCell(val1)) {
-                type = 0;
+            } 
+            
+            else if (isValidCell(val1)) {
+                type = 1;
                 cell->cell1 = get_hash(val1, sheet->cols);
                 cell->cell2 = -1;
                 cell->op_val = 0;
+                cell->operator='+';
             }
-        } else {
+        } 
+        
+        else {
             if (strcmp(val1, "SLEEP") == 0) {
                 if (isValidCell(val2)) {
                     type = 7;
                     cell->cell1 = get_hash(val2, sheet->cols);
                     cell->cell2 = -1;
                     cell->op_val = 0;
-                } else if (isValidNumber(val2)) {
+                } 
+                
+                else if (isValidNumber(val2)) {
                     type = 7;
                     cell->cell1 = -1;
                     cell->cell2 = -1;
                     cell->op_val = atoi(val2);
                 }
-            } else {
+            } 
+            
+            else {
                 char* first = NULL;
                 char* second = NULL;
 
