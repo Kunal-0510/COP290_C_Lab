@@ -1,7 +1,6 @@
 #ifndef DISPLAY_H
 #define DISPLAY_H
 
-#include "hash.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
