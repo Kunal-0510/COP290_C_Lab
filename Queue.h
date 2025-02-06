@@ -4,12 +4,10 @@
 #include "Node.h"
 #include <stdio.h>
 
-typedef struct QueueNode{
-
+typedef struct QueueNode {
     Node* node;
-    Node* next;
-
-}QueueNode;
+    struct QueueNode* next;  // Fix: Correct type for next
+} QueueNode;
 
 typedef struct Queue{
 
@@ -23,5 +21,6 @@ QueueNode* QueuePop( Queue* queue );
 void QueueInit( Queue* queue );
 void QueueNodeInit( QueueNode* node );
 int isEmpty( Queue* queue );
+void PrintQueue(Queue* queue);
 
 #endif

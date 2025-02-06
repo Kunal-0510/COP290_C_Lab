@@ -63,5 +63,6 @@ void SLEEP( Node* node, Sheet* sheet );
 int CHECK_CYCLE( Sheet* Sheet );
 
 int add_edge(Node* node, Sheet* sheet);
+void recalculate_node( Node* node , Sheet* sheet );
 
 #endif

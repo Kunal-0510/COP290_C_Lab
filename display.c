@@ -3,6 +3,9 @@
 int min(int a, int b){
     return (a>b) ? b : a;
 }
+int max(int a, int b){
+    return (a<b) ? b : a;
+}
 
 char* mapping(int col){//Args: Column number
     
@@ -23,13 +26,17 @@ char* mapping(int col){//Args: Column number
 
     else{
 
-        int x= col-(26*26)-26;
+        // int x= col-(26*26)-26;
         int mod1= col%(26);
-        int mod2= (col/(26))%26;
-        int div= col/(26*26);
+        col=col/26;
+        col--;
+        int mod2= (col)%26;
+        col=col/26;
+        col--;
+        int div= (col)%26;
         result[2] = 'A'+mod1;
         result[1] = 'A'+mod2;
-        result[0] = 'A'+div-1;
+        result[0] = 'A'+div;
         result[3] = '\0';
 
     }
@@ -63,7 +70,7 @@ void scroll_up(Sheet* sheet){
 }
 
 void scroll_down( Sheet* sheet){
-    sheet->rowtop= min(sheet->rowtop-10, 0);
+    sheet->rowtop= max(sheet->rowtop-10, 0);
     display_sheet(sheet);
 }
 
@@ -73,7 +80,7 @@ void scroll_right(Sheet* sheet){
 }
 
 void scroll_left(Sheet* sheet){
-    sheet->coltop= min(sheet->coltop-10, 0);
+    sheet->coltop= max(sheet->coltop-10, 0);
     display_sheet(sheet);
 }
 
@@ -87,11 +94,12 @@ void scroll_to(char* cell,  Sheet* sheet){
     char letters[4];
     char numbers[4];
     separate_cell(cell, letters, numbers);
+    // printf("%s\n", letters);
     int row= atoi(numbers)-1;
     int col = get_column(letters)-1;
 
     sheet->rowtop= row;
     sheet->coltop= col;
 
-    disable_display(sheet);
+    display_sheet(sheet);
 }

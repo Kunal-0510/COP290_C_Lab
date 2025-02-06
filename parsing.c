@@ -1,6 +1,7 @@
 #include "parsing.h"
 
 bool parse(char* input, char** first, char** second, char symbol) {
+    
     char* sign = strchr(input, symbol);
 
     if (!sign || sign == input || *(sign + 1) == '\0') {
@@ -12,6 +13,7 @@ bool parse(char* input, char** first, char** second, char symbol) {
 
     *first = (char*)malloc(firstLength + 1);
     *second = (char*)malloc(secondLength + 1);
+
 
     if (!*first || !*second) {
         free(*first);
@@ -30,6 +32,7 @@ bool parse(char* input, char** first, char** second, char symbol) {
         (*second)[i] = sign[1 + i];
     }
     (*second)[secondLength] = '\0';
+
 
     return true;
 }
@@ -119,192 +122,151 @@ Node* str_to_node(char* cellAddress,Sheet* sheet){
 
 }
 
-bool assign_cell(char* cellAddress,char* expr,Sheet* sheet){
+bool assign_cell(char* cellAddress, char* expr, Sheet* sheet) {
+    // printf("%s %s\n", cellAddress, expr);
+    Node* cell = str_to_node(cellAddress, sheet);
+    // printf("%d\n", cell->val);
 
-    Node* cell=str_to_node(cellAddress,sheet);
+    char op = '\0';
+    char val1[256] = {0};
+    char val2[256] = {0};
 
-    char op='\0';
-    char val1[15]={0};
-    char val2[15]={0};
+    parseExpr(expr, &op, val1, val2);
+    // printf("val1:%s val2:%s op:%c\n", val1, val2, op);
+    int type = -1;
 
-    parseExpr(expr, &op,val1,val2);
+    if (op != '\0') {
+        type = 1;
+        cell->operator = op;
 
-    int type=-1;
+        if (isValidCell(val1)) {
+            cell->cell1 = get_hash(val1, sheet->cols);
 
-    val2[0]='\0';
-
-    if(op!='\0'){
-
-        type=1;
-        cell->operator=op;
-
-        if(isValidCell(val1)){
-
-            cell->cell1=get_hash(val1,sheet->cols);
-
-            if(isValidCell(val2)){ //* cell cell
-                cell->cell2=get_hash(val2,sheet->cols);
-                cell->op_val=0;
+            if (isValidCell(val2)) {
+                cell->cell2 = get_hash(val2, sheet->cols);
+                cell->op_val = 0;
+            } else if (isValidNumber(val2)) {
+                int num = atoi(val2);
+                if (num == 0 && op == '*') {
+                    type = 0;
+                    cell->cell1 = -1;
+                    cell->cell2 = -1;
+                    cell->op_val = 0;
+                }
+                cell->op_val = num;
+                cell->cell2 = -1;
             }
-            else if(isValidNumber(val2)){ //* cell const
+        } else if (isValidNumber(val1)) {
+            int num = atoi(val1);
+            cell->op_val = num;
+            cell->cell1 = -1;
 
-                int num=atoi(val2);
+            if (isValidCell(val2)) {
+                if (num == 0 && op == '*') {
+                    type = 0;
+                    cell->cell1 = -1;
+                    cell->cell2 = -1;
+                    cell->op_val = 0;
 
-                if(num==0 && op=='*'){
-                    type=0;
-                    cell->cell1=-1;
-                    cell->cell2=-1;
-                    cell->op_val=0;
-                    return true;
                 }
+                cell->cell2 = get_hash(val2, sheet->cols);
+            } else if (isValidNumber(val2)) {
+                type = 0;
+                int num1 = atoi(val1);
+                int num2 = atoi(val2);
+                int ans = 0;
 
-                cell->op_val=num;
-                cell->cell2=-1;
+                if (op == '+') ans = num1 + num2;
+                else if (op == '-') ans = num1 - num2;
+                else if (op == '*') ans = num1 * num2;
+                else if (op == '/' && num2 != 0) ans = num1 / num2;
+
+                cell->cell1 = -1;
+                cell->cell2 = -1;
+                cell->op_val = ans;
             }
-        }
-        else if(isValidNumber(val1)){
-
-            int num=atoi(val1);
-
-            cell->op_val=num;
-            cell->cell1=-1;
-
-            if(isValidCell(val2)){ //* const cell
-
-                if(num==0 && op=='*'){
-
-                    type=0;
-                    cell->cell1=-1;
-                    cell->cell2=-1;
-                    cell->op_val=0;
-                    return true;
-                }
-
-                cell->cell2=get_hash(val2,sheet->cols);
+        } else type = -1;
+    } else {
+        // printf("I am here\n");
+        if (val2[0] == '\0') {
+            if (isValidNumber(val1)) {
+                type = 0;
+                cell->op_val = atoi(val1);
+                // printf("%d %d\n", cell->op_val, cell->id);
+                // printf("I am here\n");
+            } else if (isValidCell(val1)) {
+                type = 0;
+                cell->cell1 = get_hash(val1, sheet->cols);
+                cell->cell2 = -1;
+                cell->op_val = 0;
             }
-
-            else if(isValidNumber(val2)){ //* const const
-
-                type=0;
-                int num1=atoi(val1);
-                int num2=atoi(val2);
-
-                int ans=0;
-
-                if(op=='+'){
-                    ans=num1+num2;
+        } else {
+            if (strcmp(val1, "SLEEP") == 0) {
+                if (isValidCell(val2)) {
+                    type = 7;
+                    cell->cell1 = get_hash(val2, sheet->cols);
+                    cell->cell2 = -1;
+                    cell->op_val = 0;
+                } else if (isValidNumber(val2)) {
+                    type = 7;
+                    cell->cell1 = -1;
+                    cell->cell2 = -1;
+                    cell->op_val = atoi(val2);
                 }
-                else if(op=='-'){
-                    ans=num1-num2;
-                }
-                else if(op=='*'){
-                    ans=num1*num2;
-                }
-                else if(op=='/' && num2!=0){
-                    ans=num1/num2;
-                }
-
-                cell->cell1=-1;
-                cell->cell2=-1;
-                cell->op_val=ans;
-                
-            }
-        }
-        else type=-1;
-    }
-
-    else{
-
-        //* assignment
-        if(val2[0]=='\0'){
-
-            if(isValidNumber(val1)){
-                type=0;
-                cell->op_val= atoi(val1); //* cell = constant
-            }
-            else if(isValidCell(val1)){
-                type=0;
-                cell->cell1=get_hash(val1,sheet->cols);
-                cell->cell2=-1;
-                cell->op_val=0;
-            }
-        }
-
-        else{
-
-            //* val1 -> <func> val2-> <range>
-
-            if(strcmp(val1,"SLEEP")){
-
-                if(isValidCell(val2)){
-
-                    type=7;
-                    cell->cell1=get_hash(val1,sheet->cols);
-                    cell->cell2=-1;
-                    cell->op_val=0;
-
-                }
-                else if(isValidNumber(val2)){
-
-                    type=7;
-                    cell->cell1=-1;
-                    cell->cell2=-1;
-                    cell->op_val=atoi(val2);
-
-                }
-            }
-
-            else{
-
+            } else {
                 char* first = NULL;
                 char* second = NULL;
 
-                if (parse(val2, &first, &second, ':') && isValidRange(first, second,sheet)) {
+                if (parse(val2, &first, &second, ':') && isValidRange(first, second, sheet)) {
                     if (strcmp(val1, "MIN") == 0) type = 2;
                     else if (strcmp(val1, "MAX") == 0) type = 3;
                     else if (strcmp(val1, "AVG") == 0) type = 4;
                     else if (strcmp(val1, "SUM") == 0) type = 5;
                     else if (strcmp(val1, "STDEV") == 0) type = 6;
 
-                    cell->cell1=get_hash(first,sheet->cols);
-                    cell->cell2=get_hash(second,sheet->cols);
-                    cell->op_val=0;
+                    cell->cell1 = get_hash(first, sheet->cols);
+                    cell->cell2 = get_hash(second, sheet->cols);
+                    cell->op_val = 0;
                 }
 
                 free(first);
                 free(second);
             }
         }
-
     }
 
-    cell->type=type;
+    cell->type = type;
+    printf("type: %d\n" , cell->type);
 
-    if(add_edge(cell,sheet)==0){
+    if (add_edge(cell, sheet) == 0) {
+        // printf("I reached here!!fe\n");
         return false;
     }
+    // printf("I reached here!!fewS\n");
 
-    recalculate_node(cell,sheet);
-    free(cell);
+    recalculate_node(cell, sheet);
 
-    return (type!=-1);
+
+    return (type != -1);
 }
 
-bool parseInput(char* input,Sheet* sheet){
 
-    char cellAddress[15];
-    char expression[15];
 
-    if(!parse(input,&cellAddress,&expression,'=')){
+bool parseInput(char* input, Sheet* sheet) {
+    // printf("%zu %s\n", strlen(input), input);
+
+    char* cellAddress = NULL;
+    char* expression = NULL;
+
+    if (!parse(input, &cellAddress, &expression, '=')) {
         return false;
     }
+    
 
-    if(!assign_cell(cellAddress,expression,sheet)){
-        return false;
-    }
-    //add_edge()
-    //recalculate()
-    return true;
+    bool result = assign_cell(cellAddress, expression, sheet);
 
+    free(cellAddress);
+    free(expression);
+
+    return result;
 }
-

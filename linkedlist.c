@@ -58,3 +58,18 @@ int find_node(LinkedList* head, int hash){
     }
     return found;
 }
+
+void print_list(LinkedList* head) {
+    if (head == NULL) {
+        printf("List is empty\n");
+        return;
+    }
+
+    LinkedList* current = head;
+    printf("List contents: ");
+    while (current != NULL) {
+        printf("%d ", current->data);
+        current = current->next;
+    }
+    printf("\n");
+}
