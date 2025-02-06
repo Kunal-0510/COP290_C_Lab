@@ -14,6 +14,7 @@ bool parse(char* input, char** first, char** second, char symbol) {
     *first = (char*)malloc(firstLength + 1);
     *second = (char*)malloc(secondLength + 1);
 
+
     if (!*first || !*second) {
         free(*first);
         free(*second);
@@ -31,6 +32,7 @@ bool parse(char* input, char** first, char** second, char symbol) {
         (*second)[i] = sign[1 + i];
     }
     (*second)[secondLength] = '\0';
+
 
     return true;
 }
@@ -234,7 +236,7 @@ bool assign_cell(char* cellAddress, char* expr, Sheet* sheet) {
     }
 
     cell->type = type;
-    printf("type: %d\n" , cell->type);
+    // printf("type: %d\n" , cell->type);
 
     if (add_edge(cell, sheet) == 0) {
         // printf("I reached here!!fe\n");
@@ -243,7 +245,7 @@ bool assign_cell(char* cellAddress, char* expr, Sheet* sheet) {
     // printf("I reached here!!fewS\n");
 
     recalculate_node(cell, sheet);
-    // printf("I reached here!!fewS\n");
+
 
     return (type != -1);
 }
@@ -259,6 +261,7 @@ bool parseInput(char* input, Sheet* sheet) {
     if (!parse(input, &cellAddress, &expression, '=')) {
         return false;
     }
+    
 
     bool result = assign_cell(cellAddress, expression, sheet);
 

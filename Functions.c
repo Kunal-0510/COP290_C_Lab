@@ -427,6 +427,8 @@ void recalculate_node( Node* node , Sheet* sheet ){
         }
 
     }
+    // printf("I reached here!!3\n");
+
 
     free(q);
 
@@ -448,6 +450,8 @@ void recalculate_node( Node* node , Sheet* sheet ){
         }
 
     }
+    printf("I reached here!!4\n");
+
     PrintQueue(q1);
     while( isEmpty(q1) == 0 ){
 
