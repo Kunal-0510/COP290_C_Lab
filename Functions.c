@@ -279,10 +279,10 @@ int CHECK_CYCLE( Sheet* sheet ){
     for( int i = 0 ; i<max_rows ; i++ ){
         for( int j = 0 ; j<max_cols ; j++ ){
             int count = 0;
-            LinkedList* inNeighbours = (sheet->matrix + i*max_cols + j )->InNeighbours;
-            while( inNeighbours!=NULL ){
+            LinkedList* inneighbours = (sheet->matrix + i*max_cols + j )->InNeighbours;
+            while( inneighbours!=NULL ){
                 count++;
-                inNeighbours = inNeighbours->next;
+                inneighbours = inneighbours->next;
             }
             (sheet->matrix + i*max_cols + j )->in_size = count;
         }
@@ -437,12 +437,12 @@ void recalculate_node( Node* node , Sheet* sheet ){
         for( int j = 0 ; j<max_cols ; j++ ){
             int count = 0;
 
-            LinkedList* inNeighbours = (sheet->matrix + i*max_cols + j )->InNeighbours;
+            LinkedList* inneighbours = (sheet->matrix + i*max_cols + j )->InNeighbours;
 
-            while( inNeighbours!=NULL ){
+            while( inneighbours!=NULL ){
 
                 count++;
-                inNeighbours = inNeighbours->next;
+                inneighbours = inneighbours->next;
 
             }
             (sheet->matrix + i*max_cols + j )->in_size = count;

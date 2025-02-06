@@ -24,8 +24,7 @@ void QueueNodeInit(QueueNode* qNode) {
 }
 
 void QueuePush(QueueNode* node, Queue* queue) {
-
-    node->next = NULL;  // Important to prevent undefined behavior
+    node->next=NULL;
     // printf("I reached here!!11111\n");
     if (isEmpty(queue)==1) {
         queue->head = node;
@@ -34,6 +33,7 @@ void QueuePush(QueueNode* node, Queue* queue) {
         // printf("I reached here!!11112\n");
         
         queue->tail->next = node;
+        queue->tail = node;
         // printf("I reached here!!11113\n");
     }
 }
