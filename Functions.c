@@ -371,93 +371,28 @@ int add_edge(Node* node, Sheet* sheet){
 }
 
 /* Doing recalculation on the nodes not the entire sheet*/
+void topo_sort( int id , int* vis , Stack* st ,Sheet* sh ){
 
+    vis[id] = 1;
+    LinkedList* in = (sh->matrix+id)->OutNeighbours;
+    while( in!= NULL ){
+        if( vis[in->data]==0 ){
+            dfs( in->data , vis , st , sh );
+        }
+    }
+    push( st, id );
+}
 void recalculate_node( Node* node , Sheet* sheet ){
     // printf("I reached here!!1\n");
 
-    Queue* q = (Queue*)malloc(sizeof(Queue));
-    if (q == NULL) {
-        fprintf(stderr, "Memory allocation failed for Queue q\n");
-        return;
+    Stack* st = (Stack*)(malloc(sizeof(Stack)));
+    StackInit(st);
+    int n = (sheet->cols)*(sheet->rows);
+    int vis[n];
+    memset( vis,0,sizeof(vis));
+    topo_sort( node->id, vis, st, sheet );
+
+    while(isEmpty(st) == 0){
+        MASTER((sheet->matrix+pop(st)),sheet);
     }
-    QueueInit(q);
-
-    int max_cols = sheet->cols;
-    int max_rows = sheet->rows;
-    QueueNode* n1 = (QueueNode*)malloc(sizeof(QueueNode));
-    if (n1 == NULL) {
-        fprintf(stderr, "Memory allocation failed for QueueNode n1\n");
-        free(q);
-        return;
-    }
-    QueueNodeInit(n1);
-    n1->node = node;
-    QueuePush(n1, q);
-
-    Queue* q1 = (Queue*)malloc(sizeof(Queue));
-    if (q1 == NULL) {
-        fprintf(stderr, "Memory allocation failed for Queue q1\n");
-        free(n1);
-        free(q);
-        return;
-    }
-    QueueInit(q1);
-
-    // printf("I reached here!!2\n");
-
-    while( isEmpty(q) == 0 ){
-
-        QueueNode* Node = QueuePop(q);
-        LinkedList* top = Node->node->OutNeighbours;
-        QueuePush(Node,q1);
-
-        while( top!= NULL ){
-
-            (sheet->matrix + top->data)->in_size--;
-
-            if((sheet->matrix + top->data)->in_size == 0){
-                
-                QueueNode* newNode = (QueueNode*)(malloc(sizeof(QueueNode)));
-                QueueNodeInit(newNode);
-                newNode->node = (sheet->matrix + top->data);
-                QueuePush(newNode,q);
-
-            }
-            top=top->next;
-
-        }
-
-    }
-
-    free(q);
-
-    for( int i = 0 ; i<max_rows ; i++ ){
-
-
-        for( int j = 0 ; j<max_cols ; j++ ){
-            int count = 0;
-
-            LinkedList* inneighbours = (sheet->matrix + i*max_cols + j )->InNeighbours;
-
-            while( inneighbours!=NULL ){
-
-                count++;
-                inneighbours = inneighbours->next;
-
-            }
-            (sheet->matrix + i*max_cols + j )->in_size = count;
-
-        }
-
-    }
-    PrintQueue(q1);
-    while( isEmpty(q1) == 0 ){
-
-        QueueNode* head = QueuePop(q1);
-        MASTER( head->node ,sheet );
-        free(head);
-
-    }
-    free(q1);
-
 }
