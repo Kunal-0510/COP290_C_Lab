@@ -355,6 +355,7 @@ int add_edge(Node* node, Sheet* sheet){
         // printf("I reached here!!15\n");
         printf("indegree of %d: %d\n", node->id, node->in_size);
         print_list(node->InNeighbours);
+<<<<<<< HEAD
         if(CHECK_CYCLE(sheet)==1){
                 LinkedList* tmp= tempList;
                 while(tmp!=NULL){
@@ -369,6 +370,22 @@ int add_edge(Node* node, Sheet* sheet){
                 return 0;
             }
         
+=======
+        // if(CHECK_CYCLE(sheet)==1){
+        //         LinkedList* tmp= tempList;
+        //         while(tmp!=NULL){
+        //             delete_node(((sheet->matrix)+tmp->data)->OutNeighbours, node->id);
+        //             tmp=tmp->next;
+        //         }
+        //         free_list(tmp);
+        //         LinkedList* tmp2= node->InNeighbours;
+        //         node->InNeighbours= curr_head;
+        //         free_list(tmp2);
+        //         node->in_size= temp_size;
+        //         return 0;
+        //     }
+       
+>>>>>>> a84b194faccb589e5d7ac64656c7cc3b91820b25
         free_list(curr_head);
         free_list(tempList);
         printf("hello A1: ");
