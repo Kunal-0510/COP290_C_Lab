@@ -222,82 +222,27 @@ void SLEEP(Node* node, Sheet* sheet){
     }
 }
 
-int CHECK_CYCLE( Sheet* sheet ){
-    // printf("I reached here!!111\n");
-    Queue* q = (Queue*)(malloc(sizeof(Queue)));
-    QueueInit(q);
-    int max_cols = sheet->cols;
-    int max_rows = sheet->rows;
-    // printf("I reached here!!112\n");
-    for( int i = 0 ; i<max_rows ; i++ ){
-
-        for( int j = 0 ; j<max_cols ; j++ ){
-            // printf("I reached here!!11 i: %d j: %d\n", i, j);
-            Node* node = (sheet->matrix + i*max_cols + j );
-            // printf("insize:%d\n", node->in_size);
-            if( node->in_size == 0 ){
-
-                QueueNode* newNode = (QueueNode*)(malloc(sizeof(QueueNode)));
-                QueueNodeInit(newNode);
-                // printf("I reached here!!1111\n");
-                newNode->node = (sheet->matrix + i*max_cols + j );
-                // printf("I reached here!!1112\n");
-                QueuePush(newNode,q);
-                // printf("I reached here!!1113\n");
+int CHECK_CYCLE( int id,int pathVis[],int vis[],Sheet* sheet ){
+    vis[id]=1;
+    pathVis[id]=1;
+    LinkedList* top = (sheet->matrix+id)->OutNeighbours;
+    while(top!=NULL){
+        if(vis[top->data]==0){
+            if(CHECK_CYCLE(top->data,pathVis,vis,sheet)){
+                return 1;
             }
         }
-    }
-
-    int n = 0;
-
-    while( isEmpty(q) == 0 ){
-
-        QueueNode* Node = QueuePop(q);
-        n++;
-        LinkedList* top = Node->node->OutNeighbours;
-        
-        while( top!= NULL ){
-
-            (sheet->matrix + top->data)->in_size--;
-
-            if((sheet->matrix + top->data)->in_size == 0){
-                
-                QueueNode* newNode = (QueueNode*)(malloc(sizeof(QueueNode)));
-                QueueNodeInit(newNode);
-                newNode->node = (sheet->matrix + top->data);
-                QueuePush(newNode,q);
-
-            }
-            top=top->next; //Gogo mistake counter:4
-
+        else if(pathVis[top->data]==1){
+            return 1;
         }
-
-        free(Node);
-
+        top=top->next;
     }
-
-    free(q);
-
-    for( int i = 0 ; i<max_rows ; i++ ){
-        for( int j = 0 ; j<max_cols ; j++ ){
-            int count = 0;
-            LinkedList* inNeighbours = (sheet->matrix + i*max_cols + j )->InNeighbours;
-            while( inNeighbours!=NULL ){
-                count++;
-                inNeighbours = inNeighbours->next;
-            }
-            (sheet->matrix + i*max_cols + j )->in_size = count;
-        }
-    }
-    if( n == max_cols*max_rows ){
-        return 1;
-    }
+    pathVis[id]=0;
     return 0;
-
 }
 
 int add_edge(Node* node, Sheet* sheet){
-    
+    int n = (sheet->cols)*(sheet->rows);
     if(node->type>0){
         LinkedList* curr_head= node->InNeighbours; //nimit error counter 3
         int temp_size= node->in_size;
@@ -355,8 +300,11 @@ int add_edge(Node* node, Sheet* sheet){
         // printf("I reached here!!15\n");
         printf("indegree of %d: %d\n", node->id, node->in_size);
         print_list(node->InNeighbours);
-<<<<<<< HEAD
-        if(CHECK_CYCLE(sheet)==1){
+        int pathVis[n];
+        int vis[n];
+        memset(vis,0,sizeof(vis));
+        memset(pathVis,0,sizeof(pathVis));
+        if(CHECK_CYCLE(node->id,pathVis,vis,sheet)==1){
                 LinkedList* tmp= tempList;
                 while(tmp!=NULL){
                     delete_node(((sheet->matrix)+tmp->data)->OutNeighbours, node->id);
@@ -369,23 +317,7 @@ int add_edge(Node* node, Sheet* sheet){
                 node->in_size= temp_size;
                 return 0;
             }
-        
-=======
-        // if(CHECK_CYCLE(sheet)==1){
-        //         LinkedList* tmp= tempList;
-        //         while(tmp!=NULL){
-        //             delete_node(((sheet->matrix)+tmp->data)->OutNeighbours, node->id);
-        //             tmp=tmp->next;
-        //         }
-        //         free_list(tmp);
-        //         LinkedList* tmp2= node->InNeighbours;
-        //         node->InNeighbours= curr_head;
-        //         free_list(tmp2);
-        //         node->in_size= temp_size;
-        //         return 0;
-        //     }
        
->>>>>>> a84b194faccb589e5d7ac64656c7cc3b91820b25
         free_list(curr_head);
         free_list(tempList);
         printf("hello A1: ");
