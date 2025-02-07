@@ -230,7 +230,7 @@ void SLEEP(Node* node, Sheet* sheet){
     }
 }
 
-int CHECK_CYCLE( int id,int pathVis[],int vis[],Sheet* sheet ){
+int CHECK_CYCLE( int id,int* pathVis,int* vis,Sheet* sheet ){
     vis[id]=1;
     pathVis[id]=1;
     LinkedList* top = (sheet->matrix+id)->OutNeighbours;
@@ -263,12 +263,12 @@ int add_edge(Node* node, Sheet* sheet){
             if(node->cell1!=-1){
                 node->InNeighbours= add_node(node->InNeighbours, node->cell1);
                 node->in_size++;
-                print_list(node->InNeighbours);
+                // print_list(node->InNeighbours);
                 if(find_node(((sheet->matrix)+(node->cell1))->OutNeighbours, node->id)==0){
                     ((sheet->matrix)+node->cell1)->OutNeighbours= add_node(((sheet->matrix)+node->cell1)->OutNeighbours, node->id);
                     tempList= add_node(tempList, node->cell1);
                 }
-                print_list(((sheet->matrix)+(node->cell1))->OutNeighbours);
+                // print_list(((sheet->matrix)+(node->cell1))->OutNeighbours);
             }
             if(node->cell2!=-1){
                 node->InNeighbours= add_node(node->InNeighbours, node->cell2);
@@ -301,17 +301,20 @@ int add_edge(Node* node, Sheet* sheet){
                     }
                 }
             }
-            printf("hello:42 ");
-            print_list(node->InNeighbours);
+            // printf("hello:42 ");
+            // print_list(node->InNeighbours);
 
         }
         // printf("I reached here!!15\n");
-        printf("indegree of %d: %d\n", node->id, node->in_size);
-        print_list(node->InNeighbours);
-        int pathVis[n];
-        int vis[n];
-        memset(vis,0,sizeof(vis));
-        memset(pathVis,0,sizeof(pathVis));
+        // printf("indegree of %d: %d\n", node->id, node->in_size);
+        // print_list(node->InNeighbours);
+
+        int* pathVis = (int*)malloc(n * sizeof(int));
+        int* vis = (int*)malloc(n * sizeof(int));
+
+        memset(vis, 0, n * sizeof(int));
+        memset(pathVis, 0, n * sizeof(int));
+
         if(CHECK_CYCLE(node->id,pathVis,vis,sheet)==1){
             LinkedList* tmp= tempList;
             while(tmp!=NULL){
@@ -328,8 +331,8 @@ int add_edge(Node* node, Sheet* sheet){
         else{
             free_list(curr_head);
             free_list(tempList);
-            printf("hello A1: ");
-            print_list((sheet->matrix)->OutNeighbours);
+            // printf("hello A1: ");
+            // print_list((sheet->matrix)->OutNeighbours);
 
             return 1;
         }
@@ -362,10 +365,13 @@ void recalculate_node( Node* node , Sheet* sheet ){
 
     Stack* st = (Stack*)(malloc(sizeof(Stack)));
     StackInit(st);
+
     int n = (sheet->cols)*(sheet->rows);
-    int vis[n];
-    memset( vis,0,sizeof(vis));
+    int* vis = (int*)malloc(n * sizeof(int));
+    memset(vis, 0, n * sizeof(int));
     topo_sort( node->id, vis, st, sheet );
+
+    free(vis);
 
     while(isempty(st) == 0){
         MASTER((sheet->matrix+pop(st)),sheet);
