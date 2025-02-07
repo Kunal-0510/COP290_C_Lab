@@ -24,6 +24,7 @@ int MASTER( Node* node, Sheet* sheet ){
     int success= 1;
     if( func_type == 0 ){ // Constant assignment
         node->val = node->op_val;
+        return 1;
     }
     else if(func_type==1){ //arithmetic
         if(node->operator=='+'){
@@ -36,17 +37,22 @@ int MASTER( Node* node, Sheet* sheet ){
             else{
                 node->val= (sheet->matrix+ node->cell1)->val + (sheet->matrix+ node->cell2)->val;
             }
+            return 1;
         }
         else if(node->operator=='-'){
+            // printf("cell1: %d cell2: %d val: %d\n", node->cell1, node->cell2, node->op_val);
             if(node->cell2==-1){
                 node->val= (sheet->matrix+ node->cell1)->val - node->op_val;
+                // printf("value: %d\n", node->val);
+                
             }
-            if(node->cell1==-1){
+            else if(node->cell1==-1){
                 node->val= node->op_val- (sheet->matrix+ node->cell2)->val ;
             }
             else{
                 node->val= (sheet->matrix+ node->cell1)->val - (sheet->matrix+ node->cell2)->val;
             }
+            return 1;
         }
         else if(node->operator=='*'){
             if(node->cell1==-1){
@@ -58,20 +64,22 @@ int MASTER( Node* node, Sheet* sheet ){
             else{
                 node->val= (sheet->matrix+ node->cell1)->val * (sheet->matrix+ node->cell2)->val;
             }
+            return 1;
         }
         else if(node->operator=='/'){ //TODO: Handle division by zero.
             if(node->cell2==-1){
                 node->val= ((sheet->matrix+ node->cell1)->val)/(node->op_val);
             }
-            if(node->cell1==-1){
+            else if(node->cell1==-1){
                 node->val= (node->op_val)/((sheet->matrix+ node->cell2)->val) ;
             }
             else{
                 node->val= ((sheet->matrix+ node->cell1)->val)/((sheet->matrix+ node->cell2)->val);
             }
+            return 1;
         }
         else{
-            success=0;
+            return 0;
         }
     }
     else if( func_type == 2){ // MIN(RANGE)
@@ -111,7 +119,7 @@ int MASTER( Node* node, Sheet* sheet ){
 
     }
     
-    return success;
+    
 }
 
 int MAX( int from_row,int from_col,int to_row,int to_col,int max_col, Sheet* sheet ){

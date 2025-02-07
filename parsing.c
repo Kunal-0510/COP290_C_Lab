@@ -80,9 +80,16 @@ void parseExpr(char* expression, char* op, char* val1, char* val2) {
     int n = strlen(expression);
     int len1 = 0, len2 = 0;
     int insideParentheses = 0;
-
+    
     for (int i = 0; i < n; i++) {
+        printf("i: %d val1:%s val2:%s op:%c\n",i, val1, val2, op);
         char c = expression[i];
+
+        if(i==0 && (c=='-' || c=='+')){
+            // negative number
+            val1[len1++]=c;
+            continue;
+        }
 
         if (c == '(') {
             insideParentheses = 1;
@@ -99,12 +106,11 @@ void parseExpr(char* expression, char* op, char* val1, char* val2) {
             continue;
         }
 
-        if (c == '+' || c == '-' || c == '*' || c == '/') {
+        if ((c == '+' || c == '-' || c == '*' || c == '/') && *op=='\0') {
             *op = c;
             continue;
         }
-
-        if (*op) {
+        else if (*op!='\0') {
             val2[len2++] = c;
         } else {
             val1[len1++] = c;
@@ -132,7 +138,7 @@ bool assign_cell(char* cellAddress, char* expr, Sheet* sheet) {
     char val2[256] = {0};
 
     parseExpr(expr, &op, val1, val2);
-    // printf("val1:%s val2:%s op:%c\n", val1, val2, op);
+    printf("val1:%s val2:%s op:%c\n", val1, val2, op);
     int type = -1;
 
     if (op != '\0') {
@@ -180,6 +186,7 @@ bool assign_cell(char* cellAddress, char* expr, Sheet* sheet) {
                 type = 0;
                 int num1 = atoi(val1);
                 int num2 = atoi(val2);
+                printf("num1: %d num2: %d\n",num1, num2);
                 int ans = 0;
 
                 if (op == '+') ans = num1 + num2;

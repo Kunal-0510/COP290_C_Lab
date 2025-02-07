@@ -5,7 +5,7 @@ bool isValidNumber(char* num){
     int n=strlen(num);
     for(int i=0;i<n;i++){
 
-        if(num[0]=='-' && n>1){
+        if((num[0]=='-' || num[0]=='+') && n>1){
             continue;
         }
 
