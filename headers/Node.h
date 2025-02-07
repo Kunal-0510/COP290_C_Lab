@@ -16,7 +16,6 @@ typedef struct Node{
     int cell2;
     int op_val;
     char operator;
-    int in_size;
     
 }Node;
 
