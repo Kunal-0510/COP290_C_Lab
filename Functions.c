@@ -305,25 +305,27 @@ int add_edge(Node* node, Sheet* sheet){
         memset(vis,0,sizeof(vis));
         memset(pathVis,0,sizeof(pathVis));
         if(CHECK_CYCLE(node->id,pathVis,vis,sheet)==1){
-                LinkedList* tmp= tempList;
-                while(tmp!=NULL){
-                    delete_node(((sheet->matrix)+tmp->data)->OutNeighbours, node->id);
-                    tmp=tmp->next;
-                }
-                free_list(tmp);
-                LinkedList* tmp2= node->InNeighbours;
-                node->InNeighbours= curr_head;
-                free_list(tmp2);
-                node->in_size= temp_size;
-                return 0;
+            LinkedList* tmp= tempList;
+            while(tmp!=NULL){
+                delete_node(((sheet->matrix)+tmp->data)->OutNeighbours, node->id);
+                tmp=tmp->next;
             }
-       
-        free_list(curr_head);
-        free_list(tempList);
-        printf("hello A1: ");
-        print_list((sheet->matrix)->OutNeighbours);
+            free_list(tmp);
+            LinkedList* tmp2= node->InNeighbours;
+            node->InNeighbours= curr_head;
+            free_list(tmp2);
+            node->in_size= temp_size;
+            return 0;
+        }
+        else{
+            free_list(curr_head);
+            free_list(tempList);
+            printf("hello A1: ");
+            print_list((sheet->matrix)->OutNeighbours);
 
-        return 1;
+            return 1;
+        }
+        
         
         // printf("I reached here!!16\n");
     }
