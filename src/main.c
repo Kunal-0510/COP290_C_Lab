@@ -96,6 +96,6 @@ int main(int argc, char* argv[]) {
         printf("[%0.1f] (ok) > ", elapsed_time);
     }
     
-    free(sheet); // Free allocated memory
+    free_sheet(sheet); // Free allocated memory
     return 0;
 }

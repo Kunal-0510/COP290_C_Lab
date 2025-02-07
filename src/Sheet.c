@@ -25,3 +25,27 @@ void create_sheet(int row, int col, struct Sheet *sheet) {
     sheet->matrix = create_node_matrix(row, col);
     sheet->display = 1;
 }
+
+
+void free_sheet(Sheet *sheet) {
+    if (!sheet || !sheet->matrix) return;
+
+   
+    for (int i = 0; i < sheet->rows * sheet->cols; i++) {
+        Node *node = &sheet->matrix[i];
+
+        
+        if (node->InNeighbours) {
+            free_list(node->InNeighbours);
+            node->InNeighbours = NULL;  
+        }
+        if (node->OutNeighbours) {
+            free_list(node->OutNeighbours);
+            node->OutNeighbours = NULL;
+        }
+    }
+
+    
+    free(sheet->matrix);
+    sheet->matrix = NULL;
+}
