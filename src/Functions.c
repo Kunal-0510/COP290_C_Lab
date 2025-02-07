@@ -253,16 +253,16 @@ int add_edge(Node* node, Sheet* sheet){
     int n = (sheet->cols)*(sheet->rows);
     if(node->type>0){
         LinkedList* curr_head= node->InNeighbours; //nimit error counter 3
-        int temp_size= node->in_size;
+        // int temp_size= node->in_size;
         node->InNeighbours= NULL;
-        node->in_size=0;
+        // node->in_size=0;
         LinkedList* tempList = NULL; 
         // printf("I reached here!!13\n");
        
         if(node->type==1 || node->type==7){
             if(node->cell1!=-1){
                 node->InNeighbours= add_node(node->InNeighbours, node->cell1);
-                node->in_size++;
+                // node->in_size++;
                 // print_list(node->InNeighbours);
                 if(find_node(((sheet->matrix)+(node->cell1))->OutNeighbours, node->id)==0){
                     ((sheet->matrix)+node->cell1)->OutNeighbours= add_node(((sheet->matrix)+node->cell1)->OutNeighbours, node->id);
@@ -272,7 +272,7 @@ int add_edge(Node* node, Sheet* sheet){
             }
             if(node->cell2!=-1){
                 node->InNeighbours= add_node(node->InNeighbours, node->cell2);
-                node->in_size++;
+                // node->in_size++;
                 if(find_node(((sheet->matrix)+(node->cell2))->OutNeighbours, node->id)==0){
                     ((sheet->matrix)+node->cell2)->OutNeighbours= add_node(((sheet->matrix)+node->cell2)->OutNeighbours, node->id);
                     tempList= add_node(tempList, node->cell2);
@@ -294,7 +294,7 @@ int add_edge(Node* node, Sheet* sheet){
                 for( int j = from_col; j<=to_col; j++ ){
                     int cell= i*max_col+j;
                     node->InNeighbours= add_node(node->InNeighbours, cell);
-                    node->in_size++;
+                    // node->in_size++;
                     if(find_node(((sheet->matrix)+cell)->OutNeighbours, node->id)==0){
                         ((sheet->matrix)+ cell)->OutNeighbours= add_node(((sheet->matrix)+ cell)->OutNeighbours, node->id);
                         tempList= add_node(tempList, cell);
@@ -314,8 +314,10 @@ int add_edge(Node* node, Sheet* sheet){
 
         memset(vis, 0, n * sizeof(int));
         memset(pathVis, 0, n * sizeof(int));
-
-        if(CHECK_CYCLE(node->id,pathVis,vis,sheet)==1){
+        int cycle= CHECK_CYCLE(node->id,pathVis,vis,sheet);
+        free(vis);
+        free(pathVis);
+        if(cycle==1){
             LinkedList* tmp= tempList;
             while(tmp!=NULL){
                 delete_node(((sheet->matrix)+tmp->data)->OutNeighbours, node->id);
@@ -325,7 +327,7 @@ int add_edge(Node* node, Sheet* sheet){
             LinkedList* tmp2= node->InNeighbours;
             node->InNeighbours= curr_head;
             free_list(tmp2);
-            node->in_size= temp_size;
+            // node->in_size= temp_size;
             return 0;
         }
         else{
@@ -343,7 +345,7 @@ int add_edge(Node* node, Sheet* sheet){
     else{
         free_list(node->InNeighbours);
         node->InNeighbours=NULL;
-        node->in_size=0;
+        // node->in_size=0;
         return 1;
     }
 }
