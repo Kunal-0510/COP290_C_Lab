@@ -82,7 +82,7 @@ void parseExpr(char* expression, char* op, char* val1, char* val2) {
     int insideParentheses = 0;
     
     for (int i = 0; i < n; i++) {
-        printf("i: %d val1:%s val2:%s op:%c\n",i, val1, val2, op);
+        // printf("i: %d val1:%s val2:%s op:%c\n",i, val1, val2, op);
         char c = expression[i];
 
         if(i==0 && (c=='-' || c=='+')){
@@ -138,7 +138,7 @@ bool assign_cell(char* cellAddress, char* expr, Sheet* sheet) {
     char val2[256] = {0};
 
     parseExpr(expr, &op, val1, val2);
-    printf("val1:%s val2:%s op:%c\n", val1, val2, op);
+    // printf("val1:%s val2:%s op:%c\n", val1, val2, op);
     int type = -1;
 
     if (op != '\0') {
@@ -186,7 +186,7 @@ bool assign_cell(char* cellAddress, char* expr, Sheet* sheet) {
                 type = 0;
                 int num1 = atoi(val1);
                 int num2 = atoi(val2);
-                printf("num1: %d num2: %d\n",num1, num2);
+                // printf("num1: %d num2: %d\n",num1, num2);
                 int ans = 0;
 
                 if (op == '+') ans = num1 + num2;
@@ -262,16 +262,17 @@ bool assign_cell(char* cellAddress, char* expr, Sheet* sheet) {
     }
 
     cell->type = type;
-    printf("type: %d\n" , cell->type);
+    // printf("type: %d\n" , cell->type);
 
     if (add_edge(cell, sheet) == 0) {
         // printf("I reached here!!fe\n");
         return false;
     }
+
     // printf("I reached here!!fewS\n");
 
     recalculate_node(cell, sheet);
-
+    
 
     return (type != -1);
 }
@@ -287,6 +288,7 @@ bool parseInput(char* input, Sheet* sheet) {
     if (!parse(input, &cellAddress, &expression, '=')) {
         return false;
     }
+
     
 
     bool result = assign_cell(cellAddress, expression, sheet);

@@ -65,12 +65,13 @@ void display_sheet(struct Sheet* sheet){ // args: The sheet itself
     }
 }  // Displays the excel sheet in 10*10 grid
 void scroll_up(Sheet* sheet){
-    sheet->rowtop= min(sheet->rowtop+10, sheet->rows);
+    sheet->rowtop= max(sheet->rowtop-10, 0);
     display_sheet(sheet);
 }
+    
 
 void scroll_down( Sheet* sheet){
-    sheet->rowtop= max(sheet->rowtop-10, 0);
+    sheet->rowtop= min(sheet->rowtop+10, sheet->rows);
     display_sheet(sheet);
 }
 
