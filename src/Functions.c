@@ -322,22 +322,22 @@ int add_edge(Node* node, Sheet* sheet){
                 temp=temp->next;
             }
 
-            free_list(node->InNeighbours);
+            free_list(&(node->InNeighbours));
             node->InNeighbours= temp;
-            free_list(tmp);
+            free_list(&tmp);
             return 0;
         }
         else{
 
-            free_list(curr_head);
-            free_list(tempList);
+            free_list(&curr_head);
+            free_list(&tempList);
 
             return 1;
         }
     }
     else{
         
-        free_list(curr_head);
+        free_list(&curr_head);
         node->InNeighbours=NULL;
         return 1;
     }

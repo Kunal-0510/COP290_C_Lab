@@ -36,16 +36,15 @@ LinkedList* delete_node(LinkedList* head, int hash) {
     return head;
 }
 
-void free_list(LinkedList* head) {
-    LinkedList* temp=NULL;
-    while (head != NULL) {
-        temp = head;      // Store current node
-        head = head->next; // Move to next node
+void free_list(LinkedList** head) {
+    LinkedList* temp;
+    while (*head != NULL) {
+        temp = *head;      // Store current node
+        *head = (*head)->next; // Move to next node
         free(temp);       // Free current node
     }
-    head=NULL;
+    *head = NULL;  
 }
-
 int find_node(LinkedList* head, int hash){
     LinkedList* temp = head;
     int found=0;
