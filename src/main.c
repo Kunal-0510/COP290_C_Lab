@@ -8,7 +8,7 @@
 #include "Functions.h"
 #include "hash.h"
 #include <time.h>
-#include "parsing.h"
+#include "display.h"
 
 #define MAX_INPUT_LENGTH 100
 //Input-> parsing-> assign cell properties-> call add_edge -> call recalculate -> display file
