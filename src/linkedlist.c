@@ -15,26 +15,55 @@ LinkedList* add_node(LinkedList* head, int hash) {
 } // Always use list= addnode(), not just addnode()
 
 
-LinkedList* delete_node(LinkedList* head, int hash) {
-    LinkedList* temp = head;
-    LinkedList* prev = NULL;
+// LinkedList* delete_node(LinkedList* head, int hash) {
+//     LinkedList* temp = head;
+//     LinkedList* prev = NULL;
 
-    while (temp != NULL && temp->data != hash) {
-        prev = temp;
-        temp = temp->next;
-    }
+//     while (temp != NULL && temp->data != hash) {
+//         prev = temp;
+//         temp = temp->next;
+//     }
 
-    if (temp != NULL) { 
-        if (prev == NULL) {  
-            head = temp->next;
-        } else {
-            prev->next = temp->next;
-        }
-        free(temp);
-    }
+//     if (temp != NULL) { 
+//         if (prev == NULL) {  
+//             head = temp->next;
+//         } else {
+//             prev->next = temp->next;
+//         }
+//         free(temp);
+//     }
 
-    return head;
-}
+//     return head;
+// }
+
+void delete_node( LinkedList** head_ref, int key) 
+{ 
+    // Store head node 
+    LinkedList *temp = *head_ref, *prev; 
+  
+    // If head node itself holds the key to be deleted 
+    if (temp != NULL && temp->data == key) { 
+        *head_ref = temp->next; // Changed head 
+        free(temp); // free old head 
+        return; 
+    } 
+  
+    // Search for the key to be deleted, keep track of the 
+    // previous node as we need to change 'prev->next' 
+    while (temp != NULL && temp->data != key) { 
+        prev = temp; 
+        temp = temp->next; 
+    } 
+  
+    // If key was not present in linked list 
+    if (temp == NULL) 
+        return; 
+  
+    // Unlink the node from linked list 
+    prev->next = temp->next; 
+  
+    free(temp); // Free memory 
+} 
 
 void free_list(LinkedList** head) {
     LinkedList* temp;

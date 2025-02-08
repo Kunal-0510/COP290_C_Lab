@@ -255,7 +255,7 @@ int add_edge(Node* node, Sheet* sheet){
     LinkedList* temp= curr_head;
     node->InNeighbours=NULL;
     while(temp!=NULL){
-        delete_node(((sheet->matrix)+temp->data)->OutNeighbours, node->id);
+        delete_node(&(((sheet->matrix)+temp->data)->OutNeighbours), node->id);
         temp=temp->next;
     }
     
@@ -311,7 +311,7 @@ int add_edge(Node* node, Sheet* sheet){
             LinkedList* tmp= tempList;
 
             while(tmp!=NULL){
-                delete_node(((sheet->matrix)+tmp->data)->OutNeighbours, node->id);
+                delete_node(&(((sheet->matrix)+tmp->data)->OutNeighbours), node->id);
                 tmp=tmp->next;
             }
 
