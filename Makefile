@@ -8,14 +8,14 @@ TARGET = sheet
 
 # Source files
 SRC_DIR = src
-SRC = $(addprefix $(SRC_DIR)/, Node.c Sheet.c linkedlist.c Queue.c hash.c validity.c parsing.c Functions.c display.c main.c stack.c)
+SRC = $(addprefix $(SRC_DIR)/, Node.c Sheet.c linkedlist.c Queue.c hash.c validity.c parsing.c Functions.c display.c main.c stack.c set.c)
 
 # Object files (replace .c with .o for each source file)
 OBJ = $(SRC:.c=.o)
 
 # Header files directory
 HEADER_DIR = headers
-HEADERS = $(addprefix $(HEADER_DIR)/, Node.h Sheet.h linkedlist.h Queue.h hash.h validity.h parsing.h Functions.h display.h stack.h)
+HEADERS = $(addprefix $(HEADER_DIR)/, Node.h Sheet.h linkedlist.h Queue.h hash.h validity.h parsing.h Functions.h display.h stack.h set.h)
 
 # Default target
 all: $(TARGET)
@@ -33,6 +33,8 @@ Sheet.o: Sheet.c $(HEADER_DIR)/Sheet.h $(HEADER_DIR)/Node.h
 
 linkedlist.o: linkedlist.c $(HEADER_DIR)/linkedlist.h
 	$(CC) $(CFLAGS) -c $< -o $@
+
+set.o: set.c $(HEADER_DIR)/set.h
 
 Queue.o: Queue.c $(HEADER_DIR)/Queue.h
 	$(CC) $(CFLAGS) -c $< -o $@
