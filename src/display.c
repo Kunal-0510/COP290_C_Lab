@@ -71,12 +71,12 @@ void scroll_up(Sheet* sheet){
     
 
 void scroll_down( Sheet* sheet){
-    sheet->rowtop= min(sheet->rowtop+10, sheet->rows);
+    sheet->rowtop= min(sheet->rowtop+10, sheet->rows-10);
     display_sheet(sheet);
 }
 
 void scroll_right(Sheet* sheet){
-    sheet->coltop= min(sheet->coltop+10, sheet->cols);
+    sheet->coltop= min(sheet->coltop+10, sheet->cols-10);
     display_sheet(sheet);
 }
 
