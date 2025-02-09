@@ -259,7 +259,7 @@ int add_edge(Node* node, Sheet* sheet){
         temp=temp->next;
     }
     
-    if(node->type>0){
+    if(node->type>0 && !(node->type==7 && node->cell1==-1)){
 
 
         LinkedList* tempList = NULL; 
