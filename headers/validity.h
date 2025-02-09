@@ -11,9 +11,9 @@
 
 bool isValidNumber(char* num);
 
-bool isValidCell(char* cell);
+bool isValidCell(char* cell, Sheet* sheet);
 
-bool isValidValue(char* val);
+bool isValidValue(char* val, Sheet* sheet);
 
 bool isValidRange(char* first,char* second,Sheet* sheet);
 

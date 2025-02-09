@@ -145,10 +145,10 @@ bool assign_cell(char* cellAddress, char* expr, Sheet* sheet) {
         type = 1;
         cell->operator = op;
 
-        if (isValidCell(val1)) {
+        if (isValidCell(val1, sheet)) {
             cell->cell1 = get_hash(val1, sheet->cols);
 
-            if (isValidCell(val2)) {
+            if (isValidCell(val2, sheet)) {
                 cell->cell2 = get_hash(val2, sheet->cols);
                 cell->op_val = 0;
             }
@@ -171,7 +171,7 @@ bool assign_cell(char* cellAddress, char* expr, Sheet* sheet) {
             cell->op_val = num;
             cell->cell1 = -1;
 
-            if (isValidCell(val2)) {
+            if (isValidCell(val2, sheet)) {
                 if (num == 0 && op == '*') {
                     type = 0;
                     cell->cell1 = -1;
@@ -213,7 +213,7 @@ bool assign_cell(char* cellAddress, char* expr, Sheet* sheet) {
                 // printf("I am here\n");
             } 
             
-            else if (isValidCell(val1)) {
+            else if (isValidCell(val1, sheet)) {
                 type = 1;
                 cell->cell1 = get_hash(val1, sheet->cols);
                 cell->cell2 = -1;
@@ -224,7 +224,7 @@ bool assign_cell(char* cellAddress, char* expr, Sheet* sheet) {
         
         else {
             if (strcmp(val1, "SLEEP") == 0) {
-                if (isValidCell(val2)) {
+                if (isValidCell(val2, sheet)) {
                     type = 7;
                     cell->cell1 = get_hash(val2, sheet->cols);
                     cell->cell2 = -1;
@@ -289,12 +289,18 @@ bool parseInput(char* input, Sheet* sheet) {
         return false;
     }
 
-    
+    if(!isValidCell(cellAddress,sheet)){
+        return false;
+    }
 
     bool result = assign_cell(cellAddress, expression, sheet);
+    
+    if(result==false){
+        return false;
+    }
 
     free(cellAddress);
     free(expression);
 
-    return result;
+    return true;
 }

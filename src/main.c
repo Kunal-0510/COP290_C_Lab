@@ -9,6 +9,7 @@
 #include "hash.h"
 #include <time.h>
 #include "display.h"
+#include "parsing.h"
 
 #define MAX_INPUT_LENGTH 100
 //Input-> parsing-> assign cell properties-> call add_edge -> call recalculate -> display file
@@ -24,7 +25,10 @@ TBD:
 - make file (Kunal)
 */
 
+/*
+Types of errors:
 
+*/
 int main(int argc, char* argv[]) {
     if (argc != 3) {
         printf("Usage: ./sheet <rows> <columns>\n");
@@ -80,7 +84,7 @@ int main(int argc, char* argv[]) {
             // Assume it's a formula or operation
             // printf("%d\n", strlen(input));
             int result = parseInput(input, sheet); // Assuming parse_input is implemented in parser.h
-            if (result == 0) {
+            if (result != 1) {
                 printf("[0.0] (error parsing input) >");
                 continue;
             }
