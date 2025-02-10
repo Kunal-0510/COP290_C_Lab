@@ -266,15 +266,15 @@ int add_edge(Node* node, Sheet* sheet){
        
         if(node->type==1 || node->type==7){
             if(node->cell1!=-1){
-                node->InNeighbours= add_node(node->InNeighbours, node->cell1);
-                ((sheet->matrix)+node->cell1)->OutNeighbours= add_node(((sheet->matrix)+node->cell1)->OutNeighbours, node->id);
-                tempList= add_node(tempList, node->cell1);
+                add_node(&(node->InNeighbours), node->cell1);
+                add_node(&(((sheet->matrix)+node->cell1)->OutNeighbours), node->id);
+                add_node(&tempList, node->cell1);
             }
 
             if(node->cell2!=-1){
-                node->InNeighbours= add_node(node->InNeighbours, node->cell2);
-                ((sheet->matrix)+node->cell2)->OutNeighbours= add_node(((sheet->matrix)+node->cell2)->OutNeighbours, node->id);
-                tempList= add_node(tempList, node->cell2);
+                add_node(&(node->InNeighbours), node->cell2);
+                add_node(&(((sheet->matrix)+node->cell2)->OutNeighbours), node->id);
+                add_node(&tempList, node->cell2);
             }
         }
         
@@ -291,9 +291,9 @@ int add_edge(Node* node, Sheet* sheet){
             for( int i = from_row; i <= to_row; i++ ){
                 for( int j = from_col; j<=to_col; j++ ){
                     int cell= i*max_col+j;
-                    node->InNeighbours= add_node(node->InNeighbours, cell);
-                    ((sheet->matrix)+ cell)->OutNeighbours= add_node(((sheet->matrix)+ cell)->OutNeighbours, node->id);
-                    tempList= add_node(tempList, cell);
+                    add_node(&node->InNeighbours, cell);
+                    add_node(&(((sheet->matrix)+ cell)->OutNeighbours), node->id);
+                    add_node(&tempList, cell);
                 }
             }
         }
@@ -318,7 +318,7 @@ int add_edge(Node* node, Sheet* sheet){
             LinkedList* temp= curr_head;
 
             while(temp!=NULL){
-                ((sheet->matrix)+temp->data)->OutNeighbours= add_node(((sheet->matrix)+temp->data)->OutNeighbours, node->id);
+                add_node(&(((sheet->matrix)+temp->data)->OutNeighbours), node->id);
                 temp=temp->next;
             }
 
