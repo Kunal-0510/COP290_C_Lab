@@ -52,7 +52,7 @@ void display_sheet(struct Sheet* sheet){ // args: The sheet itself
         int numcols= sheet->cols;
         int numrows= sheet->rows;
         for(int j=colt; j<min(colt+10, numcols); j++){
-            printf("%10s", mapping(j));
+            printf("%12s", mapping(j));
         }
         printf("\n");
         for(int i=rowt; i<min(rowt+10, numrows); i++){
@@ -60,10 +60,10 @@ void display_sheet(struct Sheet* sheet){ // args: The sheet itself
             for(int j= colt; j<min(colt+10, numcols); j++){
                 Node* node= (sheet->matrix)+i*numcols+j;
                 if(node->isValid==1){
-                    printf("%10d", ((sheet->matrix)+i*numcols+j)->val);
+                    printf("%12d", ((sheet->matrix)+i*numcols+j)->val);
                 }
                 else{
-                    printf("       ERR");
+                    printf("         ERR");
                 }
             }
             printf("\n");
