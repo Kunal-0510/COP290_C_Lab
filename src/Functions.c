@@ -396,6 +396,18 @@ void topo_sort( int id , int* vis , Stack* st ,Sheet* sh ){
     }
     push( st, id );
 }
+
+void dfs( int id , int*vis , Sheet* sheet ){
+    vis[id] = 1;
+    LinkedList* in = (sheet->matrix+id)->OutNeighbours;
+    while( in!= NULL ){
+        if( vis[in->data]==0 ){
+            (sheet->matrix+in->data)->isValid = (sheet->matrix +id)->isValid;
+            dfs( in->data , vis ,sheet );
+        }
+        in=in->next; //Gogo Stupidity counter- infinity
+    }
+}
 void recalculate_node( Node* node , Sheet* sheet ){
     // printf("I reached here!!1\n");
 
@@ -406,10 +418,24 @@ void recalculate_node( Node* node , Sheet* sheet ){
     int* vis = (int*)malloc(n * sizeof(int));
     memset(vis, 0, n * sizeof(int));
     topo_sort( node->id, vis, st, sheet );
+    memset(vis, 0, n * sizeof(int));
 
-    free(vis);
     int flag=1;
     while(isempty(st) == 0){
-        MASTER((sheet->matrix+pop(st)),sheet);   
+        int a= pop(st);
+        if((sheet->matrix+a)->isValid==1){
+            MASTER((sheet->matrix+a),sheet);
+            if((sheet->matrix+a)->isValid==0){
+                dfs(a, vis, sheet);
+            }
+        }
+        else if(!vis[a]){
+            MASTER((sheet->matrix+a),sheet);
+        }
+        else{
+            continue;
+        }
+           
     }
+    free(vis);
 }
