@@ -251,32 +251,30 @@ int CHECK_CYCLE( int id,int* pathVis,int* vis,Sheet* sheet ){
 
 int add_edge(Node* node, Sheet* sheet){
     int n = (sheet->cols)*(sheet->rows);
-    if(node->type>0){
-        LinkedList* curr_head= node->InNeighbours; //nimit error counter 3
-        // int temp_size= node->in_size;
-        node->InNeighbours= NULL;
-        // node->in_size=0;
+    LinkedList* curr_head= node->InNeighbours;
+    LinkedList* temp= curr_head;
+    node->InNeighbours=NULL;
+    while(temp!=NULL){
+        delete_node(&(((sheet->matrix)+temp->data)->OutNeighbours), node->id);
+        temp=temp->next;
+    }
+    
+    if(node->type>0 && !(node->type==7 && node->cell1==-1)){
+
+
         LinkedList* tempList = NULL; 
-        // printf("I reached here!!13\n");
        
         if(node->type==1 || node->type==7){
             if(node->cell1!=-1){
                 node->InNeighbours= add_node(node->InNeighbours, node->cell1);
-                // node->in_size++;
-                // print_list(node->InNeighbours);
-                if(find_node(((sheet->matrix)+(node->cell1))->OutNeighbours, node->id)==0){
-                    ((sheet->matrix)+node->cell1)->OutNeighbours= add_node(((sheet->matrix)+node->cell1)->OutNeighbours, node->id);
-                    tempList= add_node(tempList, node->cell1);
-                }
-                // print_list(((sheet->matrix)+(node->cell1))->OutNeighbours);
+                ((sheet->matrix)+node->cell1)->OutNeighbours= add_node(((sheet->matrix)+node->cell1)->OutNeighbours, node->id);
+                tempList= add_node(tempList, node->cell1);
             }
+
             if(node->cell2!=-1){
                 node->InNeighbours= add_node(node->InNeighbours, node->cell2);
-                // node->in_size++;
-                if(find_node(((sheet->matrix)+(node->cell2))->OutNeighbours, node->id)==0){
-                    ((sheet->matrix)+node->cell2)->OutNeighbours= add_node(((sheet->matrix)+node->cell2)->OutNeighbours, node->id);
-                    tempList= add_node(tempList, node->cell2);
-                }
+                ((sheet->matrix)+node->cell2)->OutNeighbours= add_node(((sheet->matrix)+node->cell2)->OutNeighbours, node->id);
+                tempList= add_node(tempList, node->cell2);
             }
         }
         
@@ -294,58 +292,59 @@ int add_edge(Node* node, Sheet* sheet){
                 for( int j = from_col; j<=to_col; j++ ){
                     int cell= i*max_col+j;
                     node->InNeighbours= add_node(node->InNeighbours, cell);
-                    // node->in_size++;
-                    if(find_node(((sheet->matrix)+cell)->OutNeighbours, node->id)==0){
-                        ((sheet->matrix)+ cell)->OutNeighbours= add_node(((sheet->matrix)+ cell)->OutNeighbours, node->id);
-                        tempList= add_node(tempList, cell);
-                    }
+                    ((sheet->matrix)+ cell)->OutNeighbours= add_node(((sheet->matrix)+ cell)->OutNeighbours, node->id);
+                    tempList= add_node(tempList, cell);
                 }
             }
-            // printf("hello:42 ");
-            // print_list(node->InNeighbours);
-
         }
-        // printf("I reached here!!15\n");
-        // printf("indegree of %d: %d\n", node->id, node->in_size);
-        // print_list(node->InNeighbours);
+       
 
-        int* pathVis = (int*)malloc(n * sizeof(int));
-        int* vis = (int*)malloc(n * sizeof(int));
+        int* pathVis = (int*)calloc(n, sizeof(int));
+        int* vis = (int*)calloc(n, sizeof(int));
 
-        memset(vis, 0, n * sizeof(int));
-        memset(pathVis, 0, n * sizeof(int));
         int cycle= CHECK_CYCLE(node->id,pathVis,vis,sheet);
+
         free(vis);
         free(pathVis);
+
         if(cycle==1){
             LinkedList* tmp= tempList;
+
             while(tmp!=NULL){
-                delete_node(((sheet->matrix)+tmp->data)->OutNeighbours, node->id);
+                delete_node(&(((sheet->matrix)+tmp->data)->OutNeighbours), node->id);
                 tmp=tmp->next;
             }
-            free_list(tmp);
-            LinkedList* tmp2= node->InNeighbours;
-            node->InNeighbours= curr_head;
-            free_list(tmp2);
-            // node->in_size= temp_size;
+
+            LinkedList* temp= curr_head;
+
+            while(temp!=NULL){
+                ((sheet->matrix)+temp->data)->OutNeighbours= add_node(((sheet->matrix)+temp->data)->OutNeighbours, node->id);
+                temp=temp->next;
+            }
+
+            free_list(&(node->InNeighbours));
+            node->InNeighbours= temp;
+            free_list(&tmp);
             return 0;
         }
         else{
-            free_list(curr_head);
-            free_list(tempList);
-            // printf("hello A1: ");
-            // print_list((sheet->matrix)->OutNeighbours);
+
+            free_list(&curr_head);
+            free_list(&tempList);
 
             return 1;
         }
+<<<<<<< HEAD
 
         
         // printf("I reached here!!16\n");
+=======
+>>>>>>> b43229b188fd9d33d3de684e7bfb98c757a6ced3
     }
     else{
-        free_list(node->InNeighbours);
+        
+        free_list(&curr_head);
         node->InNeighbours=NULL;
-        // node->in_size=0;
         return 1;
     }
 }

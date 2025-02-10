@@ -16,7 +16,7 @@ bool isValidNumber(char* num){
     return true;
 }
 
-bool isValidCell(char* cell) {
+bool isValidCell(char* cell, Sheet* sheet) {
     
     int n=strlen(cell);
     if (n>6 || n<2) {
@@ -34,18 +34,26 @@ bool isValidCell(char* cell) {
 
     if (i!=n || letterCount==0 || digitCount==0 || letterCount>3 || digitCount>3)
         return false;
+    char letter[4];
+    char number[4];
+    separate_cell(cell,letter,number);
+    int r= atoi(number);
+    int c= get_column(letter);
 
+    if(r>sheet->rows || c>sheet->cols){
+        return false;
+    }
     return true;
 }
 
-bool isValidValue(char* val){
-    return isValidCell(val) || isValidNumber(val);
+bool isValidValue(char* val, Sheet* sheet){
+    return isValidCell(val,sheet) || isValidNumber(val);
 }
 
 
 bool isValidRange(char* first,char* second,Sheet* sheet){
 
-    if(!isValidCell(first) || !isValidCell(second)){
+    if(!isValidCell(first, sheet) || !isValidCell(second, sheet)){
         return false;
     }
 
@@ -57,13 +65,17 @@ bool isValidRange(char* first,char* second,Sheet* sheet){
     separate_cell(first,letter1,number1);
     separate_cell(second,letter2,number2);
 
-    int r1=atoi(number1)-1;
-    int c1=get_column(letter1)-1;
+    int r1=atoi(number1);
+    int c1=get_column(letter1);
 
-    int r2=atoi(number2)-1;
-    int c2=get_column(letter2)-1;
+    int r2=atoi(number2);
+    int c2=get_column(letter2);
 
     if(r1>r2 || c1>c2){
+        return false;
+    }
+    
+    if(r1>sheet->rows || c1>sheet->cols){
         return false;
     }
 
