@@ -15,7 +15,7 @@
 int MASTER( Node* node, Sheet* sheet ){
     int func_type= node->type;
     int max_col = sheet->cols;
-    int index_1 = node->cell1;
+    int index_1 = node->cell1; 
     int index_2 = node->cell2;
     int from_col = index_1%max_col;
     int to_col = index_2%max_col;
@@ -24,49 +24,100 @@ int MASTER( Node* node, Sheet* sheet ){
 
     if( func_type == 0 ){ // Constant assignment
         node->val = node->op_val;
+
         return 1;
     }
     else if(func_type==1){ //arithmetic
         if(node->operator=='+'){
             if(node->cell1==-1){
-                node->val= (sheet->matrix+ node->cell2)->val + node->op_val;
+                if((sheet->matrix+ node->cell2)->isValid==0){
+                    node->isValid=0;
+                }
+                else{
+                    node->val= (sheet->matrix+ node->cell2)->val + node->op_val;
+                    node->isValid=1;
+                }
             }
             else if(node->cell2==-1){
-                node->val= (sheet->matrix+ node->cell1)->val + node->op_val;
+                if((sheet->matrix+ node->cell1)->isValid==0){
+                    node->isValid=0;
+                }
+                else{
+                    node->val= (sheet->matrix+ node->cell1)->val + node->op_val;
+                    node->isValid=1;
+                }
             }
             else{
-                node->val= (sheet->matrix+ node->cell1)->val + (sheet->matrix+ node->cell2)->val;
+                if((sheet->matrix+ node->cell1)->isValid==0 || (sheet->matrix+ node->cell2)->isValid==0){
+                    node->isValid=0;
+                }
+                else{
+                    node->val= (sheet->matrix+ node->cell1)->val + (sheet->matrix+ node->cell2)->val;
+                    node->isValid=1;
+                }
             }
-            node->isValid=1;
             return 1;
         }
         else if(node->operator=='-'){
             // printf("cell1: %d cell2: %d val: %d\n", node->cell1, node->cell2, node->op_val);
             if(node->cell2==-1){
-                node->val= (sheet->matrix+ node->cell1)->val - node->op_val;
-                // printf("value: %d\n", node->val);
+                if((sheet->matrix+ node->cell1)->isValid==0){
+                    node->isValid=0;
+                }
+                else{
+                    node->val= (sheet->matrix+ node->cell1)->val - node->op_val;
+                    node->isValid=1;
+                }
                 
             }
             else if(node->cell1==-1){
-                node->val= node->op_val- (sheet->matrix+ node->cell2)->val ;
+                if((sheet->matrix+ node->cell2)->isValid==0){
+                    node->isValid=0;
+                }
+                else{
+                    node->val= node->op_val- (sheet->matrix+ node->cell2)->val ;
+                    node->isValid=1;
+                }
             }
             else{
-                node->val= (sheet->matrix+ node->cell1)->val - (sheet->matrix+ node->cell2)->val;
+                if((sheet->matrix+ node->cell1)->isValid==0 || (sheet->matrix+ node->cell2)->isValid==0){
+                    node->isValid=0;
+                }
+                else{
+                    node->val= (sheet->matrix+ node->cell1)->val - (sheet->matrix+ node->cell2)->val;
+                    node->isValid=1;
+                }
             }
-            node->isValid=1;
             return 1;
         }
         else if(node->operator=='*'){
             if(node->cell1==-1){
-                node->val= (sheet->matrix+ node->cell2)->val * node->op_val;
+                if((sheet->matrix+ node->cell2)->isValid==0){
+                    node->isValid=0;
+                }
+                else{
+                    node->val= (sheet->matrix+ node->cell2)->val * node->op_val;
+                    node->isValid=1;
+                }
             }
             else if(node->cell2==-1){
-                node->val= (sheet->matrix+ node->cell1)->val * node->op_val;
+                if((sheet->matrix+ node->cell1)->isValid==0){
+                    node->isValid=0;
+                }
+                else{
+                    node->val= (sheet->matrix+ node->cell1)->val * node->op_val;
+                    node->isValid=1;
+                }
             }
             else{
-                node->val= (sheet->matrix+ node->cell1)->val * (sheet->matrix+ node->cell2)->val;
+                if((sheet->matrix+ node->cell1)->isValid==0 || (sheet->matrix+ node->cell2)->isValid==0){
+                    node->isValid=0;
+                }
+                else{
+                    node->val= (sheet->matrix+ node->cell1)->val * (sheet->matrix+ node->cell2)->val;
+                    node->isValid=1;
+                }
             }
-            node->isValid=1;
             return 1;
         }
         else if(node->operator=='/'){ //TODO: Handle division by zero. (Donee)

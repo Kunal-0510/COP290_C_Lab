@@ -184,6 +184,7 @@ bool assign_cell(char* cellAddress, char* expr, Sheet* sheet) {
             
             else if (isValidNumber(val2)) {
                 type = 0;
+                cell->isValid=1;
                 int num1 = atoi(val1);
                 int num2 = atoi(val2);
                 // printf("num1: %d num2: %d\n",num1, num2);
@@ -193,6 +194,7 @@ bool assign_cell(char* cellAddress, char* expr, Sheet* sheet) {
                 else if (op == '-') ans = num1 - num2;
                 else if (op == '*') ans = num1 * num2;
                 else if (op == '/' && num2 != 0) ans = num1 / num2;
+                else if (op == '/' && num2==0) cell->isValid=0;
 
                 cell->cell1 = -1;
                 cell->cell2 = -1;
@@ -208,6 +210,7 @@ bool assign_cell(char* cellAddress, char* expr, Sheet* sheet) {
         if (val2[0] == '\0') {
             if (isValidNumber(val1)) {
                 type = 0;
+                cell->isValid=1;
                 cell->op_val = atoi(val1);
                 // printf("%d %d\n", cell->op_val, cell->id);
                 // printf("I am here\n");
