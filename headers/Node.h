@@ -6,7 +6,7 @@
 
 typedef struct Node{
 
-
+    int isValid;
     int val ;
     int id;
     LinkedList *InNeighbours;

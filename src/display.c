@@ -58,7 +58,13 @@ void display_sheet(struct Sheet* sheet){ // args: The sheet itself
         for(int i=rowt; i<min(rowt+10, numrows); i++){
             printf("%3d", i+1);
             for(int j= colt; j<min(colt+10, numcols); j++){
-                printf("%10d", ((sheet->matrix)+i*numcols+j)->val);
+                Node* node= (sheet->matrix)+i*numcols+j;
+                if(node->isValid==1){
+                    printf("%10d", ((sheet->matrix)+i*numcols+j)->val);
+                }
+                else{
+                    printf("       ERR");
+                }
             }
             printf("\n");
         }

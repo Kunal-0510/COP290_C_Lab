@@ -21,7 +21,7 @@ int MASTER( Node* node, Sheet* sheet ){
     int to_col = index_2%max_col;
     int from_row = index_1/max_col;
     int to_row = index_2/max_col;
-    int success= 1;
+
     if( func_type == 0 ){ // Constant assignment
         node->val = node->op_val;
         return 1;
@@ -37,6 +37,7 @@ int MASTER( Node* node, Sheet* sheet ){
             else{
                 node->val= (sheet->matrix+ node->cell1)->val + (sheet->matrix+ node->cell2)->val;
             }
+            node->isValid=1;
             return 1;
         }
         else if(node->operator=='-'){
@@ -52,6 +53,7 @@ int MASTER( Node* node, Sheet* sheet ){
             else{
                 node->val= (sheet->matrix+ node->cell1)->val - (sheet->matrix+ node->cell2)->val;
             }
+            node->isValid=1;
             return 1;
         }
         else if(node->operator=='*'){
@@ -64,17 +66,43 @@ int MASTER( Node* node, Sheet* sheet ){
             else{
                 node->val= (sheet->matrix+ node->cell1)->val * (sheet->matrix+ node->cell2)->val;
             }
+            node->isValid=1;
             return 1;
         }
-        else if(node->operator=='/'){ //TODO: Handle division by zero.
+        else if(node->operator=='/'){ //TODO: Handle division by zero. (Donee)
             if(node->cell2==-1){
-                node->val= ((sheet->matrix+ node->cell1)->val)/(node->op_val);
+                if(node->op_val==0){
+                    node->isValid=0;
+                    return 1;
+                }
+                else{
+                    node->val= ((sheet->matrix+ node->cell1)->val)/(node->op_val);
+                    node->isValid=1;
+                }
+                
+                
             }
             else if(node->cell1==-1){
-                node->val= (node->op_val)/((sheet->matrix+ node->cell2)->val) ;
+                if((sheet->matrix+ node->cell2)->val==0){
+                    node->isValid=0;
+                    return 1;
+                }
+                else{
+                    node->val= (node->op_val)/((sheet->matrix+ node->cell2)->val) ;
+                    node->isValid=1;
+                }
+
             }
             else{
-                node->val= ((sheet->matrix+ node->cell1)->val)/((sheet->matrix+ node->cell2)->val);
+                if((sheet->matrix+ node->cell2)->val==0){
+                    node->isValid=0;
+                    return 1;
+                }
+                else{
+                    node->val= ((sheet->matrix+ node->cell1)->val)/((sheet->matrix+ node->cell2)->val);
+                    node->isValid=1;
+                }
+                
             }
             return 1;
         }
@@ -85,37 +113,49 @@ int MASTER( Node* node, Sheet* sheet ){
     else if( func_type == 2){ // MIN(RANGE)
         int ans=  MIN( from_row,from_col,to_row,to_col,max_col, sheet );
         node->val= ans;
+        node->isValid=1;
+        return 1;
 
     }
     else if( func_type == 3 ){ // MAX(RANGE)
 
         int ans= MAX( from_row,from_col,to_row,to_col,max_col, sheet );
         node->val= ans;
+        node->isValid=1;
+        return 1;
 
     }
 
     else if( func_type == 4 ){ // AVG(RANGE)
         node->val= AVG( from_row,from_col,to_row,to_col,max_col, sheet );
+        node->isValid=1;
+        return 1;
     }
 
     else if( func_type == 5 ){ // SUM(RANGE)
 
         node->val= SUM( from_row,from_col,to_row,to_col,max_col, sheet );
+        node->isValid=1;
+        return 1;
 
     }
 
     else if( func_type == 6 ){ // STDEV(RANGE)
 
         node->val= STDEV( from_row,from_col,to_row,to_col,max_col, sheet );
+        node->isValid=1;
+        return 1;
     }
 
     else if( func_type == 7){ // SLEEP(RANGE)
         SLEEP(node,sheet);
+        node->isValid=1;
+        return 1;
         
     }
 
     else{
-        success=0;
+        return 0;
 
     }
     
@@ -368,8 +408,8 @@ void recalculate_node( Node* node , Sheet* sheet ){
     topo_sort( node->id, vis, st, sheet );
 
     free(vis);
-
+    int flag=1;
     while(isempty(st) == 0){
-        MASTER((sheet->matrix+pop(st)),sheet);
+        MASTER((sheet->matrix+pop(st)),sheet);   
     }
 }
