@@ -334,12 +334,6 @@ int add_edge(Node* node, Sheet* sheet){
 
             return 1;
         }
-<<<<<<< HEAD
-
-        
-        // printf("I reached here!!16\n");
-=======
->>>>>>> b43229b188fd9d33d3de684e7bfb98c757a6ced3
     }
     else{
         
