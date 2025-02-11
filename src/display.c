@@ -72,23 +72,23 @@ void display_sheet(struct Sheet* sheet){ // args: The sheet itself
 }  // Displays the excel sheet in 10*10 grid
 void scroll_up(Sheet* sheet){
     sheet->rowtop= max(sheet->rowtop-10, 0);
-    display_sheet(sheet);
+    // display_sheet(sheet);
 }
     
 
 void scroll_down( Sheet* sheet){
     sheet->rowtop= min(sheet->rowtop+10, max(sheet->rows-10,0));
-    display_sheet(sheet);
+    // display_sheet(sheet);
 }
 
 void scroll_right(Sheet* sheet){
     sheet->coltop= min(sheet->coltop+10, max(sheet->cols-10,0));
-    display_sheet(sheet);
+    // display_sheet(sheet);
 }
 
 void scroll_left(Sheet* sheet){
     sheet->coltop= max(sheet->coltop-10, 0);
-    display_sheet(sheet);
+    // display_sheet(sheet);
 }
 
 void disable_display( Sheet*  sheet){
@@ -108,5 +108,5 @@ void scroll_to(char* cell,  Sheet* sheet){
     sheet->rowtop= row;
     sheet->coltop= col;
 
-    display_sheet(sheet);
+    // display_sheet(sheet);
 }
