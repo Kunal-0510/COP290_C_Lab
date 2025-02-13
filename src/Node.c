@@ -1,6 +1,7 @@
 #include "Node.h"
 
 void initialize_node(struct Node *node, int id) {
+    node->isValid=1;
     node->val = 0;
     node->InNeighbours = NULL;
     node->id= id;

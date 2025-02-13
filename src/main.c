@@ -35,6 +35,7 @@ int main(int argc, char* argv[]) {
         return 1;
     }
 
+
     int rows = atoi(argv[1]);
     int cols = atoi(argv[2]);
 
@@ -52,6 +53,7 @@ int main(int argc, char* argv[]) {
 
     char input[MAX_INPUT_LENGTH];
     while (1) {
+        int suc=1;
         // printf("%d\n", strlen(input));
         if (!fgets(input, MAX_INPUT_LENGTH, stdin)) {
             printf("[0.0] (error reading input) >");
@@ -79,25 +81,32 @@ int main(int argc, char* argv[]) {
             enable_display(sheet);
         } else if (strncmp(input, "scroll_to ", 10) == 0) {
             char* cell = input + 10; // Extract cell argument
-            scroll_to(cell, sheet);
+            if(isValidCell(cell, sheet)){
+                scroll_to(cell, sheet);
+            }
+            else{
+                suc=0;
+            }
+            
         } else {
             // Assume it's a formula or operation
             // printf("%d\n", strlen(input));
             int result = parseInput(input, sheet); // Assuming parse_input is implemented in parser.h
             if (result != 1) {
-                printf("[0.0] (error parsing input) >");
-                continue;
+                suc=0;    
             }
-            else{
-                display_sheet(sheet);
-            }
+           
         }
 
         clock_t end_time = clock();
         double elapsed_time = ((double)(end_time - start_time)) / CLOCKS_PER_SEC;
-
-        
-        printf("[%0.1f] (ok) > ", elapsed_time);
+        display_sheet(sheet);
+        if(suc==1){
+            printf("[%0.1f] (ok) > ", elapsed_time);
+        }
+        else{
+            printf("[%0.1f] (error parsing input) > ", elapsed_time);
+        }
     }
     
     free_sheet(sheet); // Free allocated memory
