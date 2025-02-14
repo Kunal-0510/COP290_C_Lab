@@ -298,12 +298,8 @@ bool parseInput(char* input, Sheet* sheet) {
 
     bool result = assign_cell(cellAddress, expression, sheet);
     
-    if(result==false){
-        return false;
-    }
-
     free(cellAddress);
     free(expression);
 
-    return true;
+    return result;
 }
