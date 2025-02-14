@@ -6,7 +6,7 @@ typedef struct LinkedList {
     struct LinkedList* next;
 }LinkedList;
 
-LinkedList* add_node(LinkedList* head, int hash);
+void add_node(LinkedList** head, int hash);
 void delete_node( LinkedList** head_ref, int key);
 void free_list(LinkedList** head);
 int find_node(LinkedList* head, int hash);

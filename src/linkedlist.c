@@ -2,16 +2,16 @@
 #include <stdio.h>
 #include <stdlib.h>  
 
-LinkedList* add_node(LinkedList* head, int hash) {
+void add_node(LinkedList** head, int hash) {
     LinkedList* new_node = (LinkedList*)malloc(sizeof(LinkedList));
     if (!new_node) {
         printf("Memory allocation failed!\n");
-        return head;  
+        return; 
     }
 
     new_node->data = hash;
-    new_node->next = head;  
-    return new_node; 
+    new_node->next = *head;  
+    *head= new_node;
 } // Always use list= addnode(), not just addnode()
 
 

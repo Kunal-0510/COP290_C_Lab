@@ -15,66 +15,145 @@
 int MASTER( Node* node, Sheet* sheet ){
     int func_type= node->type;
     int max_col = sheet->cols;
-    int index_1 = node->cell1;
+    int index_1 = node->cell1; 
     int index_2 = node->cell2;
     int from_col = index_1%max_col;
     int to_col = index_2%max_col;
     int from_row = index_1/max_col;
     int to_row = index_2/max_col;
-    int success= 1;
+
     if( func_type == 0 ){ // Constant assignment
         node->val = node->op_val;
+
         return 1;
     }
     else if(func_type==1){ //arithmetic
         if(node->operator=='+'){
             if(node->cell1==-1){
-                node->val= (sheet->matrix+ node->cell2)->val + node->op_val;
+                if((sheet->matrix+ node->cell2)->isValid==0){
+                    node->isValid=0;
+                }
+                else{
+                    node->val= (sheet->matrix+ node->cell2)->val + node->op_val;
+                    node->isValid=1;
+                }
             }
             else if(node->cell2==-1){
-                node->val= (sheet->matrix+ node->cell1)->val + node->op_val;
+                if((sheet->matrix+ node->cell1)->isValid==0){
+                    node->isValid=0;
+                }
+                else{
+                    node->val= (sheet->matrix+ node->cell1)->val + node->op_val;
+                    node->isValid=1;
+                }
             }
             else{
-                node->val= (sheet->matrix+ node->cell1)->val + (sheet->matrix+ node->cell2)->val;
+                if((sheet->matrix+ node->cell1)->isValid==0 || (sheet->matrix+ node->cell2)->isValid==0){
+                    node->isValid=0;
+                }
+                else{
+                    node->val= (sheet->matrix+ node->cell1)->val + (sheet->matrix+ node->cell2)->val;
+                    node->isValid=1;
+                }
             }
             return 1;
         }
         else if(node->operator=='-'){
             // printf("cell1: %d cell2: %d val: %d\n", node->cell1, node->cell2, node->op_val);
             if(node->cell2==-1){
-                node->val= (sheet->matrix+ node->cell1)->val - node->op_val;
-                // printf("value: %d\n", node->val);
+                if((sheet->matrix+ node->cell1)->isValid==0){
+                    node->isValid=0;
+                }
+                else{
+                    node->val= (sheet->matrix+ node->cell1)->val - node->op_val;
+                    node->isValid=1;
+                }
                 
             }
             else if(node->cell1==-1){
-                node->val= node->op_val- (sheet->matrix+ node->cell2)->val ;
+                if((sheet->matrix+ node->cell2)->isValid==0){
+                    node->isValid=0;
+                }
+                else{
+                    node->val= node->op_val- (sheet->matrix+ node->cell2)->val ;
+                    node->isValid=1;
+                }
             }
             else{
-                node->val= (sheet->matrix+ node->cell1)->val - (sheet->matrix+ node->cell2)->val;
+                if((sheet->matrix+ node->cell1)->isValid==0 || (sheet->matrix+ node->cell2)->isValid==0){
+                    node->isValid=0;
+                }
+                else{
+                    node->val= (sheet->matrix+ node->cell1)->val - (sheet->matrix+ node->cell2)->val;
+                    node->isValid=1;
+                }
             }
             return 1;
         }
         else if(node->operator=='*'){
             if(node->cell1==-1){
-                node->val= (sheet->matrix+ node->cell2)->val * node->op_val;
+                if((sheet->matrix+ node->cell2)->isValid==0){
+                    node->isValid=0;
+                }
+                else{
+                    node->val= (sheet->matrix+ node->cell2)->val * node->op_val;
+                    node->isValid=1;
+                }
             }
             else if(node->cell2==-1){
-                node->val= (sheet->matrix+ node->cell1)->val * node->op_val;
+                if((sheet->matrix+ node->cell1)->isValid==0){
+                    node->isValid=0;
+                }
+                else{
+                    node->val= (sheet->matrix+ node->cell1)->val * node->op_val;
+                    node->isValid=1;
+                }
             }
             else{
-                node->val= (sheet->matrix+ node->cell1)->val * (sheet->matrix+ node->cell2)->val;
+                if((sheet->matrix+ node->cell1)->isValid==0 || (sheet->matrix+ node->cell2)->isValid==0){
+                    node->isValid=0;
+                }
+                else{
+                    node->val= (sheet->matrix+ node->cell1)->val * (sheet->matrix+ node->cell2)->val;
+                    node->isValid=1;
+                }
             }
             return 1;
         }
-        else if(node->operator=='/'){ //TODO: Handle division by zero.
+        else if(node->operator=='/'){ //TODO: Handle division by zero. (Donee)
             if(node->cell2==-1){
-                node->val= ((sheet->matrix+ node->cell1)->val)/(node->op_val);
+                if(node->op_val==0){
+                    node->isValid=0;
+                    return 1;
+                }
+                else{
+                    node->val= ((sheet->matrix+ node->cell1)->val)/(node->op_val);
+                    node->isValid=1;
+                }
+                
+                
             }
             else if(node->cell1==-1){
-                node->val= (node->op_val)/((sheet->matrix+ node->cell2)->val) ;
+                if((sheet->matrix+ node->cell2)->val==0){
+                    node->isValid=0;
+                    return 1;
+                }
+                else{
+                    node->val= (node->op_val)/((sheet->matrix+ node->cell2)->val) ;
+                    node->isValid=1;
+                }
+
             }
             else{
-                node->val= ((sheet->matrix+ node->cell1)->val)/((sheet->matrix+ node->cell2)->val);
+                if((sheet->matrix+ node->cell2)->val==0){
+                    node->isValid=0;
+                    return 1;
+                }
+                else{
+                    node->val= ((sheet->matrix+ node->cell1)->val)/((sheet->matrix+ node->cell2)->val);
+                    node->isValid=1;
+                }
+                
             }
             return 1;
         }
@@ -85,37 +164,49 @@ int MASTER( Node* node, Sheet* sheet ){
     else if( func_type == 2){ // MIN(RANGE)
         int ans=  MIN( from_row,from_col,to_row,to_col,max_col, sheet );
         node->val= ans;
+        node->isValid=1;
+        return 1;
 
     }
     else if( func_type == 3 ){ // MAX(RANGE)
 
         int ans= MAX( from_row,from_col,to_row,to_col,max_col, sheet );
         node->val= ans;
+        node->isValid=1;
+        return 1;
 
     }
 
     else if( func_type == 4 ){ // AVG(RANGE)
         node->val= AVG( from_row,from_col,to_row,to_col,max_col, sheet );
+        node->isValid=1;
+        return 1;
     }
 
     else if( func_type == 5 ){ // SUM(RANGE)
 
         node->val= SUM( from_row,from_col,to_row,to_col,max_col, sheet );
+        node->isValid=1;
+        return 1;
 
     }
 
     else if( func_type == 6 ){ // STDEV(RANGE)
 
         node->val= STDEV( from_row,from_col,to_row,to_col,max_col, sheet );
+        node->isValid=1;
+        return 1;
     }
 
     else if( func_type == 7){ // SLEEP(RANGE)
         SLEEP(node,sheet);
+        node->isValid=1;
+        return 1;
         
     }
 
     else{
-        success=0;
+        return 0;
 
     }
     
@@ -266,15 +357,15 @@ int add_edge(Node* node, Sheet* sheet){
        
         if(node->type==1 || node->type==7){
             if(node->cell1!=-1){
-                node->InNeighbours= add_node(node->InNeighbours, node->cell1);
-                ((sheet->matrix)+node->cell1)->OutNeighbours= add_node(((sheet->matrix)+node->cell1)->OutNeighbours, node->id);
-                tempList= add_node(tempList, node->cell1);
+                add_node(&(node->InNeighbours), node->cell1);
+                add_node(&(((sheet->matrix)+node->cell1)->OutNeighbours), node->id);
+                add_node(&tempList, node->cell1);
             }
 
             if(node->cell2!=-1){
-                node->InNeighbours= add_node(node->InNeighbours, node->cell2);
-                ((sheet->matrix)+node->cell2)->OutNeighbours= add_node(((sheet->matrix)+node->cell2)->OutNeighbours, node->id);
-                tempList= add_node(tempList, node->cell2);
+                add_node(&(node->InNeighbours), node->cell2);
+                add_node(&(((sheet->matrix)+node->cell2)->OutNeighbours), node->id);
+                add_node(&tempList, node->cell2);
             }
         }
         
@@ -291,9 +382,9 @@ int add_edge(Node* node, Sheet* sheet){
             for( int i = from_row; i <= to_row; i++ ){
                 for( int j = from_col; j<=to_col; j++ ){
                     int cell= i*max_col+j;
-                    node->InNeighbours= add_node(node->InNeighbours, cell);
-                    ((sheet->matrix)+ cell)->OutNeighbours= add_node(((sheet->matrix)+ cell)->OutNeighbours, node->id);
-                    tempList= add_node(tempList, cell);
+                    add_node(&node->InNeighbours, cell);
+                    add_node(&(((sheet->matrix)+ cell)->OutNeighbours), node->id);
+                    add_node(&tempList, cell);
                 }
             }
         }
@@ -318,7 +409,7 @@ int add_edge(Node* node, Sheet* sheet){
             LinkedList* temp= curr_head;
 
             while(temp!=NULL){
-                ((sheet->matrix)+temp->data)->OutNeighbours= add_node(((sheet->matrix)+temp->data)->OutNeighbours, node->id);
+                add_node(&(((sheet->matrix)+temp->data)->OutNeighbours), node->id);
                 temp=temp->next;
             }
 
@@ -356,6 +447,18 @@ void topo_sort( int id , int* vis , Stack* st ,Sheet* sh ){
     }
     push( st, id );
 }
+
+void dfs( int id , int*vis , Sheet* sheet ){
+    vis[id] = 1;
+    LinkedList* in = (sheet->matrix+id)->OutNeighbours;
+    while( in!= NULL ){
+        if( vis[in->data]==0 ){
+            (sheet->matrix+in->data)->isValid = (sheet->matrix +id)->isValid;
+            dfs( in->data , vis ,sheet );
+        }
+        in=in->next; //Gogo Stupidity counter- infinity
+    }
+}
 void recalculate_node( Node* node , Sheet* sheet ){
     // printf("I reached here!!1\n");
 
@@ -366,10 +469,24 @@ void recalculate_node( Node* node , Sheet* sheet ){
     int* vis = (int*)malloc(n * sizeof(int));
     memset(vis, 0, n * sizeof(int));
     topo_sort( node->id, vis, st, sheet );
+    memset(vis, 0, n * sizeof(int));
 
-    free(vis);
-
+    int flag=1;
     while(isempty(st) == 0){
-        MASTER((sheet->matrix+pop(st)),sheet);
+        int a= pop(st);
+        if((sheet->matrix+a)->isValid==1){
+            MASTER((sheet->matrix+a),sheet);
+            if((sheet->matrix+a)->isValid==0){
+                dfs(a, vis, sheet);
+            }
+        }
+        else if(!vis[a]){
+            MASTER((sheet->matrix+a),sheet);
+        }
+        else{
+            continue;
+        }
+           
     }
+    free(vis);
 }
