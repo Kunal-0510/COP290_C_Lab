@@ -62,7 +62,7 @@ void SLEEP( Node* node, Sheet* sheet );
 // Check cycle function checks for cycle in the graph using kahns. Gives 1 for true 0 for false.
 
 int CHECK_CYCLE( int id,int* pathVis,int* vis,Sheet* sheet );
-
+int delete_edge(Node* node , Sheet* sheet);
 int add_edge(Node* node, Sheet* sheet);
 void topo_sort( int id , int* vis , Stack* st ,Sheet* sh );
 void recalculate_node( Node* node , Sheet* sheet );

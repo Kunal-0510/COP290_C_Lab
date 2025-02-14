@@ -289,12 +289,17 @@ bool parseInput(char* input, Sheet* sheet) {
     char* expression = NULL;
 
     if (!parse(input, &cellAddress, &expression, '=')) {
+        free(cellAddress);
+        free(expression);
         return false;
     }
 
     if(!isValidCell(cellAddress,sheet)){
+        free(cellAddress);
+        free(expression);
         return false;
     }
+    
 
     bool result = assign_cell(cellAddress, expression, sheet);
     
