@@ -302,4 +302,5 @@ bool parseInput(char* input, Sheet* sheet) {
     free(expression);
 
     return result;
-}
+}    return result;
+}    return result;
