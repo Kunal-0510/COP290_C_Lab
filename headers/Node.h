@@ -9,7 +9,6 @@ typedef struct Node{
     int isValid;
     int val ;
     int id;
-    LinkedList *InNeighbours;
     LinkedList *OutNeighbours;
     int type;
     int cell1;
