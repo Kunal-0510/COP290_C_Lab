@@ -61,5 +61,24 @@ main.o: main.c $(HEADERS)
 clean:
 	rm -f $(OBJ) $(TARGET)
 
+# --- Test Suite Section ---
+TEST_DIR = testcase
+TEST_SRC = $(TEST_DIR)/test_suite.c
+TEST_OBJ = $(TEST_DIR)/test_suite.o
+TEST_TARGET = $(TEST_DIR)/test_suite
+
+# Compile the test suite source into an object file.
+$(TEST_OBJ): $(TEST_SRC)
+	$(CC) $(CFLAGS) -c -o $(TEST_OBJ) $(TEST_SRC)
+
+# Link the test suite object file into an executable.
+$(TEST_TARGET): $(TEST_OBJ) $(TARGET)
+	$(CC) $(CFLAGS) -o $(TEST_TARGET) $(TEST_OBJ)
+
+# Target to run the test suite.
+test: $(TEST_TARGET)
+	@echo "Running tests..."
+	$(TEST_TARGET)
+
 # Phony targets (not actual files)
 .PHONY: all clean
