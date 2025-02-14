@@ -57,9 +57,6 @@ stack.o: stack.c $(HEADER_DIR)/stack.h
 main.o: main.c $(HEADERS)
 	$(CC) $(CFLAGS) -c $< -o $@
 
-# Clean up build artifacts
-clean:
-	rm -f $(OBJ) $(TARGET)
 
 # --- Test Suite Section ---
 TEST_DIR = testcase
@@ -79,6 +76,10 @@ $(TEST_TARGET): $(TEST_OBJ) $(TARGET)
 test: $(TEST_TARGET)
 	@echo "Running tests..."
 	$(TEST_TARGET)
+
+# Clean up build artifacts
+clean:
+	rm -f $(OBJ) $(TARGET) testcase/test_suite.o
 
 # Phony targets (not actual files)
 .PHONY: all clean

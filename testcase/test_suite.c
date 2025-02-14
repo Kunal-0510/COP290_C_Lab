@@ -21,8 +21,8 @@ int main(void) {
     }
     
     // Open the generated output and the expected output.
-    FILE *fout = fopen("temp_output.txt", "r");
-    FILE *fexpected = fopen("output.txt", "r");
+    FILE *fout = fopen("testcase/temp_output.txt", "r");
+    FILE *fexpected = fopen("testcase/output.txt", "r");
     if (!fout || !fexpected) {
         fprintf(stderr, "Error: Could not open output files.\n");
         return 1;
