@@ -46,6 +46,7 @@ int main(int argc, char* argv[]) {
     }
     clock_t st = clock();
     create_sheet(rows, cols, sheet); // Initialize the sheet
+    init_memory_pool();
     display_sheet(sheet);      // Display the sheet (assuming this function is defined)
     clock_t en = clock();
     double el = ((double)(en - st)) / CLOCKS_PER_SEC;

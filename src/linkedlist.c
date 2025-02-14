@@ -1,91 +1,71 @@
 #include "linkedlist.h"
-#include <stdio.h>
-#include <stdlib.h>  
 
-void add_node(LinkedList** head, int hash) {
-    LinkedList* new_node = (LinkedList*)malloc(sizeof(LinkedList));
-    if (!new_node) {
-        printf("Memory allocation failed!\n");
-        return; 
+// Memory pool for LinkedList nodes
+static LinkedList nodePool[MAX_NODES];
+static LinkedList* freeList = NULL;  // Head of the free node list
+
+
+void init_memory_pool() {
+    for (int i = 0; i < MAX_NODES - 1; i++) {
+        nodePool[i].next = &nodePool[i + 1];  
     }
-
-    new_node->data = hash;
-    new_node->next = *head;  
-    *head= new_node;
-} // Always use list= addnode(), not just addnode()
-
-
-// LinkedList* delete_node(LinkedList* head, int hash) {
-//     LinkedList* temp = head;
-//     LinkedList* prev = NULL;
-
-//     while (temp != NULL && temp->data != hash) {
-//         prev = temp;
-//         temp = temp->next;
-//     }
-
-//     if (temp != NULL) { 
-//         if (prev == NULL) {  
-//             head = temp->next;
-//         } else {
-//             prev->next = temp->next;
-//         }
-//         free(temp);
-//     }
-
-//     return head;
-// }
-
-void delete_node( LinkedList** head_ref, int key) 
-{ 
-    // Store head node 
-    LinkedList *temp = *head_ref, *prev; 
-  
-    // If head node itself holds the key to be deleted 
-    if (temp != NULL && temp->data == key) { 
-        *head_ref = temp->next; // Changed head 
-        free(temp); // free old head 
-        return; 
-    } 
-  
-    // Search for the key to be deleted, keep track of the 
-    // previous node as we need to change 'prev->next' 
-    while (temp != NULL && temp->data != key) { 
-        prev = temp; 
-        temp = temp->next; 
-    } 
-  
-    // If key was not present in linked list 
-    if (temp == NULL) 
-        return; 
-  
-    // Unlink the node from linked list 
-    prev->next = temp->next; 
-  
-    free(temp); // Free memory 
-} 
-
-void free_list(LinkedList** head) {
-    LinkedList* temp;
-    while (*head != NULL) {
-        temp = *head;      // Store current node
-        *head = (*head)->next; // Move to next node
-        free(temp);       // Free current node
-    }
-    *head = NULL;  
+    nodePool[MAX_NODES - 1].next = NULL;
+    freeList = nodePool;  
 }
-int find_node(LinkedList* head, int hash){
-    LinkedList* temp = head;
-    int found=0;
-    while(temp!=NULL && found==0){
-        if(temp->data==hash){
-            found=1;
-        }
-        else{
-            temp= temp->next;
-        }
+
+LinkedList* get_new_node(int hash) {
+    if (freeList == NULL) {
+        printf("Memory limit reached!\n");
+        return NULL;
     }
-    return found;
+    LinkedList* new_node = freeList;
+    freeList = freeList->next;  
+    new_node->data = hash;
+    new_node->next = NULL;
+    return new_node;
+}
+
+// Return a node to the memory pool
+void free_node(LinkedList* node) {
+    if (node == NULL) return;
+    node->next = freeList;
+    freeList = node;
+}
+
+// Add a node to the linked list (Using Memory Pool)
+void add_node(LinkedList** head, int hash) {
+    LinkedList* new_node = get_new_node(hash);
+    if (!new_node) return;  // Memory exhausted
+    new_node->next = *head;
+    *head = new_node;
+}
+
+// Delete a node from the linked list
+void delete_node(LinkedList** head, int hash) {
+    LinkedList* temp = *head, *prev = NULL;
+
+    while (temp != NULL && temp->data != hash) {
+        prev = temp;
+        temp = temp->next;
+    }
+
+    if (temp == NULL) return;  // Not found
+
+    if (prev != NULL) prev->next = temp->next;
+    else *head = temp->next;
+
+    free_node(temp);
+}
+
+// Free entire linked list
+void free_list(LinkedList** head) {
+    LinkedList* temp = *head;
+    while (temp != NULL) {
+        LinkedList* next = temp->next;
+        free_node(temp);
+        temp = next;
+    }
+    *head = NULL;
 }
 
 void print_list(LinkedList* head) {
