@@ -364,7 +364,7 @@ void CHECK_CYCLE( Node* node , int* vis , Sheet* sheet , int  cell1 , int cell2 
     LinkedList* out = (sheet->matrix+node->id)->OutNeighbours;
     while( out!= NULL ){
         if( vis[out->data]==0 ){
-            CHECK_CYCLE( out->data ,  vis ,  sheet ,  cell1 ,  cell2 , flag ,  type , st );
+            CHECK_CYCLE( (sheet->matrix)+(out->data) ,  vis ,  sheet ,  cell1 ,  cell2 , flag ,  type , st );
         }
         out = out->next; //Gogo Stupidity counter- infinity
     }
@@ -470,8 +470,9 @@ int delete_edge(Node* node , Sheet* sheet){// node-> previous
     if(type>1){
         if(type==7){
             if(node->cell1!=-1){
-                LinkedList* tba= ((sheet->matrix)+node->cell1)->OutNeighbours;
-                delete_node(&tba, node->id);
+                // LinkedList* tba= ((sheet->matrix)+node->cell1)->OutNeighbours;
+                delete_node(&(((sheet->matrix)+node->cell1)->OutNeighbours), node->id);
+                // ((sheet->matrix)+node->cell1)->OutNeighbours=tba;
             }    
         }
         else{
@@ -481,12 +482,13 @@ int delete_edge(Node* node , Sheet* sheet){// node-> previous
             int row1= cell1/cols;
             int col1= cell1%cols;
             int row2= cell2/cols;
-            int col2= cell2/cols;
+            int col2= cell2%cols;
             for(int i=row1; i<=row2; i++){
                 for(int j=col1; j<=col2; j++){
                     int cell = i*cols+j;
-                    LinkedList* tba= ((sheet->matrix)+cell)->OutNeighbours;
-                    delete_node(&tba, node->id);
+                    // LinkedList* tba= ((sheet->matrix)+cell)->OutNeighbours;
+                    delete_node(&(((sheet->matrix)+cell)->OutNeighbours), node->id);
+                    // ((sheet->matrix)+cell)->OutNeighbours=tba;
                 }
             }
         }
@@ -494,12 +496,14 @@ int delete_edge(Node* node , Sheet* sheet){// node-> previous
     else if(type==1){
         
         if(node->cell1!=-1){
-            LinkedList* tba= ((sheet->matrix)+node->cell1)->OutNeighbours;
-            delete_node(&tba, node->id);
+            // LinkedList* tba= ((sheet->matrix)+node->cell1)->OutNeighbours;
+            delete_node(&(((sheet->matrix)+node->cell1)->OutNeighbours), node->id);
+            // ((sheet->matrix)+node->cell1)->OutNeighbours=tba;
         } 
         if(node->cell2!=-1){
-            LinkedList* tba= ((sheet->matrix)+node->cell2)->OutNeighbours;
-            delete_node(&tba, node->id);
+            // LinkedList* tba= ((sheet->matrix)+node->cell2)->OutNeighbours;
+            delete_node(&(((sheet->matrix)+node->cell2)->OutNeighbours), node->id);
+            // ((sheet->matrix)+node->cell2)->OutNeighbours=tba;
         }
     
     }
@@ -511,8 +515,9 @@ int add_edge(Node* node, Sheet* sheet){
     if(type>1){
         if(type==7){
             if(node->cell1!=-1){
-                LinkedList* tba= ((sheet->matrix)+node->cell1)->OutNeighbours;
-                add_node(&tba, node->id);
+                // LinkedList* tba= ((sheet->matrix)+node->cell1)->OutNeighbours;
+                add_node(&(((sheet->matrix)+node->cell1)->OutNeighbours), node->id);
+                // ((sheet->matrix)+node->cell1)->OutNeighbours=tba;
             }    
         }
         else{
@@ -522,12 +527,13 @@ int add_edge(Node* node, Sheet* sheet){
             int row1= cell1/cols;
             int col1= cell1%cols;
             int row2= cell2/cols;
-            int col2= cell2/cols;
+            int col2= cell2%cols;
             for(int i=row1; i<=row2; i++){
                 for(int j=col1; j<=col2; j++){
                     int cell = i*cols+j;
-                    LinkedList* tba= ((sheet->matrix)+cell)->OutNeighbours;
-                    add_node(&tba, node->id);
+                    // LinkedList* tba= ((sheet->matrix)+cell)->OutNeighbours;
+                    add_node(&(((sheet->matrix)+cell)->OutNeighbours), node->id);
+                    // ((sheet->matrix)+cell)->OutNeighbours=tba;
                 }
             }
         }
@@ -535,12 +541,14 @@ int add_edge(Node* node, Sheet* sheet){
     else if(type==1){
         
         if(node->cell1!=-1){
-            LinkedList* tba= ((sheet->matrix)+node->cell1)->OutNeighbours;
-            add_node(&tba, node->id);
+            // LinkedList* tba= ((sheet->matrix)+node->cell1)->OutNeighbours;
+            add_node(&(((sheet->matrix)+node->cell1)->OutNeighbours), node->id);
+            // ((sheet->matrix)+node->cell1)->OutNeighbours=tba;
         } 
         if(node->cell2!=-1){
-            LinkedList* tba= ((sheet->matrix)+node->cell2)->OutNeighbours;
-            add_node(&tba, node->id);
+            // LinkedList* tba= ((sheet->matrix)+node->cell2)->OutNeighbours;
+            add_node(&(((sheet->matrix)+node->cell2)->OutNeighbours), node->id);
+            // ((sheet->matrix)+node->cell2)->OutNeighbours=tba;
         }
     
     }
