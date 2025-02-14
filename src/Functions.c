@@ -321,133 +321,244 @@ void SLEEP(Node* node, Sheet* sheet){
     }
 }
 
-int CHECK_CYCLE( int id,int* pathVis,int* vis,Sheet* sheet ){
-    vis[id]=1;
-    pathVis[id]=1;
-    LinkedList* top = (sheet->matrix+id)->OutNeighbours;
-    while(top!=NULL){
-        if(vis[top->data]==0){
-            if(CHECK_CYCLE(top->data,pathVis,vis,sheet)){
-                return 1;
+void CHECK_CYCLE( Node* node , int* vis , Sheet* sheet , int  cell1 , int cell2 ,int* flag , int type , Stack* st ){
+    vis[node->id] = 1;
+    if(type>1&&type<7){
+        if((node->id)/(sheet->cols)>=(cell1)/(sheet->cols)&&(node->id)/(sheet->cols)<=(cell2)/(sheet->cols)){
+            if((node->id)%(sheet->cols)>=(cell1)%(sheet->cols)&&(node->id)%(sheet->cols)<=(cell2)%(sheet->cols)){
+                *flag = 1;
             }
         }
-        else if(pathVis[top->data]==1){
-            return 1;
-        }
-        top=top->next;
     }
-    pathVis[id]=0;
-    return 0;
-}
-
-int add_edge(Node* node, Sheet* sheet){
-    int n = (sheet->cols)*(sheet->rows);
-    LinkedList* curr_head= node->InNeighbours;
-    LinkedList* temp= curr_head;
-    node->InNeighbours=NULL;
-    while(temp!=NULL){
-        delete_node(&(((sheet->matrix)+temp->data)->OutNeighbours), node->id);
-        temp=temp->next;
-    }
-    
-    if(node->type>0 && !(node->type==7 && node->cell1==-1)){
-
-
-        LinkedList* tempList = NULL; 
-       
-        if(node->type==1 || node->type==7){
-            if(node->cell1!=-1){
-                add_node(&(node->InNeighbours), node->cell1);
-                add_node(&(((sheet->matrix)+node->cell1)->OutNeighbours), node->id);
-                add_node(&tempList, node->cell1);
+    else if ( type == 1 ){
+        if(cell2!=-1&& cell1!=-1){
+            if((node->id)/(sheet->cols)==(cell1)/(sheet->cols)&&(node->id)%(sheet->cols)==(cell1)%(sheet->cols)){
+                *flag = 1;
             }
-
-            if(node->cell2!=-1){
-                add_node(&(node->InNeighbours), node->cell2);
-                add_node(&(((sheet->matrix)+node->cell2)->OutNeighbours), node->id);
-                add_node(&tempList, node->cell2);
+            if((node->id)/(sheet->cols)==(cell2)/(sheet->cols)&&(node->id)%(sheet->cols)==(cell2)%(sheet->cols)){
+                *flag = 1;
             }
         }
-        
-        else{
-            int max_col = sheet->cols;
-            int index_1 = node->cell1;
-            int index_2 = node->cell2;
-            int from_col = index_1%max_col;
-            int to_col = index_2%max_col;
-            int from_row = index_1/max_col;
-            int to_row = index_2/max_col;
-
-
-            for( int i = from_row; i <= to_row; i++ ){
-                for( int j = from_col; j<=to_col; j++ ){
-                    int cell= i*max_col+j;
-                    add_node(&node->InNeighbours, cell);
-                    add_node(&(((sheet->matrix)+ cell)->OutNeighbours), node->id);
-                    add_node(&tempList, cell);
+        else if (cell1!=-1){
+            if((node->id)/(sheet->cols)==(cell1)/(sheet->cols)){
+                if((node->id)%(sheet->cols)==(cell1)%(sheet->cols)){
+                    *flag = 1;
                 }
             }
         }
+        else {
+            if((node->id)/(sheet->cols)==(cell2)/(sheet->cols)){
+                if((node->id)%(sheet->cols)==(cell2)%(sheet->cols)){
+                    *flag = 1;
+                }
+            }
+        }
+    }
+    else if(type == 7){
+        if(cell1!=-1){
+            if((node->id)/(sheet->cols)==(cell1)/(sheet->cols)&&(node->id)%(sheet->cols)==(cell1)%(sheet->cols)){
+                *flag = 1;
+            }
+        }
+    }
+    LinkedList* out = (sheet->matrix+node->id)->OutNeighbours;
+    while( out!= NULL ){
+        if( vis[out->data]==0 ){
+            CHECK_CYCLE( out->data ,  vis ,  sheet ,  cell1 ,  cell2 , flag ,  type , st );
+        }
+        out = out->next; //Gogo Stupidity counter- infinity
+    }
+    push( st, node->id );
+}
+
+// int add_edge(Node* node, Sheet* sheet){
+//     int n = (sheet->cols)*(sheet->rows);
+//     LinkedList* curr_head= node->InNeighbours;
+//     LinkedList* temp= curr_head;
+//     node->InNeighbours=NULL;
+//     while(temp!=NULL){
+//         delete_node(&(((sheet->matrix)+temp->data)->OutNeighbours), node->id);
+//         temp=temp->next;
+//     }
+    
+//     if(node->type>0 && !(node->type==7 && node->cell1==-1)){
+
+
+//         LinkedList* tempList = NULL; 
+       
+//         if(node->type==1 || node->type==7){
+//             if(node->cell1!=-1){
+//                 add_node(&(node->InNeighbours), node->cell1);
+//                 add_node(&(((sheet->matrix)+node->cell1)->OutNeighbours), node->id);
+//                 add_node(&tempList, node->cell1);
+//             }
+
+//             if(node->cell2!=-1){
+//                 add_node(&(node->InNeighbours), node->cell2);
+//                 add_node(&(((sheet->matrix)+node->cell2)->OutNeighbours), node->id);
+//                 add_node(&tempList, node->cell2);
+//             }
+//         }
+        
+//         else{
+//             int max_col = sheet->cols;
+//             int index_1 = node->cell1;
+//             int index_2 = node->cell2;
+//             int from_col = index_1%max_col;
+//             int to_col = index_2%max_col;
+//             int from_row = index_1/max_col;
+//             int to_row = index_2/max_col;
+
+
+//             for( int i = from_row; i <= to_row; i++ ){
+//                 for( int j = from_col; j<=to_col; j++ ){
+//                     int cell= i*max_col+j;
+//                     add_node(&node->InNeighbours, cell);
+//                     add_node(&(((sheet->matrix)+ cell)->OutNeighbours), node->id);
+//                     add_node(&tempList, cell);
+//                 }
+//             }
+//         }
        
 
-        int* pathVis = (int*)calloc(n, sizeof(int));
-        int* vis = (int*)calloc(n, sizeof(int));
+//         int* pathVis = (int*)calloc(n, sizeof(int));
+//         int* vis = (int*)calloc(n, sizeof(int));
 
-        int cycle= CHECK_CYCLE(node->id,pathVis,vis,sheet);
-        // int cycle= 0;
+//         int cycle= CHECK_CYCLE(node->id,pathVis,vis,sheet);
+
+//         free(vis);
+//         free(pathVis);
+
+//         if(cycle==1){
+//             LinkedList* tmp= tempList;
+
+//             while(tmp!=NULL){
+//                 delete_node(&(((sheet->matrix)+tmp->data)->OutNeighbours), node->id);
+//                 tmp=tmp->next;
+//             }
+
+//             LinkedList* temp= curr_head;
+
+//             while(temp!=NULL){
+//                 add_node(&(((sheet->matrix)+temp->data)->OutNeighbours), node->id);
+//                 temp=temp->next;
+//             }
+
+//             free_list(&(node->InNeighbours));
+//             node->InNeighbours= temp;
+//             free_list(&tmp);
+//             return 0;
+//         }
+//         else{
+
+//             free_list(&curr_head);
+//             free_list(&tempList);
+
+//             return 1;
+//         }
+//     }
+//     else{
         
-        free(vis);
-        free(pathVis);
-
-        if(cycle==1){
-            LinkedList* tmp= tempList;
-
-            while(tmp!=NULL){
-                delete_node(&(((sheet->matrix)+tmp->data)->OutNeighbours), node->id);
-                tmp=tmp->next;
-            }
-
-            LinkedList* temp= curr_head;
-
-            while(temp!=NULL){
-                add_node(&(((sheet->matrix)+temp->data)->OutNeighbours), node->id);
-                temp=temp->next;
-            }
-
-            free_list(&(node->InNeighbours));
-            node->InNeighbours= temp;
-            free_list(&tmp);
-            return 0;
+//         free_list(&curr_head);
+//         node->InNeighbours=NULL;
+//         return 1;
+//     }
+// }
+//input-> cycle-> delete->assign->add->recalculate
+int delete_edge(Node* node , Sheet* sheet){// node-> previous
+    int type= node->type;
+    if(type>1){
+        if(type==7){
+            if(node->cell1!=-1){
+                LinkedList* tba= ((sheet->matrix)+node->cell1)->OutNeighbours;
+                delete_node(&tba, node->id);
+            }    
         }
         else{
-
-            free_list(&curr_head);
-            free_list(&tempList);
-
-            return 1;
+            int cols= sheet->cols;
+            int cell1= node->cell1;
+            int cell2= node->cell2;
+            int row1= cell1/cols;
+            int col1= cell1%cols;
+            int row2= cell2/cols;
+            int col2= cell2/cols;
+            for(int i=row1; i<=row2; i++){
+                for(int j=col1; j<=col2; j++){
+                    int cell = i*cols+j;
+                    LinkedList* tba= ((sheet->matrix)+cell)->OutNeighbours;
+                    delete_node(&tba, node->id);
+                }
+            }
         }
     }
-    else{
+    else if(type==1){
         
-        free_list(&curr_head);
-        node->InNeighbours=NULL;
-        return 1;
-    }
-}
-
-/* Doing recalculation on the nodes not the entire sheet*/
-void topo_sort( int id , int* vis , Stack* st ,Sheet* sh ){
-
-    vis[id] = 1;
-    LinkedList* in = (sh->matrix+id)->OutNeighbours;
-    while( in!= NULL ){
-        if( vis[in->data]==0 ){
-            topo_sort( in->data , vis , st , sh );
+        if(node->cell1!=-1){
+            LinkedList* tba= ((sheet->matrix)+node->cell1)->OutNeighbours;
+            delete_node(&tba, node->id);
+        } 
+        if(node->cell2!=-1){
+            LinkedList* tba= ((sheet->matrix)+node->cell2)->OutNeighbours;
+            delete_node(&tba, node->id);
         }
-        in=in->next; //Gogo Stupidity counter- infinity
+    
     }
-    push( st, id );
+    return 1;
 }
+
+int add_edge(Node* node, Sheet* sheet){
+    int type= node->type;
+    if(type>1){
+        if(type==7){
+            if(node->cell1!=-1){
+                LinkedList* tba= ((sheet->matrix)+node->cell1)->OutNeighbours;
+                add_node(&tba, node->id);
+            }    
+        }
+        else{
+            int cols= sheet->cols;
+            int cell1= node->cell1;
+            int cell2= node->cell2;
+            int row1= cell1/cols;
+            int col1= cell1%cols;
+            int row2= cell2/cols;
+            int col2= cell2/cols;
+            for(int i=row1; i<=row2; i++){
+                for(int j=col1; j<=col2; j++){
+                    int cell = i*cols+j;
+                    LinkedList* tba= ((sheet->matrix)+cell)->OutNeighbours;
+                    add_node(&tba, node->id);
+                }
+            }
+        }
+    }
+    else if(type==1){
+        
+        if(node->cell1!=-1){
+            LinkedList* tba= ((sheet->matrix)+node->cell1)->OutNeighbours;
+            add_node(&tba, node->id);
+        } 
+        if(node->cell2!=-1){
+            LinkedList* tba= ((sheet->matrix)+node->cell2)->OutNeighbours;
+            add_node(&tba, node->id);
+        }
+    
+    }
+    return 1;
+}
+/* Doing recalculation on the nodes not the entire sheet*/
+// void topo_sort( int id , int* vis , Stack* st ,Sheet* sh ){
+
+//     vis[id] = 1;
+//     LinkedList* in = (sh->matrix+id)->OutNeighbours;
+//     while( in!= NULL ){
+//         if( vis[in->data]==0 ){
+//             topo_sort( in->data , vis , st , sh );
+//         }
+//         in=in->next; //Gogo Stupidity counter- infinity
+//     }
+//     push( st, id );
+// }
 
 void dfs( int id , int*vis , Sheet* sheet ){
     vis[id] = 1;
@@ -460,16 +571,11 @@ void dfs( int id , int*vis , Sheet* sheet ){
         in=in->next; //Gogo Stupidity counter- infinity
     }
 }
-void recalculate_node( Node* node , Sheet* sheet ){
+void recalculate_node( Node* node , Sheet* sheet , Stack* st ){
     // printf("I reached here!!1\n");
-
-    Stack* st = (Stack*)(malloc(sizeof(Stack)));
-    StackInit(st);
 
     int n = (sheet->cols)*(sheet->rows);
     int* vis = (int*)malloc(n * sizeof(int));
-    memset(vis, 0, n * sizeof(int));
-    topo_sort( node->id, vis, st, sheet );
     memset(vis, 0, n * sizeof(int));
 
     int flag=1;
