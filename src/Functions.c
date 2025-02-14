@@ -394,7 +394,8 @@ int add_edge(Node* node, Sheet* sheet){
         int* vis = (int*)calloc(n, sizeof(int));
 
         int cycle= CHECK_CYCLE(node->id,pathVis,vis,sheet);
-
+        // int cycle= 0;
+        
         free(vis);
         free(pathVis);
 
