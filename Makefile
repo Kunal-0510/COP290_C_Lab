@@ -1,6 +1,6 @@
 # Compiler and flags
 CC = gcc
-CFLAGS = -O3 -w -g -Iheaders  # Suppress warnings (-w), include debugging information (-g), and add header directory
+CFLAGS = -O2 -w -g -Iheaders  # Suppress warnings (-w), include debugging information (-g), and add header directory
 LDFLAGS = -lm   # Linker flag for math library
 
 # Target executable

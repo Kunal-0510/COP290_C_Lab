@@ -40,7 +40,7 @@ bool parse(char* input, char** first, char** second, char symbol) {
  /*
     Invalid = -1
 
-    Constant Assignment = 0 // set op_val to the assignment value. All the operations of cell= value +-/* value are included in this type
+    Constant Assignment = 0 // set op_val to the assignment value. All the operations of cell= value + - * / value are included in this type
 
     Arithmetic sum = 1 
     if cell = value + cell or cell = cell + value -> op_val= value and cell1= hash(cell) else -> op_val=0 and cell1,cell2 = hash(cells).
