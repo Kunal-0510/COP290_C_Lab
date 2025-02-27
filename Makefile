@@ -4,7 +4,7 @@ CFLAGS = -O2 -w -g -Iheaders  # Suppress warnings (-w), include debugging inform
 LDFLAGS = -lm   # Linker flag for math library
 
 # Target executable
-TARGET = sheet
+TARGET = target/release/spreadsheet
 
 # Source files
 SRC_DIR = src
@@ -22,39 +22,41 @@ all: $(TARGET)
 
 # Rule to build the target executable
 $(TARGET): $(OBJ)
+	mkdir -p $(dir $(TARGET))
 	$(CC) $(CFLAGS) -o $@ $^ $(LDFLAGS)
 
 # Rules for individual object files
-Node.o: Node.c $(HEADER_DIR)/Node.h $(HEADER_DIR)/linkedlist.h
+Node.o: $(SRC_DIR)/Node.c $(HEADER_DIR)/Node.h $(HEADER_DIR)/linkedlist.h
 	$(CC) $(CFLAGS) -c $< -o $@
 
-Sheet.o: Sheet.c $(HEADER_DIR)/Sheet.h $(HEADER_DIR)/Node.h
+Sheet.o: $(SRC_DIR)/Sheet.c $(HEADER_DIR)/Sheet.h $(HEADER_DIR)/Node.h
 	$(CC) $(CFLAGS) -c $< -o $@
 
-linkedlist.o: linkedlist.c $(HEADER_DIR)/linkedlist.h
+linkedlist.o: $(SRC_DIR)/linkedlist.c $(HEADER_DIR)/linkedlist.h
 	$(CC) $(CFLAGS) -c $< -o $@
 
-set.o: set.c $(HEADER_DIR)/set.h
-
-hash.o: hash.c $(HEADER_DIR)/hash.h
+set.o: $(SRC_DIR)/set.c $(HEADER_DIR)/set.h
 	$(CC) $(CFLAGS) -c $< -o $@
 
-validity.o: validity.c $(HEADER_DIR)/validity.h $(HEADER_DIR)/hash.h $(HEADER_DIR)/Sheet.h
+hash.o: $(SRC_DIR)/hash.c $(HEADER_DIR)/hash.h
 	$(CC) $(CFLAGS) -c $< -o $@
 
-parsing.o: parsing.c $(HEADER_DIR)/parsing.h $(HEADER_DIR)/hash.h $(HEADER_DIR)/validity.h $(HEADER_DIR)/Node.h $(HEADER_DIR)/Sheet.h $(HEADER_DIR)/Functions.h
+validity.o: $(SRC_DIR)/validity.c $(HEADER_DIR)/validity.h $(HEADER_DIR)/hash.h $(HEADER_DIR)/Sheet.h
 	$(CC) $(CFLAGS) -c $< -o $@
 
-Functions.o: Functions.c $(HEADER_DIR)/Functions.h $(HEADER_DIR)/stack.h $(HEADER_DIR)/hash.h $(HEADER_DIR)/linkedlist.h  $(HEADER_DIR)/Node.h $(HEADER_DIR)/Sheet.h
+parsing.o: $(SRC_DIR)/parsing.c $(HEADER_DIR)/parsing.h $(HEADER_DIR)/hash.h $(HEADER_DIR)/validity.h $(HEADER_DIR)/Node.h $(HEADER_DIR)/Sheet.h $(HEADER_DIR)/Functions.h
 	$(CC) $(CFLAGS) -c $< -o $@
 
-display.o: display.c $(HEADER_DIR)/display.h $(HEADER_DIR)/Node.h $(HEADER_DIR)/Sheet.h
+Functions.o: $(SRC_DIR)/Functions.c $(HEADER_DIR)/Functions.h $(HEADER_DIR)/stack.h $(HEADER_DIR)/hash.h $(HEADER_DIR)/linkedlist.h $(HEADER_DIR)/Node.h $(HEADER_DIR)/Sheet.h
 	$(CC) $(CFLAGS) -c $< -o $@
 
-stack.o: stack.c $(HEADER_DIR)/stack.h
+display.o: $(SRC_DIR)/display.c $(HEADER_DIR)/display.h $(HEADER_DIR)/Node.h $(HEADER_DIR)/Sheet.h
 	$(CC) $(CFLAGS) -c $< -o $@
 
-main.o: main.c $(HEADERS)
+stack.o: $(SRC_DIR)/stack.c $(HEADER_DIR)/stack.h
+	$(CC) $(CFLAGS) -c $< -o $@
+
+main.o: $(SRC_DIR)/main.c $(HEADERS)
 	$(CC) $(CFLAGS) -c $< -o $@
 
 # Clean up build artifacts
