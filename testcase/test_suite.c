@@ -5,9 +5,7 @@
 
 #define BUFFER_SIZE 1024
 
-int main(void) {
-    // Set up parameters for the sheet program.
-    int rows = 5, cols = 5;  // adjust these values as needed
+void test_parser(int tc,int rows,int cols){
 
     // Construct the command to run the sheet executable:
     // It feeds input.txt to sheet and writes the output to temp_output.txt.
@@ -60,11 +58,21 @@ int main(void) {
     fclose(fexpected);
     
     if (failed) {
-        printf("Test FAILED.\n");
+        printf("Testcase %d FAILED.\n",tc);
         return 1;
     } else {
-        printf("Test PASSED.\n");
+        printf("Testcase %d PASSED.\n",tc);
     }
+
+}
+
+int main(void) {
+    
+
+    int tc=1;
+    int rows=5,cols=5;
+    test_parser(tc++,rows,cols);
+    test_parser(tc++,rows,cols);    
     
     return 0;
 }
