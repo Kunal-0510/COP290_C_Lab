@@ -192,7 +192,7 @@ int MASTER( Node* node, Sheet* sheet ){
     }
 
     else if( func_type == 6 ){ // STDEV(RANGE)
-
+        // printf("yo\n" );
         node->val= STDEV( from_row,from_col,to_row,to_col,max_col, sheet );
         node->isValid=1;
         return 1;
@@ -279,11 +279,17 @@ int SUM( int from_row,int from_col,int to_row,int to_col,int max_col,Sheet* shee
 }
 
 int STDEV( int from_row,int from_col,int to_row,int to_col,int max_col, Sheet* sheet ){
+
+    int sum = 0;
     Node* matrix= sheet->matrix;
-    int sum = SUM(from_row, from_col, to_row, to_col, max_col, matrix);
-    int num_of_terms = ( to_col - from_col )*( to_row - from_row );
+    for( int i = from_row; i <= to_row; i++ ){
+        for( int j = from_col; j<=to_col; j++ ){
+            sum += ( matrix + i*max_col +j )->val;
+        }
+    }
+    int num_of_terms = ( to_col - from_col +1 )*( to_row - from_row +1);
     int mean = sum / num_of_terms;
-    int var = 0;
+    double var = 0.0;
 
     for( int i = from_row; i <= to_row; i++ ){
         for( int j = from_col; j<=to_col; j++ ){
@@ -292,9 +298,8 @@ int STDEV( int from_row,int from_col,int to_row,int to_col,int max_col, Sheet* s
     }
     
     var /= num_of_terms;
-    int std_dev = sqrt( var );
     
-    return std_dev;
+    return (int)round(sqrt(var));
 
 }
 
