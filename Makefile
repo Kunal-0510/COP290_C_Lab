@@ -8,14 +8,14 @@ TARGET = target/release/spreadsheet
 
 # Source files
 SRC_DIR = src
-SRC = $(addprefix $(SRC_DIR)/, Node.c Sheet.c linkedlist.c hash.c validity.c parsing.c Functions.c display.c main.c stack.c set.c)
+SRC = $(addprefix $(SRC_DIR)/, Node.c Sheet.c linkedlist.c linked_stack.c hash.c validity.c parsing.c Functions.c display.c main.c stack.c set.c)
 
 # Object files (replace .c with .o for each source file)
 OBJ = $(SRC:.c=.o)
 
 # Header files directory
 HEADER_DIR = headers
-HEADERS = $(addprefix $(HEADER_DIR)/, Node.h Sheet.h linkedlist.h hash.h validity.h parsing.h Functions.h display.h stack.h set.h)
+HEADERS = $(addprefix $(HEADER_DIR)/, Node.h Sheet.h linkedlist.h linked_stack.h hash.h validity.h parsing.h Functions.h display.h stack.h set.h)
 
 # Default target
 all: $(TARGET)
@@ -35,6 +35,9 @@ Sheet.o: $(SRC_DIR)/Sheet.c $(HEADER_DIR)/Sheet.h $(HEADER_DIR)/Node.h
 linkedlist.o: $(SRC_DIR)/linkedlist.c $(HEADER_DIR)/linkedlist.h
 	$(CC) $(CFLAGS) -c $< -o $@
 
+linked_stack.o: $(SRC_DIR)/linked_stack.c $(HEADER_DIR)/linked_stack.h $(HEADER_DIR)/linkedlist.h
+	$(CC) $(CFLAGS) -c $< -o $@
+
 set.o: $(SRC_DIR)/set.c $(HEADER_DIR)/set.h
 	$(CC) $(CFLAGS) -c $< -o $@
 
@@ -47,7 +50,7 @@ validity.o: $(SRC_DIR)/validity.c $(HEADER_DIR)/validity.h $(HEADER_DIR)/hash.h 
 parsing.o: $(SRC_DIR)/parsing.c $(HEADER_DIR)/parsing.h $(HEADER_DIR)/hash.h $(HEADER_DIR)/validity.h $(HEADER_DIR)/Node.h $(HEADER_DIR)/Sheet.h $(HEADER_DIR)/Functions.h
 	$(CC) $(CFLAGS) -c $< -o $@
 
-Functions.o: $(SRC_DIR)/Functions.c $(HEADER_DIR)/Functions.h $(HEADER_DIR)/stack.h $(HEADER_DIR)/hash.h $(HEADER_DIR)/linkedlist.h $(HEADER_DIR)/Node.h $(HEADER_DIR)/Sheet.h
+Functions.o: $(SRC_DIR)/Functions.c $(HEADER_DIR)/Functions.h $(HEADER_DIR)/stack.h $(HEADER_DIR)/hash.h $(HEADER_DIR)/linkedlist.h $(HEADER_DIR)/linked_stack.h $(HEADER_DIR)/Node.h $(HEADER_DIR)/Sheet.h 
 	$(CC) $(CFLAGS) -c $< -o $@
 
 display.o: $(SRC_DIR)/display.c $(HEADER_DIR)/display.h $(HEADER_DIR)/Node.h $(HEADER_DIR)/Sheet.h

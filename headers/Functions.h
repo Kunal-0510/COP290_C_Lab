@@ -39,23 +39,23 @@ and expects the collumns and rows in the input.
 */
 
 
-int MIN( int from_row,int from_col,int to_row,int to_col,int max_col, Sheet* sheet );
+void MIN( int from_row,int from_col,int to_row,int to_col,int max_col, Sheet* sheet, Node* node );
 /*
 Min Function is similar to max.
 Expects same inputs.
 */
 
-int MAX( int from_row,int from_col,int to_row,int to_col,int max_col, Sheet* sheet );
+void MAX( int from_row,int from_col,int to_row,int to_col,int max_col, Sheet* sheet, Node* node );
 
 /*
 Average also takes the same inputs.
 */
 
-int AVG( int from_row,int from_col,int to_row,int to_col,int max_col, Sheet* sheet );
+void AVG( int from_row,int from_col,int to_row,int to_col,int max_col, Sheet* sheet, Node* node );
 
-int SUM( int from_row,int from_col,int to_row,int to_col,int max_col,Sheet* sheet );
+void SUM( int from_row,int from_col,int to_row,int to_col,int max_col,Sheet* sheet, Node* node );
 
-int STDEV( int from_row,int from_col,int to_row,int to_col,int max_col, Sheet* sheet );
+void STDEV( int from_row,int from_col,int to_row,int to_col,int max_col, Sheet* sheet, Node* node );
 
 void SLEEP( Node* node, Sheet* sheet );
 
