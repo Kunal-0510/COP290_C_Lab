@@ -375,7 +375,62 @@ void CHECK_CYCLE( Node* node , int* vis , Sheet* sheet , int  cell1 , int cell2 
     }
     push( st, node->id );
 }
+// void CHECK_CYCLE(Node* startNode, int* vis, Sheet* sheet, int cell1, int cell2, int* flag, int type, Stack* st) {
+//     Stack* localStack= (Stack*)malloc(sizeof(Stack));
+//     StackInit(localStack);  // Initialize local stack
 
+//     push(localStack, startNode->id);
+
+//     while (isempty(localStack)==0) {
+//         int id = pop(localStack);
+//         Node* node = sheet->matrix + id;
+//         if (vis[id]==1) continue;  // Skip if already visited
+//         vis[id] = 1;
+
+//         // Cycle condition checks
+//         if (type > 1 && type < 7) {
+//             if ((id / sheet->cols) >= (cell1 / sheet->cols) && (id / sheet->cols) <= (cell2 / sheet->cols)) {
+//                 if ((id % sheet->cols) >= (cell1 % sheet->cols) && (id % sheet->cols) <= (cell2 % sheet->cols)) {
+//                     *flag = 1;
+//                 }
+//             }
+//         } else if (type == 1) {
+//             if (cell2 != -1 && cell1 != -1) {
+//                 if ((id / sheet->cols) == (cell1 / sheet->cols) && (id % sheet->cols) == (cell1 % sheet->cols)) {
+//                     *flag = 1;
+//                 }
+//                 if ((id / sheet->cols) == (cell2 / sheet->cols) && (id % sheet->cols) == (cell2 % sheet->cols)) {
+//                     *flag = 1;
+//                 }
+//             } else if (cell1 != -1) {
+//                 if ((id / sheet->cols) == (cell1 / sheet->cols) && (id % sheet->cols) == (cell1 % sheet->cols)) {
+//                     *flag = 1;
+//                 }
+//             } else {
+//                 if ((id / sheet->cols) == (cell2 / sheet->cols) && (id % sheet->cols) == (cell2 % sheet->cols)) {
+//                     *flag = 1;
+//                 }
+//             }
+//         } else if (type == 7) {
+//             if (cell1 != -1) {
+//                 if ((id / sheet->cols) == (cell1 / sheet->cols) && (id % sheet->cols) == (cell1 % sheet->cols)) {
+//                     *flag = 1;
+//                 }
+//             }
+//         }
+
+//         // Push all unvisited neighbors onto the stack
+//         LinkedList* out = (sheet->matrix + id)->OutNeighbours;
+//         while (out != NULL) {
+//             if (vis[out->data]==0) {
+//                 push(localStack, out->data);
+//             }
+//             out = out->next;
+//         }
+
+//         push(st, id);  // Maintain original logic (storing processed nodes)
+//     }
+// }
 // int add_edge(Node* node, Sheet* sheet){
 //     int n = (sheet->cols)*(sheet->rows);
 //     LinkedList* curr_head= node->InNeighbours;
@@ -573,19 +628,40 @@ int add_edge(Node* node, Sheet* sheet){
 //     push( st, id );
 // }
 
-void dfs( int id , int*vis , Sheet* sheet ){
-    vis[id] = 1;
-    LinkedList* in = (sheet->matrix+id)->OutNeighbours;
-    while( in!= NULL ){
-        if( vis[in->data]==0 ){
-            (sheet->matrix+in->data)->isValid = (sheet->matrix +id)->isValid;
-            dfs( in->data , vis ,sheet );
+// void dfs( int id , int*vis , Sheet* sheet ){
+//     vis[id] = 1;
+//     LinkedList* in = (sheet->matrix+id)->OutNeighbours;
+//     while( in!= NULL ){
+//         if( vis[in->data]==0 ){
+//             (sheet->matrix+in->data)->isValid = (sheet->matrix +id)->isValid;
+//             dfs( in->data , vis ,sheet );
+//         }
+//         in=in->next; 
+//     }
+// }
+void dfs(int start_id, int* vis, Sheet* sheet) {
+    Stack* stack= (Stack*)malloc(sizeof(Stack)); // Initialize stack
+    StackInit(stack);
+    push(stack, start_id);
+    
+    while (isempty(stack)==0) {
+        int id = pop(stack);
+        if (vis[id]==1) continue;  // Skip if already visited
+        
+        vis[id] = 1;
+        LinkedList* in = (sheet->matrix + id)->OutNeighbours;
+
+        while (in != NULL) {
+            if (vis[in->data]==0) {
+                (sheet->matrix + in->data)->isValid = (sheet->matrix + id)->isValid;
+                push(stack, in->data);
+            }
+            in = in->next;
         }
-        in=in->next; //Gogo Stupidity counter- infinity
     }
+    free(stack);
 }
 void recalculate_node( Node* node , Sheet* sheet , Stack* st ){
-    // printf("I reached here!!1\n");
 
     int n = (sheet->cols)*(sheet->rows);
     int* vis = (int*)malloc(n * sizeof(int));

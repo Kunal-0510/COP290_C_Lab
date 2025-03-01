@@ -160,15 +160,16 @@ bool assign_cell(char* cellAddress, char* expr, Sheet* sheet) {
             
             else if (isValidNumber(val2)) {
                 int num = atoi(val2);
-                if (num == 0 && op == '*') {
-                    type = 0;
-                    cell1 = -1;
-                    cell2 = -1;
-                    op_val = 0;
-                }
+                // if (num == 0 && op == '*') {
+                //     type = 0;
+                //     cell1 = -1;
+                //     cell2 = -1;
+                //     op_val = 0;
+                // }
                 op_val = num;
                 cell2 = -1;
             }
+            else return false;
         }
         
         else if (isValidNumber(val1)) {
@@ -177,13 +178,13 @@ bool assign_cell(char* cellAddress, char* expr, Sheet* sheet) {
             cell1 = -1;
 
             if (isValidCell(val2, sheet)) {
-                if (num == 0 && op == '*') {
-                    type = 0;
-                    cell1 = -1;
-                    cell2 = -1;
-                    op_val = 0;
+                // if (num == 0 && op == '*') {
+                //     type = 0;
+                //     cell1 = -1;
+                //     cell2 = -1;
+                //     op_val = 0;
 
-                }
+                // }
                 cell2 = get_hash(val2, sheet->cols);
             }
             
@@ -207,18 +208,16 @@ bool assign_cell(char* cellAddress, char* expr, Sheet* sheet) {
             }
         } 
         
-        else type = -1;
+        else return false;
     } 
     
     else {
-        // printf("I am here\n");
+       
         if (val2[0] == '\0') {
             if (isValidNumber(val1)) {
                 type = 0;
                 isValid=1;
                 op_val = atoi(val1);
-                // printf("%d %d\n", cell->op_val, cell->id);
-                // printf("I am here\n");
             } 
             
             else if (isValidCell(val1, sheet)) {
@@ -228,6 +227,7 @@ bool assign_cell(char* cellAddress, char* expr, Sheet* sheet) {
                 op_val = 0;
                 newop='+';
             }
+            else return false;
         } 
         
         else {
@@ -245,6 +245,7 @@ bool assign_cell(char* cellAddress, char* expr, Sheet* sheet) {
                     cell2 = -1;
                     op_val = atoi(val2);
                 }
+                else return false;
             } 
             
             else {
@@ -262,6 +263,7 @@ bool assign_cell(char* cellAddress, char* expr, Sheet* sheet) {
                     cell2 = get_hash(second, sheet->cols);
                     op_val = 0;
                 }
+                else return false;
 
                 free(first);
                 free(second);
@@ -291,7 +293,7 @@ bool assign_cell(char* cellAddress, char* expr, Sheet* sheet) {
         return false;
     }
 
-    return (type != -1);
+    return true;
 }
 
 
