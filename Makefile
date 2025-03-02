@@ -62,9 +62,16 @@ stack.o: $(SRC_DIR)/stack.c $(HEADER_DIR)/stack.h
 main.o: $(SRC_DIR)/main.c $(HEADERS)
 	$(CC) $(CFLAGS) -c $< -o $@
 
+# Rule to compile LaTeX report
+report.pdf: report.tex
+	pdflatex report.tex
+	pdflatex report.tex  # Run twice to resolve references
+
+report: report.pdf
+
 # Clean up build artifacts
 clean:
-	rm -f $(OBJ) $(TARGET)
+	rm -f $(OBJ) $(TARGET) report.pdf report.aux report.log report.out report.toc report.synctex.gz
 
 # Phony targets (not actual files)
-.PHONY: all clean
+.PHONY: all clean report
