@@ -58,7 +58,6 @@ int MASTER( Node* node, Sheet* sheet ){
             return 1;
         }
         else if(node->operator=='-'){
-            // printf("cell1: %d cell2: %d val: %d\n", node->cell1, node->cell2, node->op_val);
             if(node->cell2==-1){
                 if((sheet->matrix+ node->cell1)->isValid==0){
                     node->isValid=0;
