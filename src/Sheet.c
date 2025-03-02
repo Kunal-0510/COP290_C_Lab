@@ -34,11 +34,6 @@ void free_sheet(Sheet *sheet) {
     for (int i = 0; i < sheet->rows * sheet->cols; i++) {
         Node *node = &sheet->matrix[i];
 
-        
-        if (node->InNeighbours) {
-            free_list(&(node->InNeighbours));
-            node->InNeighbours = NULL;  
-        }
         if (node->OutNeighbours) {
             free_list(&(node->OutNeighbours));
             node->OutNeighbours = NULL;
