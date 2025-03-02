@@ -109,6 +109,5 @@ int main(int argc, char* argv[]) {
         }
     }
     
-    free_sheet(sheet); // Free allocated memory
     return 0;
 }
