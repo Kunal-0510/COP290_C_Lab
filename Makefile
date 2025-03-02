@@ -70,17 +70,17 @@ TEST_TARGET = $(TEST_DIR)/test_suite
 
 # Compile the test suite source into an object file.
 $(TEST_OBJ): $(TEST_SRC)
-	$(CC) $(CFLAGS) -c -o $(TEST_OBJ) $(TEST_SRC)
+	$(CC) $(CFLAGS) -c -o $@ $<
 
 # Link the test suite object file into an executable.
-$(TEST_TARGET): $(TEST_OBJ) $(TARGET)
-	$(CC) $(CFLAGS) -o $(TEST_TARGET) $(TEST_OBJ)
+# Exclude main.o from $(OBJ) to avoid duplicate symbols.
+$(TEST_TARGET): $(TEST_OBJ) $(filter-out src/main.o, $(OBJ))
+	$(CC) $(CFLAGS) -o $@ $^ $(LDFLAGS)
 
 # Target to run the test suite.
-test: $(TEST_TARGET)
+test: all $(TEST_TARGET)
 	@echo "Running tests..."
 	$(TEST_TARGET)
-
 
 # Rule to compile LaTeX report
 report.pdf: report.tex
@@ -91,7 +91,7 @@ report: report.pdf
 
 # Clean up build artifacts
 clean:
-	rm -f $(OBJ) $(TARGET) test_suite.o report.pdf report.aux report.log report.out report.toc report.synctex.gz
+	rm -f $(OBJ) $(TARGET) test_suite.o report.pdf report.aux report.log report.out report.toc report.synctex.gz report.fdb_latexmk report.fls
 
 # Phony targets (not actual files)
 .PHONY: all clean report
