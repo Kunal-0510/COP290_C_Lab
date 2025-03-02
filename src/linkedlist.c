@@ -2,14 +2,14 @@
 #include <stdio.h>
 #include <stdlib.h>  
 
-void add_node(LinkedList** head, int hash) {
+void add_node(LinkedList** head, int* hash) {
     LinkedList* new_node = (LinkedList*)malloc(sizeof(LinkedList));
     if (!new_node) {
         printf("Memory allocation failed!\n");
         return; 
     }
 
-    new_node->data = hash;
+    new_node->data = *hash;
     new_node->next = *head;  
     *head= new_node;
 } // Always use list= addnode(), not just addnode()
@@ -36,13 +36,13 @@ void add_node(LinkedList** head, int hash) {
 //     return head;
 // }
 
-void delete_node(LinkedList** head_ref, int key) {
+void delete_node(LinkedList** head_ref, int* key) {
     if (*head_ref == NULL) return;  // No need to proceed if the list is empty
 
     LinkedList** curr = head_ref;  
 
     while (*curr != NULL) {
-        if ((*curr)->data == key) {
+        if ((*curr)->data == &key) {
             LinkedList* temp = *curr;
             *curr = (*curr)->next;  // Bypass the node
             free(temp);  // Free memory
