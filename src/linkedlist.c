@@ -1,77 +1,101 @@
 #include "linkedlist.h"
 #include <stdio.h>
-#include <stdlib.h>  
+#include <stdlib.h>
+
+#define POOL_SIZE 1024
+
+typedef struct MemoryPool {
+    LinkedList* nodes;
+    int index;
+    struct MemoryPool* next;
+} MemoryPool;
+
+MemoryPool* pool = NULL;
+LinkedList* free_list_head = NULL;
+
+void allocate_pool() {
+    MemoryPool* new_pool = (MemoryPool*)malloc(sizeof(MemoryPool));
+    if (!new_pool) {
+        printf("Memory pool allocation failed!\n");
+        return;
+    }
+    new_pool->nodes = (LinkedList*)malloc(POOL_SIZE*sizeof(LinkedList));
+    if (!new_pool->nodes) {
+        printf("Node block allocation failed!\n");
+        free(new_pool);
+        return;
+    }
+    new_pool->index = 0;
+    new_pool->next = pool;
+    pool = new_pool;
+}
+
+LinkedList* get_node_from_pool() {
+    if (free_list_head) {
+        LinkedList* node = free_list_head;
+        free_list_head = free_list_head->next;
+        return node;
+    }
+    if (!pool || pool->index >= POOL_SIZE) {
+        allocate_pool();
+        if (!pool) return NULL;
+    }
+    return &pool->nodes[pool->index++];
+}
 
 void add_node(LinkedList** head, int* hash) {
-    LinkedList* new_node = (LinkedList*)malloc(sizeof(LinkedList));
+    LinkedList* new_node = get_node_from_pool();
     if (!new_node) {
         printf("Memory allocation failed!\n");
-        return; 
+        return;
     }
-
     new_node->data = *hash;
-    new_node->next = *head;  
-    *head= new_node;
-} // Always use list= addnode(), not just addnode()
-
-
-// LinkedList* delete_node(LinkedList* head, int hash) {
-//     LinkedList* temp = head;
-//     LinkedList* prev = NULL;
-
-//     while (temp != NULL && temp->data != hash) {
-//         prev = temp;
-//         temp = temp->next;
-//     }
-
-//     if (temp != NULL) { 
-//         if (prev == NULL) {  
-//             head = temp->next;
-//         } else {
-//             prev->next = temp->next;
-//         }
-//         free(temp);
-//     }
-
-//     return head;
-// }
+    new_node->next = *head;
+    *head = new_node;
+}
 
 void delete_node(LinkedList** head_ref, int* key) {
-    if (*head_ref == NULL) return;  // No need to proceed if the list is empty
-
-    LinkedList** curr = head_ref;  
-
+    if (*head_ref == NULL) return;
+    LinkedList** curr = head_ref;
     while (*curr != NULL) {
-        if ((*curr)->data == &key) {
+        if ((*curr)->data == *key) {
             LinkedList* temp = *curr;
-            *curr = (*curr)->next;  // Bypass the node
-            free(temp);  // Free memory
-            return;  // Key is unique in a simple linked list, so exit immediately
+            *curr = (*curr)->next;
+            temp->next = free_list_head;
+            free_list_head = temp;
+            return;
         }
-        curr = &((*curr)->next);  // Move to the next node
+        curr = &((*curr)->next);
     }
-} 
+}
 
 void free_list(LinkedList** head) {
-    LinkedList* temp;
     while (*head != NULL) {
-        temp = *head;      // Store current node
-        *head = (*head)->next; // Move to next node
-        free(temp);       // Free current node
+        LinkedList* temp = *head;
+        *head = (*head)->next;
+        temp->next = free_list_head;
+        free_list_head = temp;
     }
-    *head = NULL;  
-}
-int find_node(LinkedList* head, int hash){
-    LinkedList* temp = head;
-    int found=0;
-    while(temp!=NULL && found==0){
-        if(temp->data==hash){
-            found=1;
-        }
-        else{
-            temp= temp->next;
-        }
-    }
-    return found;
+    *head = NULL;
 }
 
+int find_node(LinkedList* head, int hash) {
+    LinkedList* temp = head;
+    while (temp != NULL) {
+        if (temp->data == hash) {
+            return 1;
+        }
+        temp = temp->next;
+    }
+    return 0;
+}
+
+void free_memory_pools() {
+    while (pool) {
+        MemoryPool* temp = pool;
+        pool = pool->next;
+        free(temp->nodes);
+        free(temp);
+    }
+    free_list_head = NULL;
+}
