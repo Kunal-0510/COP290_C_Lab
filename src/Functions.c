@@ -11,7 +11,7 @@
 7- SLEEP
 */
 
-// A1> graph>  topological sort>  
+// Master function to handle different types of operations on a node
 int MASTER( Node* node, Sheet* sheet ){
     int func_type= node->type;
     int max_col = sheet->cols;
@@ -26,7 +26,7 @@ int MASTER( Node* node, Sheet* sheet ){
         node->val = node->op_val;
         return 1;
     }
-    else if(func_type==1){ //arithmetic
+    else if(func_type==1){ //Arithmetic operations
         if(node->operator=='+'){
             if(node->cell1==-1){
                 if((sheet->matrix+ node->cell2)->isValid==0){
@@ -118,7 +118,7 @@ int MASTER( Node* node, Sheet* sheet ){
             }
             return 1;
         }
-        else if(node->operator=='/'){ //TODO: Handle division by zero. (Donee)
+        else if(node->operator=='/'){
             if(node->cell2==-1){
                 if(node->op_val==0){
                     node->isValid=0;
@@ -219,6 +219,7 @@ int MASTER( Node* node, Sheet* sheet ){
     
 }
 
+// Function to calculate the maximum value in a range
 void MAX( int from_row,int from_col,int to_row,int to_col,int max_col, Sheet* sheet, Node* node ){
 
     int mx = INT_MIN;
@@ -241,6 +242,7 @@ void MAX( int from_row,int from_col,int to_row,int to_col,int max_col, Sheet* sh
 
 }
 
+// Function to calculate the minimum value in a range
 void MIN( int from_row,int from_col,int to_row,int to_col,int max_col, Sheet* sheet , Node* node){
     
     int mn = INT_MAX;
@@ -264,6 +266,7 @@ void MIN( int from_row,int from_col,int to_row,int to_col,int max_col, Sheet* sh
 
 }
 
+// Function to calculate the average value in a range
 void AVG( int from_row,int from_col,int to_row,int to_col,int max_col, Sheet* sheet , Node* node){
     
     int avg_sum = 0;
@@ -288,6 +291,7 @@ void AVG( int from_row,int from_col,int to_row,int to_col,int max_col, Sheet* sh
 
 }
 
+// Function to calculate the sum of values in a range
 void SUM( int from_row,int from_col,int to_row,int to_col,int max_col,Sheet* sheet , Node* node){
     
     int sum = 0;
@@ -308,6 +312,7 @@ void SUM( int from_row,int from_col,int to_row,int to_col,int max_col,Sheet* she
 
 }
 
+// Function to calculate the standard deviation of values in a range
 void STDEV( int from_row,int from_col,int to_row,int to_col,int max_col, Sheet* sheet , Node* node){
 
     int sum = 0;
@@ -339,6 +344,7 @@ void STDEV( int from_row,int from_col,int to_row,int to_col,int max_col, Sheet* 
 
 }
 
+// Function to handle the SLEEP operation
 void SLEEP(Node* node, Sheet* sheet){
     if(node->cell1==-1){
         int sec= node->op_val;
@@ -370,59 +376,7 @@ void SLEEP(Node* node, Sheet* sheet){
     }
 }
 
-// void CHECK_CYCLE( Node* node , int* vis , Sheet* sheet , int  cell1 , int cell2 ,int* flag , int type , Stack* st ){
-//     vis[node->id] = 1;
-//     if(type>1&&type<7){
-//         if((node->id)/(sheet->cols)>=(cell1)/(sheet->cols)&&(node->id)/(sheet->cols)<=(cell2)/(sheet->cols)){
-//             if((node->id)%(sheet->cols)>=(cell1)%(sheet->cols)&&(node->id)%(sheet->cols)<=(cell2)%(sheet->cols)){
-//                 *flag = 1;
-//             }
-//         }
-//     }
-//     else if ( type == 1 ){
-//         if(cell2!=-1&& cell1!=-1){
-//             if((node->id)/(sheet->cols)==(cell1)/(sheet->cols)&&(node->id)%(sheet->cols)==(cell1)%(sheet->cols)){
-//                 *flag = 1;
-//             }
-//             if((node->id)/(sheet->cols)==(cell2)/(sheet->cols)&&(node->id)%(sheet->cols)==(cell2)%(sheet->cols)){
-//                 *flag = 1;
-//             }
-//         }
-//         else if (cell1!=-1){
-//             if((node->id)/(sheet->cols)==(cell1)/(sheet->cols)){
-//                 if((node->id)%(sheet->cols)==(cell1)%(sheet->cols)){
-//                     *flag = 1;
-//                 }
-//             }
-//         }
-//         else {
-//             if((node->id)/(sheet->cols)==(cell2)/(sheet->cols)){
-//                 if((node->id)%(sheet->cols)==(cell2)%(sheet->cols)){
-//                     *flag = 1;
-//                 }
-//             }
-//         }
-//     }
-//     else if(type == 7){
-//         if(cell1!=-1){
-//             if((node->id)/(sheet->cols)==(cell1)/(sheet->cols)&&(node->id)%(sheet->cols)==(cell1)%(sheet->cols)){
-//                 *flag = 1;
-//             }
-//         }
-//     }
-    
-//     LinkedList* out = (sheet->matrix+node->id)->OutNeighbours;
-//     while( out!= NULL ){
-//         if( vis[out->data]==0 ){
-//             CHECK_CYCLE( (sheet->matrix)+(out->data) ,  vis ,  sheet ,  cell1 ,  cell2 , flag ,  type , st );
-//             if(flag == 1){
-//                 return;
-//             }
-//         }
-//         out = out->next; 
-//     }
-//     push( st, node->id );
-// }
+// Function to check for cycles in the dependency graph
 void CHECK_CYCLE(Node* startNode, int* vis, Sheet* sheet, int cell1, int cell2, int* flag, int type, Stack* st) {
     Stack* stack= (Stack*)malloc(sizeof(Stack));
     StackInit(stack);  // Initialize local stack
@@ -435,7 +389,6 @@ void CHECK_CYCLE(Node* startNode, int* vis, Sheet* sheet, int cell1, int cell2, 
     while (isempty(stack)==0) {
         int id = peek(stack);
         Node* node = sheet->matrix + id;
-        // if (vis[id]==1) continue;  // Skip if already visited
 
         // Cycle condition checks
         if(vis[id]==0){
@@ -491,7 +444,6 @@ void CHECK_CYCLE(Node* startNode, int* vis, Sheet* sheet, int cell1, int cell2, 
                     temp->next=lkd->top;
                     lkd->top=temp;
                 }
-                // push_linked(lkd);
                
                 has_unvisited_child = 1;
                 break; // Explore deeper first
@@ -512,108 +464,14 @@ void CHECK_CYCLE(Node* startNode, int* vis, Sheet* sheet, int cell1, int cell2, 
     }
     free(stack);
 }
-// int add_edge(Node* node, Sheet* sheet){
-//     int n = (sheet->cols)*(sheet->rows);
-//     LinkedList* curr_head= node->InNeighbours;
-//     LinkedList* temp= curr_head;
-//     node->InNeighbours=NULL;
-//     while(temp!=NULL){
-//         delete_node(&(((sheet->matrix)+temp->data)->OutNeighbours), node->id);
-//         temp=temp->next;
-//     }
-    
-//     if(node->type>0 && !(node->type==7 && node->cell1==-1)){
 
-
-//         LinkedList* tempList = NULL; 
-       
-//         if(node->type==1 || node->type==7){
-//             if(node->cell1!=-1){
-//                 add_node(&(node->InNeighbours), node->cell1);
-//                 add_node(&(((sheet->matrix)+node->cell1)->OutNeighbours), node->id);
-//                 add_node(&tempList, node->cell1);
-//             }
-
-//             if(node->cell2!=-1){
-//                 add_node(&(node->InNeighbours), node->cell2);
-//                 add_node(&(((sheet->matrix)+node->cell2)->OutNeighbours), node->id);
-//                 add_node(&tempList, node->cell2);
-//             }
-//         }
-        
-//         else{
-//             int max_col = sheet->cols;
-//             int index_1 = node->cell1;
-//             int index_2 = node->cell2;
-//             int from_col = index_1%max_col;
-//             int to_col = index_2%max_col;
-//             int from_row = index_1/max_col;
-//             int to_row = index_2/max_col;
-
-
-//             for( int i = from_row; i <= to_row; i++ ){
-//                 for( int j = from_col; j<=to_col; j++ ){
-//                     int cell= i*max_col+j;
-//                     add_node(&node->InNeighbours, cell);
-//                     add_node(&(((sheet->matrix)+ cell)->OutNeighbours), node->id);
-//                     add_node(&tempList, cell);
-//                 }
-//             }
-//         }
-       
-
-//         int* pathVis = (int*)calloc(n, sizeof(int));
-//         int* vis = (int*)calloc(n, sizeof(int));
-
-//         int cycle= CHECK_CYCLE(node->id,pathVis,vis,sheet);
-
-//         free(vis);
-//         free(pathVis);
-
-//         if(cycle==1){
-//             LinkedList* tmp= tempList;
-
-//             while(tmp!=NULL){
-//                 delete_node(&(((sheet->matrix)+tmp->data)->OutNeighbours), node->id);
-//                 tmp=tmp->next;
-//             }
-
-//             LinkedList* temp= curr_head;
-
-//             while(temp!=NULL){
-//                 add_node(&(((sheet->matrix)+temp->data)->OutNeighbours), node->id);
-//                 temp=temp->next;
-//             }
-
-//             free_list(&(node->InNeighbours));
-//             node->InNeighbours= temp;
-//             free_list(&tmp);
-//             return 0;
-//         }
-//         else{
-
-//             free_list(&curr_head);
-//             free_list(&tempList);
-
-//             return 1;
-//         }
-//     }
-//     else{
-        
-//         free_list(&curr_head);
-//         node->InNeighbours=NULL;
-//         return 1;
-//     }
-// }
-//input-> cycle-> delete->assign->add->recalculate
+// Function to delete edges from the dependency graph
 int delete_edge(Node* node , Sheet* sheet){// node-> previous
     int type= node->type;
     if(type>1){
         if(type==7){
-            if(node->cell1!=-1){
-                // LinkedList* tba= ((sheet->matrix)+node->cell1)->OutNeighbours;
+            if(node->cell1!=-1){   
                 delete_node(&(((sheet->matrix)+node->cell1)->OutNeighbours), &(node->id));
-                // ((sheet->matrix)+node->cell1)->OutNeighbours=tba;
             }    
         }
         else{
@@ -626,10 +484,8 @@ int delete_edge(Node* node , Sheet* sheet){// node-> previous
             int col2= cell2%cols;
             for(int i=row1; i<=row2; i++){
                 for(int j=col1; j<=col2; j++){
-                    int cell = i*cols+j;
-                    // LinkedList* tba= ((sheet->matrix)+cell)->OutNeighbours;
+                    int cell = i*cols+j;   
                     delete_node(&(((sheet->matrix)+cell)->OutNeighbours), &(node->id));
-                    // ((sheet->matrix)+cell)->OutNeighbours=tba;
                 }
             }
         }
@@ -637,28 +493,23 @@ int delete_edge(Node* node , Sheet* sheet){// node-> previous
     else if(type==1){
         
         if(node->cell1!=-1){
-            // LinkedList* tba= ((sheet->matrix)+node->cell1)->OutNeighbours;
             delete_node(&(((sheet->matrix)+node->cell1)->OutNeighbours), &(node->id));
-            // ((sheet->matrix)+node->cell1)->OutNeighbours=tba;
         } 
         if(node->cell2!=-1){
-            // LinkedList* tba= ((sheet->matrix)+node->cell2)->OutNeighbours;
             delete_node(&(((sheet->matrix)+node->cell2)->OutNeighbours), &(node->id));
-            // ((sheet->matrix)+node->cell2)->OutNeighbours=tba;
         }
     
     }
     return 1;
 }
 
+// Function to add edges to the dependency graph
 int add_edge(Node* node, Sheet* sheet){
     int type= node->type;
     if(type>1){
         if(type==7){
-            if(node->cell1!=-1){
-                // LinkedList* tba= ((sheet->matrix)+node->cell1)->OutNeighbours;
+            if(node->cell1!=-1){ 
                 add_node(&(((sheet->matrix)+node->cell1)->OutNeighbours), &(node->id));
-                // ((sheet->matrix)+node->cell1)->OutNeighbours=tba;
             }    
         }
         else{
@@ -672,9 +523,7 @@ int add_edge(Node* node, Sheet* sheet){
             for(int i=row1; i<=row2; i++){
                 for(int j=col1; j<=col2; j++){
                     int cell = i*cols+j;
-                    // LinkedList* tba= ((sheet->matrix)+cell)->OutNeighbours;
                     add_node(&(((sheet->matrix)+cell)->OutNeighbours), &(node->id));
-                    // ((sheet->matrix)+cell)->OutNeighbours=tba;
                 }
             }
         }
@@ -682,45 +531,17 @@ int add_edge(Node* node, Sheet* sheet){
     else if(type==1){
         
         if(node->cell1!=-1){
-            // LinkedList* tba= ((sheet->matrix)+node->cell1)->OutNeighbours;
             add_node(&(((sheet->matrix)+node->cell1)->OutNeighbours), &(node->id));
-            // ((sheet->matrix)+node->cell1)->OutNeighbours=tba;
         } 
         if(node->cell2!=-1){
-            // LinkedList* tba= ((sheet->matrix)+node->cell2)->OutNeighbours;
             add_node(&(((sheet->matrix)+node->cell2)->OutNeighbours), &(node->id));
-            // ((sheet->matrix)+node->cell2)->OutNeighbours=tba;
         }
     
     }
     return 1;
 }
-/* Doing recalculation on the nodes not the entire sheet*/
-// void topo_sort( int id , int* vis , Stack* st ,Sheet* sh ){
 
-//     vis[id] = 1;
-//     LinkedList* in = (sh->matrix+id)->OutNeighbours;
-//     while( in!= NULL ){
-//         if( vis[in->data]==0 ){
-//             topo_sort( in->data , vis , st , sh );
-//         }
-//         in=in->next; //Gogo Stupidity counter- infinity
-//     }
-//     push( st, id );
-// }
-
-// void dfs( int id , int*vis , Sheet* sheet ){
-//     vis[id] = 1;
-//     LinkedList* in = (sheet->matrix+id)->OutNeighbours;
-//     while( in!= NULL ){
-//         if( vis[in->data]==0 ){
-//             (sheet->matrix+in->data)->isValid = (sheet->matrix +id)->isValid;
-//             dfs( in->data , vis ,sheet );
-//         }
-//         in=in->next; 
-//     }
-// }
-
+// Function to recalculate the value of a node
 void recalculate_node( Node* node , Sheet* sheet , Stack* st ){
     int n = (sheet->cols)*(sheet->rows);
     while(isempty(st) == 0){

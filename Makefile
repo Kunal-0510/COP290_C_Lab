@@ -8,14 +8,14 @@ TARGET = target/release/spreadsheet
 
 # Source files
 SRC_DIR = src
-SRC = $(addprefix $(SRC_DIR)/, Node.c Sheet.c linkedlist.c linked_stack.c hash.c validity.c parsing.c Functions.c display.c main.c stack.c set.c)
+SRC = $(addprefix $(SRC_DIR)/, Node.c Sheet.c linkedlist.c linked_stack.c hash.c validity.c parsing.c Functions.c display.c main.c stack.c )
 
 # Object files (replace .c with .o for each source file)
 OBJ = $(SRC:.c=.o)
 
 # Header files directory
 HEADER_DIR = headers
-HEADERS = $(addprefix $(HEADER_DIR)/, Node.h Sheet.h linkedlist.h linked_stack.h hash.h validity.h parsing.h Functions.h display.h stack.h set.h)
+HEADERS = $(addprefix $(HEADER_DIR)/, Node.h Sheet.h linkedlist.h linked_stack.h hash.h validity.h parsing.h Functions.h display.h stack.h )
 
 # Default target
 all: $(TARGET)
@@ -36,9 +36,6 @@ linkedlist.o: $(SRC_DIR)/linkedlist.c $(HEADER_DIR)/linkedlist.h
 	$(CC) $(CFLAGS) -c $< -o $@
 
 linked_stack.o: $(SRC_DIR)/linked_stack.c $(HEADER_DIR)/linked_stack.h $(HEADER_DIR)/linkedlist.h
-	$(CC) $(CFLAGS) -c $< -o $@
-
-set.o: $(SRC_DIR)/set.c $(HEADER_DIR)/set.h
 	$(CC) $(CFLAGS) -c $< -o $@
 
 hash.o: $(SRC_DIR)/hash.c $(HEADER_DIR)/hash.h

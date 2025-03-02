@@ -1,5 +1,6 @@
 #include "validity.h"
 
+// Checks if a given string is a valid number
 bool isValidNumber(char* num){
 
     int n=strlen(num);
@@ -16,6 +17,7 @@ bool isValidNumber(char* num){
     return true;
 }
 
+// Checks if a given cell address is valid within the sheet
 bool isValidCell(char* cell, Sheet* sheet) {
     
     int n=strlen(cell);
@@ -46,11 +48,12 @@ bool isValidCell(char* cell, Sheet* sheet) {
     return true;
 }
 
+// Checks if a given value is either a valid cell or a valid number
 bool isValidValue(char* val, Sheet* sheet){
     return isValidCell(val,sheet) || isValidNumber(val);
 }
 
-
+// Checks if a given range of cells is valid within the sheet
 bool isValidRange(char* first,char* second,Sheet* sheet){
 
     if(!isValidCell(first, sheet) || !isValidCell(second, sheet)){

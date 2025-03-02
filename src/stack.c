@@ -7,27 +7,23 @@ void StackInit(Stack* stack) {
 
 // Push an element onto the stack
 void push(Stack* stack, int value) {
-    StackNode* newNode = (StackNode*)malloc(sizeof(StackNode));
-    if (!newNode) {
-        fprintf(stderr, "Memory allocation failed\n");
-        return;
-    }
-    newNode->data = value;
-    newNode->next = stack->top;
-    stack->top = newNode;
+    StackNode* node = (StackNode*)malloc(sizeof(StackNode));
+    node->data = value;
+    node->next = stack->top;
+    stack->top = node;
 }
 
 // Pop an element from the stack
 int pop(Stack* stack) {
     if (isempty(stack)) {
         fprintf(stderr, "Stack underflow\n");
-        return -1; // Return an error value
+        return -1; 
     }
     StackNode* temp = stack->top;
-    int poppedValue = temp->data;
+    int val = temp->data;
     stack->top = temp->next;
     free(temp);
-    return poppedValue;
+    return val;
 }
 
 // Check if the stack is empty
