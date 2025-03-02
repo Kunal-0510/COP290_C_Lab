@@ -91,7 +91,7 @@ report: report.pdf
 
 # Clean up build artifacts
 clean:
-	rm -f $(OBJ) $(TARGET) report.pdf report.aux report.log report.out report.toc report.synctex.gz
+	rm -f $(OBJ) $(TARGET) test_suite.o report.pdf report.aux report.log report.out report.toc report.synctex.gz
 
 # Phony targets (not actual files)
 .PHONY: all clean report
