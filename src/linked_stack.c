@@ -7,14 +7,14 @@ void LinkedStackInit(LinkedStack* stack) {
 
 // Push an element onto the stack
 void push_linked(LinkedStack* stack, LinkedList* value) {
-    LinkedStackNode* newNode = (LinkedStackNode*)malloc(sizeof(LinkedStackNode));
-    if (!newNode) {
+    LinkedStackNode* node = (LinkedStackNode*)malloc(sizeof(LinkedStackNode));
+    if (!node) {
         fprintf(stderr, "Memory allocation failed\n");
         return;
     }
-    newNode->node = value;
-    newNode->next = stack->top;
-    stack->top = newNode;
+    node->node = value;
+    node->next = stack->top;
+    stack->top = node;
 }
 
 // Pop an element from the stack

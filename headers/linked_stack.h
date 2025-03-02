@@ -4,11 +4,20 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "linkedlist.h"
-// Structure for a stack nod
+
+/*
+LinkedStack Module
+
+This module defines the linked stack data structure used for managing linked lists within the spreadsheet. 
+It includes functions to initialize the stack, push and pop elements, check if the stack is empty, and peek at the top element.
+*/
+
+// Structure for a stack node
 typedef struct LinkedStackNode {
     LinkedList* node;
     struct LinkedStackNode* next;
 } LinkedStackNode;
+
 // Structure for the stack
 typedef struct LinkedStack {
     LinkedStackNode* top;

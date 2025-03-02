@@ -4,6 +4,13 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+/*
+Stack Module
+
+This module defines the stack data structure used for various operations within the spreadsheet. 
+It includes functions to initialize the stack, push and pop elements, check if the stack is empty, and peek at the top element.
+*/
+
 // Structure for a stack node
 typedef struct StackNode {
     int data;

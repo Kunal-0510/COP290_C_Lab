@@ -11,39 +11,26 @@
 #include "display.h"
 #include "parsing.h"
 
-#define MAX_INPUT_LENGTH 100
-//Input-> parsing-> assign cell properties-> call add_edge -> call recalculate -> display file
-//                                                 ^Nimit            ^Gogo
-/*
-TBD:
-- Parsing (Kunal)
-- Add_edge (Nimit)
-- Recalculate (Gogo)
-- Time funtionality in Display.h and final formatting to match display style (Nimit)
-- Error Handling: MAJOR (Each of us in our respective files)
-- main.c file (Dekh lenge)
-- make file (Kunal)
-*/
+#define MAX_INPUT_LENGTH 500
 
-/*
-Types of errors:
-
-*/
+//Main entry point of the program
 int main(int argc, char* argv[]) {
     if (argc != 3) {
         printf("Usage: ./sheet <rows> <columns>\n");
         return 1;
     }
 
-
     int rows = atoi(argv[1]);
     int cols = atoi(argv[2]);
 
+    // Allocate memory for the sheet
     Sheet* sheet = (Sheet*)malloc(sizeof(Sheet));
     if (!sheet) {
         fprintf(stderr, "Memory allocation failed for Sheet.\n");
         return EXIT_FAILURE;
     }
+
+    // Create and display the sheet
     clock_t st = clock();
     create_sheet(rows, cols, sheet); // Initialize the sheet
     display_sheet(sheet);      // Display the sheet (assuming this function is defined)
@@ -53,8 +40,7 @@ int main(int argc, char* argv[]) {
 
     char input[MAX_INPUT_LENGTH];
     while (1) {
-        int suc=1;
-        // printf("%d\n", strlen(input));
+        int suc = 1;
         if (!fgets(input, MAX_INPUT_LENGTH, stdin)) {
             printf("[0.0] (error reading input) >");
             continue;
@@ -81,30 +67,25 @@ int main(int argc, char* argv[]) {
             enable_display(sheet);
         } else if (strncmp(input, "scroll_to ", 10) == 0) {
             char* cell = input + 10; // Extract cell argument
-            if(isValidCell(cell, sheet)){
+            if (isValidCell(cell, sheet)) {
                 scroll_to(cell, sheet);
+            } else {
+                suc = 0;
             }
-            else{
-                suc=0;
-            }
-            
         } else {
             // Assume it's a formula or operation
-            // printf("%d\n", strlen(input));
             int result = parseInput(input, sheet); // Assuming parse_input is implemented in parser.h
             if (result != 1) {
-                suc=0;    
+                suc = 0;    
             }
-           
         }
 
         clock_t end_time = clock();
         double elapsed_time = ((double)(end_time - start_time)) / CLOCKS_PER_SEC;
         display_sheet(sheet);
-        if(suc==1){
+        if (suc == 1) {
             printf("[%0.1f] (ok) > ", elapsed_time);
-        }
-        else{
+        } else {
             printf("[%0.1f] (error parsing input) > ", elapsed_time);
         }
     }

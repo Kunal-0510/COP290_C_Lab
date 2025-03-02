@@ -13,6 +13,7 @@ typedef struct MemoryPool {
 MemoryPool* pool = NULL;
 LinkedList* free_list_head = NULL;
 
+// Allocates a new memory pool for linked list nodes
 void allocate_pool() {
     MemoryPool* new_pool = (MemoryPool*)malloc(sizeof(MemoryPool));
     if (!new_pool) {
@@ -30,6 +31,7 @@ void allocate_pool() {
     pool = new_pool;
 }
 
+// Retrieves a node from the memory pool
 LinkedList* get_node_from_pool() {
     if (free_list_head) {
         LinkedList* node = free_list_head;
@@ -43,6 +45,7 @@ LinkedList* get_node_from_pool() {
     return &pool->nodes[pool->index++];
 }
 
+// Adds a node to the linked list
 void add_node(LinkedList** head, int* hash) {
     LinkedList* new_node = get_node_from_pool();
     if (!new_node) {
@@ -54,6 +57,7 @@ void add_node(LinkedList** head, int* hash) {
     *head = new_node;
 }
 
+// Deletes a node from the linked list
 void delete_node(LinkedList** head_ref, int* key) {
     if (*head_ref == NULL) return;
     LinkedList** curr = head_ref;
@@ -69,6 +73,7 @@ void delete_node(LinkedList** head_ref, int* key) {
     }
 }
 
+// Frees the entire linked list
 void free_list(LinkedList** head) {
     while (*head != NULL) {
         LinkedList* temp = *head;
@@ -79,6 +84,7 @@ void free_list(LinkedList** head) {
     *head = NULL;
 }
 
+// Finds a node in the linked list
 int find_node(LinkedList* head, int hash) {
     LinkedList* temp = head;
     while (temp != NULL) {
@@ -90,6 +96,7 @@ int find_node(LinkedList* head, int hash) {
     return 0;
 }
 
+// Frees all memory pools
 void free_memory_pools() {
     while (pool) {
         MemoryPool* temp = pool;

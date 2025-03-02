@@ -1,5 +1,6 @@
 #include "parsing.h"
 
+// Parses the input string based on the given symbol and separates it into two parts
 bool parse(char* input, char** first, char** second, char symbol) {
     
     char* sign = strchr(input, symbol);
@@ -37,45 +38,29 @@ bool parse(char* input, char** first, char** second, char symbol) {
     return true;
 }
 
- /*
-    Invalid = -1
+/*
+
 
     Constant Assignment = 0 // set op_val to the assignment value. All the operations of cell= value + - * / value are included in this type
 
-    Arithmetic sum = 1 
+    Arithmetic operation = 1 
     if cell = value + cell or cell = cell + value -> op_val= value and cell1= hash(cell) else -> op_val=0 and cell1,cell2 = hash(cells).
     ***Cell assignments (like (A1=A2)) are also of this type, with op_val =0 and cell1= hash(cell assigned)***
 
-    Arithmetic diff= 2 
-    if(cell= cell - val)-> cell1=hash(cell), cell2=-1, op_val= val
-    if(cell= val- cell)-> cell1=-1, cell2=hash(cell), op_val= val
-    else-> cell1 and cell2= hash values, op_val= 0
-
-    Arithmetic product= 3
-    if value * cell or cell * value -> op_val= value and cell1= hash(cell) else -> op_val=1 and cell1,cell2 = hash(cells).
-    *** if cell= cell*0 then the cell is type 0 and constant assigned =0 ***
-
-    Arithmetic division= 4 
-    if(cell= cell/val)-> cell1=hash(cell), cell2=-1, op_val= val **return error if val=0
-    if(cell= val/cell)-> cell1=-1, cell2=hash(cell), op_val= val ** return error if cell->val=0
-    else(cell=cell1/cell2)-> cell1 and cell2= hash values, op_val= 1 **return error if cell2->val=0
-
-    MIN = 5
-    MAX = 6
-    AVG = 7
-    SUM = 8
-    STDEV = 9
+    MIN = 2
+    MAX = 3
+    AVG = 4
+    SUM = 5
+    STDEV = 6
     cell= func(c1:c2)-> cell1= hash(c1) cell2= hash(c2). set corresponding types
 
-    SLEEP = 10
+    SLEEP = 7
     cell = SLEEP(c1)-> cell1= hash(c1)  cell2=-1
     cell= SLEEP(val)-> cell1=cell2=-1 op_val=val
 
 */
 
-
-
-
+// Parses an expression and separates it into operator and operands
 void parseExpr(char* expression, char* op, char* val1, char* val2) {
     int n = strlen(expression);
     int len1 = 0, len2 = 0;
@@ -121,6 +106,7 @@ void parseExpr(char* expression, char* op, char* val1, char* val2) {
     val2[len2] = '\0';
 }
 
+// Converts a cell address string to a Node pointer
 Node* str_to_node(char* cellAddress,Sheet* sheet){
 
     Node* cell=(sheet->matrix + get_hash(cellAddress,sheet->cols));
@@ -128,10 +114,12 @@ Node* str_to_node(char* cellAddress,Sheet* sheet){
 
 }
 
+// Assigns the properties of the cell and then calls the check_cycle function, if the cycleis found,  returns false
+// else it it calls the delete_edge function and assigns the properties, calls the add edge function and then the recalculate_node function
 bool assign_cell(char* cellAddress, char* expr, Sheet* sheet) {
-    // printf("%s %s\n", cellAddress, expr);
+
     Node* cell = str_to_node(cellAddress, sheet);
-    // printf("%d\n", cell->val);
+
     int cell1=-1;
     int cell2=-1;
     int type=0;
@@ -143,8 +131,7 @@ bool assign_cell(char* cellAddress, char* expr, Sheet* sheet) {
     char val2[256] = {0};
 
     parseExpr(expr, &op, val1, val2);
-    // printf("val1:%s val2:%s op:%c\n", val1, val2, op);
-    // int type = -1;
+
 
     if (op != '\0') {
         type = 1;
@@ -160,12 +147,6 @@ bool assign_cell(char* cellAddress, char* expr, Sheet* sheet) {
             
             else if (isValidNumber(val2)) {
                 int num = atoi(val2);
-                // if (num == 0 && op == '*') {
-                //     type = 0;
-                //     cell1 = -1;
-                //     cell2 = -1;
-                //     op_val = 0;
-                // }
                 op_val = num;
                 cell2 = -1;
             }
@@ -178,13 +159,6 @@ bool assign_cell(char* cellAddress, char* expr, Sheet* sheet) {
             cell1 = -1;
 
             if (isValidCell(val2, sheet)) {
-                // if (num == 0 && op == '*') {
-                //     type = 0;
-                //     cell1 = -1;
-                //     cell2 = -1;
-                //     op_val = 0;
-
-                // }
                 cell2 = get_hash(val2, sheet->cols);
             }
             
@@ -193,7 +167,6 @@ bool assign_cell(char* cellAddress, char* expr, Sheet* sheet) {
                 isValid=1;
                 int num1 = atoi(val1);
                 int num2 = atoi(val2);
-                // printf("num1: %d num2: %d\n",num1, num2);
                 int ans = 0;
 
                 if (op == '+') ans = num1 + num2;
@@ -296,10 +269,9 @@ bool assign_cell(char* cellAddress, char* expr, Sheet* sheet) {
     return true;
 }
 
-
-
+// Parses the input command and processes it
 bool parseInput(char* input, Sheet* sheet) {
-    // printf("%zu %s\n", strlen(input), input);
+
 
     char* cellAddress = NULL;
     char* expression = NULL;

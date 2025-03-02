@@ -1,5 +1,6 @@
 #include "Node.h"
 
+//initialize the node
 void initialize_node(struct Node *node, int id) {
     node->isValid=1;
     node->val = 0;

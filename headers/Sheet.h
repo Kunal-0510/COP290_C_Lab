@@ -7,6 +7,14 @@
 #include "Node.h"
 #include "linkedlist.h"
 
+/*
+Sheet Module
+
+This module defines the Sheet structure, which stores the information about the spreadsheet. 
+The Sheet structure contains a matrix of Node structures that constitute the spreadsheet, 
+along with metadata such as the number of rows and columns, and the current view's top-left cell indices.
+*/
+
 // Declare the Sheet structure
 typedef struct Sheet {
     int rows;                    // Number of rows
@@ -20,6 +28,5 @@ typedef struct Sheet {
 // Function declarations
 struct Node* create_node_matrix(int R, int C);
 void create_sheet(int row, int col, struct Sheet *sheet);
-void free_sheet(Sheet* sheet);
 
 #endif

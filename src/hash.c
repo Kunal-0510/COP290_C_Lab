@@ -3,7 +3,8 @@
 #include <string.h>
 #include <stdlib.h>
 
-void separate_cell(char *input, char *letters, char *numbers) {//Seperates the cell address into letters and numbers
+// Separates the cell address into letters and numbers
+void separate_cell(char *input, char *letters, char *numbers) {
     int i = 0, letter_idx = 0, number_idx = 0;
     while (input[i] != '\0') {
         if (isalpha(input[i])) {
@@ -18,8 +19,8 @@ void separate_cell(char *input, char *letters, char *numbers) {//Seperates the c
     numbers[number_idx] = '\0';
 }
 
-// Function to convert column letters (e.g., "A", "BC") to a column number
-int get_column(char *letters) {//gives the column number
+// Converts column letters to a column number
+int get_column(char *letters) {
     int column = 0;
     for (int i = 0; letters[i] != '\0'; i++) {
         column = column * 26 + (letters[i] - 'A'+1);
@@ -27,7 +28,7 @@ int get_column(char *letters) {//gives the column number
     return column;
 }
 
-//Returns the hash of the given cell address
+// Returns the hash of the given cell address
 int get_hash(char* address, int col_num){
     char letters[4];
     char numbers[4];
