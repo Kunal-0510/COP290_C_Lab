@@ -429,7 +429,7 @@ void CHECK_CYCLE(Node* startNode, int* vis, Sheet* sheet, int cell1, int cell2, 
             return;
         }
 
-        // Push all unvisited neighbors onto the stack
+        // Push first unvisited neighbor onto the stack
         LinkedList* in = linked_peek(lkd);
         int has_unvisited_child = 0;
         
