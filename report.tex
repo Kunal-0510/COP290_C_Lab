@@ -128,18 +128,15 @@ The execution flow of the spreadsheet program is organized into several key step
     After the cell assignment process is complete, control returns to the main function, which then calls the display sheet function to present the updated state of the spreadsheet.
 \end{enumerate}
 \section{Test Suite}
-The test suite for this project is implemented in C and is integrated into the build process. It covers:
+The Test suite covers:
 \begin{itemize}
-    \item Basic cell assignments and arithmetic operations.
-    \item Input validation and error handling.
-    \item Dependency tracking and recalculation of cells.
+    \item Cell assignments and all function opertations.
+    \item Recalulations from dependencies.
+    \item Stress testing for inputs with large ranges.
     \item Edge cases such as division by zero and circular dependencies.
+    \item Error handling for invalid inputs such as ivalid cell and invalid ranges.
 \end{itemize}
-To run the test suite, execute:
-\begin{verbatim}
-make test
-\end{verbatim}
-The suite automatically compares program output against expected results, ensuring the correctness of all functionalities.
+
 
 \section{Challenges}
 Several challenges were encountered during the development of this spreadsheet program:
