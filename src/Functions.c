@@ -376,7 +376,7 @@ void SLEEP(Node* node, Sheet* sheet){
     }
 }
 
-// Function to check for cycles in the dependency graph
+// Function to check for cycles in the dependency graph and topologically sort the nodes
 void CHECK_CYCLE(Node* startNode, int* vis, Sheet* sheet, int cell1, int cell2, int* flag, int type, Stack* st) {
     Stack* stack= (Stack*)malloc(sizeof(Stack));
     StackInit(stack);  // Initialize local stack
@@ -465,7 +465,7 @@ void CHECK_CYCLE(Node* startNode, int* vis, Sheet* sheet, int cell1, int cell2, 
     free(stack);
 }
 
-// Function to delete edges from the dependency graph
+// Function to delete edges from the dependency graph which the node previously depended on
 int delete_edge(Node* node , Sheet* sheet){// node-> previous
     int type= node->type;
     if(type>1){
@@ -503,7 +503,7 @@ int delete_edge(Node* node , Sheet* sheet){// node-> previous
     return 1;
 }
 
-// Function to add edges to the dependency graph
+// Function to add edges to the dependency graph which the node now depends on
 int add_edge(Node* node, Sheet* sheet){
     int type= node->type;
     if(type>1){

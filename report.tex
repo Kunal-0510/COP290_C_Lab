@@ -138,19 +138,19 @@ The Test suite covers:
 \end{itemize}
 
 
-\section{Challenges}
+\section{Challenges Faced}
 Several challenges were encountered during the development of this spreadsheet program:
 \begin{itemize}
     \item \textbf{Dependency Tracking:} Efficiently managing and updating the dependencies among cells to trigger only the necessary recalculations.
     \item \textbf{Circular Dependency Detection:} Implementing a robust and efficient mechanism to detect cycles in formulas, ensuring that the program correctly finds the topological ordering of the graph and simultaneously detects cycles.
     \item \textbf{Node Structure Design:} Designing the structure of the node and deciding what information is required during recalculations and cycle checks.
-    \item \textbf{Robust Parsing:} Accurately parsing complex user inputs, including formulas and commands, while gracefully handling invalid or erroneous inputs.
+    \item \textbf{Memory Allocation:} Efficiently handling malloc calls and minimizing their frequency to reduce program execution time is achieved by creating a linked list, where each node serves as a memory pool containing 1024 linked list nodes.
 \end{itemize}
 
 \section{Demo Video and GitHub Repository}
 For a demonstration of the program in action and access to the source code, please refer to the following links:
 \begin{itemize}
-    \item \textbf{Demo Video:} \url{https://your-demo-video-link.com}
+    \item \textbf{Demo Video:} \url{https://drive.google.com/file/d/1rzWJCcruVM6A8QXpPNMnRnqD9ZBk2AYz/view?usp=sharing}
     \item \textbf{GitHub Repository:} \url{https://github.com/Kunal-0510/COP290_C_Lab}
 \end{itemize}
 
