@@ -9,7 +9,7 @@ void test_parser(int tc, int rows, int cols) {
     // Construct the command to run the sheet executable:
     // It feeds input.txt to sheet and writes the output to temp_output.txt.
     char command[256];
-    snprintf(command, sizeof(command), "./sheet %d %d < testcase/input/input%d.txt > testcase/temp_output.txt", rows, cols, tc);
+    snprintf(command, sizeof(command), "./target/release/spreadsheet %d %d < testcase/input/input%d.txt > testcase/temp_output.txt", rows, cols, tc);
     
     // Run the command.
     if (system(command) != 0) {
@@ -74,8 +74,15 @@ int main(void) {
 
     int rows, cols, tc = 1;
     while (fscanf(fptr, "%d %d", &rows, &cols) == 2) {
+        
         test_parser(tc++, rows, cols);
+        
     }
+
+    
+    
+
+
     fclose(fptr);
 
     return 0;

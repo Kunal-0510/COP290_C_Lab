@@ -41,23 +41,23 @@ def generate_input(tc_num, rows, cols):
 def generate_output(tc_num, rows, cols):
     input_filename = f"testcase/input/input{tc_num}.txt"
     output_filename = f"testcase/output/output{tc_num}.txt"
-    command = f"./sheet {rows} {cols} < {input_filename} > {output_filename}"
+    command = f"./target/release/spreadsheet {rows} {cols} < {input_filename} > {output_filename}"
     try:
         subprocess.run(command, shell=True, check=True)
     except subprocess.CalledProcessError as e:
         print(f"Error: Command '{command}' failed with exit code {e.returncode}")
 
 def main():
-    num_testcases = 10  # Reduced number of test cases for debugging
+    
     min_size = 5
-    max_rows = 10  # Reduced maximum rows for debugging
-    max_cols = 10  # Reduced maximum columns for debugging
+    max_rows = 10
+    max_cols = 10 
     
     os.makedirs("testcase/input", exist_ok=True)
     os.makedirs("testcase/output", exist_ok=True)
     
     with open("testcase/size.txt", 'w') as size_file:
-        for tc in range(1, num_testcases + 1):
+        for tc in range(1, 11):
             print(f"Generating testcase {tc}...")
             rows = random.randint(min_size, max_rows)
             cols = random.randint(min_size, max_cols)
@@ -65,6 +65,18 @@ def main():
             generate_input(tc, rows, cols)
             generate_output(tc, rows, cols)
             print(f"Testcase {tc} generated!")
+
+        print()
+        print("Generating large testcases...")
+
+        for tc in range(11, 17):
+            print(f"Generating testcase {tc}...")
+            rows = 999
+            cols = 18278
+            size_file.write(f"{rows} {cols}\n")
+            generate_output(tc, rows, cols)
+            print(f"Testcase {tc} generated!")
+        
 
 if __name__ == "__main__":
     main()
