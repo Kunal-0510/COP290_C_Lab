@@ -5,13 +5,16 @@
 
 #define BUFFER_SIZE 1024
 
+// Comparing two lines of output
 int compare_lines(const char* lineOut, const char* lineExpected) {
     double timeOut, timeExpected;
     int parsedOut, parsedExpected;
 
+    // Parsing the time values form the lines
     parsedOut = sscanf(lineOut, "[%lf]", &timeOut);
     parsedExpected = sscanf(lineExpected, "[%lf]", &timeExpected);
 
+    // for neglecting time difference between threshold
     if (parsedOut == 1 && parsedExpected == 1) {
         // Find the closing bracket in each line.
         const char *closeBracketOut = strchr(lineOut, ']');
@@ -30,6 +33,7 @@ int compare_lines(const char* lineOut, const char* lineExpected) {
     return strcmp(lineOut, lineExpected);
 }
 
+// Function to run a test case and compare the output with expected output
 void test_parser(int tc, int rows, int cols) {
     char command[256];
     snprintf(command, sizeof(command),
@@ -85,6 +89,7 @@ void test_parser(int tc, int rows, int cols) {
     } else {
         printf("Testcase %d PASSED.\n", tc);
 
+        // Custom testcase checks for large testcases and edge cases
         switch(tc){
             case 11:
                 printf("Assignment and function testcases PASSED\n");
@@ -111,6 +116,8 @@ void test_parser(int tc, int rows, int cols) {
 }
 
 int main(void) {
+
+    // File that contains size of the spreadsheet for each testcase 
     FILE* fptr = fopen("testcase/size.txt", "r");
     if (!fptr) {
         fprintf(stderr, "Error: Could not open size.txt.\n");

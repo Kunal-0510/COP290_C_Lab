@@ -15,7 +15,7 @@ bool parse(char* input, char** first, char** second, char symbol) {
     *first = (char*)malloc(firstLength + 1);
     *second = (char*)malloc(secondLength + 1);
 
-
+    // if memory allocation fails
     if (!*first || !*second) {
         free(*first);
         free(*second);
@@ -67,7 +67,6 @@ void parseExpr(char* expression, char* op, char* val1, char* val2) {
     int insideParentheses = 0;
     
     for (int i = 0; i < n; i++) {
-        // printf("i: %d val1:%s val2:%s op:%c\n",i, val1, val2, op);
         char c = expression[i];
 
         if(i==0 && (c=='-' || c=='+')){
@@ -133,19 +132,19 @@ bool assign_cell(char* cellAddress, char* expr, Sheet* sheet) {
     parseExpr(expr, &op, val1, val2);
 
 
-    if (op != '\0') {
+    if (op != '\0') { // arithmetic operation case
         type = 1;
         newop = op;
 
         if (isValidCell(val1, sheet)) {
             cell1 = get_hash(val1, sheet->cols);
 
-            if (isValidCell(val2, sheet)) {
+            if (isValidCell(val2, sheet)) { // cell op cell case
                 cell2 = get_hash(val2, sheet->cols);
                 op_val = 0;
             }
             
-            else if (isValidNumber(val2)) {
+            else if (isValidNumber(val2)) { // cell op val case
                 int num = atoi(val2);
                 op_val = num;
                 cell2 = -1;
@@ -153,17 +152,17 @@ bool assign_cell(char* cellAddress, char* expr, Sheet* sheet) {
             else return false;
         }
         
-        else if (isValidNumber(val1)) {
+        else if (isValidNumber(val1)) { 
             int num = atoi(val1);
             op_val = num;
             cell1 = -1;
 
-            if (isValidCell(val2, sheet)) {
+            if (isValidCell(val2, sheet)) { // val op cell case
                 cell2 = get_hash(val2, sheet->cols);
             }
             
-            else if (isValidNumber(val2)) {
-                type = 0;
+            else if (isValidNumber(val2)) { // val op val case
+                type = 0; // constant assignment, counting this case as type 0
                 isValid=1;
                 int num1 = atoi(val1);
                 int num2 = atoi(val2);
@@ -184,16 +183,16 @@ bool assign_cell(char* cellAddress, char* expr, Sheet* sheet) {
         else return false;
     } 
     
-    else {
+    else { // cell = function case
        
         if (val2[0] == '\0') {
-            if (isValidNumber(val1)) {
+            if (isValidNumber(val1)) { // constant assignment
                 type = 0;
                 isValid=1;
                 op_val = atoi(val1);
             } 
             
-            else if (isValidCell(val1, sheet)) {
+            else if (isValidCell(val1, sheet)) { // cell assignment
                 type = 1;
                 cell1 = get_hash(val1, sheet->cols);
                 cell2 = -1;
@@ -276,12 +275,14 @@ bool parseInput(char* input, Sheet* sheet) {
     char* cellAddress = NULL;
     char* expression = NULL;
 
+    // split the input into cell address and expression
     if (!parse(input, &cellAddress, &expression, '=')) {
         free(cellAddress);
         free(expression);
         return false;
     }
 
+    // check if the cell address is valid
     if(!isValidCell(cellAddress,sheet)){
         free(cellAddress);
         free(expression);
