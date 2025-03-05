@@ -14,13 +14,11 @@ Use make command to run the spreadsheet
 To run the spreadsheet application, use the following command:
 
 ```sh
-./target/release/spreadsheet <rows> <cols> < input_file > output_file
+./target/release/spreadsheet <rows> <cols>
 ```
 
 - `<rows>`: Number of rows in the spreadsheet.
 - `<cols>`: Number of columns in the spreadsheet.
-- `input_file`: Path to the input file containing spreadsheet commands.
-- `output_file`: Path to the output file where the results will be written.
 
 Example:
 
