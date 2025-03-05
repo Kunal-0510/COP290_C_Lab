@@ -23,7 +23,7 @@ To run the spreadsheet application, use the following command:
 Example:
 
 ```sh
-./target/release/spreadsheet 10 10 < testcase/input/input1.txt > testcase/output/output1.txt
+./target/release/spreadsheet 10 10 
 ```
 
 ## Running the Test Suite
