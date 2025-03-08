@@ -88,6 +88,8 @@ int main(int argc, char* argv[]) {
                 suc=0;
             }
             
+        } else if (strcmp(input, "i") == 0) {
+            interactive_mode(sheet);
         } else {
             // Assume it's a formula or operation
             // printf("%d\n", strlen(input));

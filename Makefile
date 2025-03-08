@@ -8,14 +8,14 @@ TARGET = target/release/spreadsheet
 
 # Source files
 SRC_DIR = src
-SRC = $(addprefix $(SRC_DIR)/, Node.c Sheet.c linkedlist.c linked_stack.c hash.c validity.c parsing.c Functions.c display.c main.c stack.c set.c)
+SRC = $(addprefix $(SRC_DIR)/, Node.c Sheet.c linkedlist.c linked_stack.c hash.c validity.c parsing.c Functions.c display.c main.c stack.c set.c moveCursor.c)
 
 # Object files (replace .c with .o for each source file)
 OBJ = $(SRC:.c=.o)
 
 # Header files directory
 HEADER_DIR = headers
-HEADERS = $(addprefix $(HEADER_DIR)/, Node.h Sheet.h linkedlist.h linked_stack.h hash.h validity.h parsing.h Functions.h display.h stack.h set.h)
+HEADERS = $(addprefix $(HEADER_DIR)/, Node.h Sheet.h linkedlist.h linked_stack.h hash.h validity.h parsing.h Functions.h display.h stack.h set.h moveCursor.h)	
 
 # Default target
 all: $(TARGET)
@@ -62,6 +62,9 @@ stack.o: $(SRC_DIR)/stack.c $(HEADER_DIR)/stack.h
 main.o: $(SRC_DIR)/main.c $(HEADERS)
 	$(CC) $(CFLAGS) -c $< -o $@
 
+moveCursor.o: $(SRC_DIR)/moveCursor.c $(HEADER_DIR)/Sheet.h $(HEADER_DIR)/display.h
+	$(CC) $(CFLAGS) -c $< -o $@
+
 # --- Test Suite Section ---
 TEST_DIR = testcase
 TEST_SRC = $(TEST_DIR)/test_suite.c
@@ -80,7 +83,6 @@ $(TEST_TARGET): $(TEST_OBJ) $(TARGET)
 test: $(TEST_TARGET)
 	@echo "Running tests..."
 	$(TEST_TARGET)
-
 
 # Rule to compile LaTeX report
 report.pdf: report.tex

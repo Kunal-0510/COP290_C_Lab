@@ -22,25 +22,9 @@ void create_sheet(int row, int col, struct Sheet *sheet) {
     sheet->cols = col;
     sheet->coltop = 0;
     sheet->rowtop = 0;
+    // Initialize the active cell for interactive mode
+    sheet->activeRow = 0;
+    sheet->activeCol = 0;
     sheet->matrix = create_node_matrix(row, col);
     sheet->display = 1;
-}
-
-
-void free_sheet(Sheet *sheet) {
-    if (!sheet || !sheet->matrix) return;
-
-   
-    for (int i = 0; i < sheet->rows * sheet->cols; i++) {
-        Node *node = &sheet->matrix[i];
-
-        if (node->OutNeighbours) {
-            free_list(&(node->OutNeighbours));
-            node->OutNeighbours = NULL;
-        }
-    }
-
-    
-    free(sheet->matrix);
-    sheet->matrix = NULL;
 }

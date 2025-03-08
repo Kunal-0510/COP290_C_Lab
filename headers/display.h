@@ -11,6 +11,7 @@
 
 int min(int a, int b);
 char* mapping(int col);
+void clearScreen();
 void display_sheet(Sheet* sheet);
 void scroll_up( Sheet* sheet);
 void scroll_down( Sheet* sheet);

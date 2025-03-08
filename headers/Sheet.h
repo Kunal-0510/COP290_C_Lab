@@ -14,6 +14,8 @@ typedef struct Sheet {
     int coltop;                  // Top-left cell column index
     int rowtop;                  // Top-left cell row index
     struct Node *matrix;         // Matrix of nodes
+    int activeRow;               // Active cell row index
+    int activeCol;               // Active cell column index
     int display;                 // Display flag
 } Sheet;
 
