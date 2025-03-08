@@ -44,18 +44,20 @@ char* mapping(int col) { // Args: Column number
 }
 
 // Clears the screen and moves the cursor to the top-left corner
-void clearScreen() {
-    printf("\033[2J\033[H");  // Clear screen and reposition to home (top-left)
+void clearScreen(void) {
+    printf("\033[2J\033[H");  // ANSI escape: Clear screen and reposition to home (top-left)
     fflush(stdout);
 }
 
-// Displays the sheet in a 10x10 grid format
+// Displays the sheet in a 10x10 grid format.
+// The active cell is printed in a distinct color (green background with black text),
+// and if a cell has an error ("ERR"), it is printed with red text.
 void display_sheet(struct Sheet* sheet) { // args: The sheet itself
     if (sheet->display == 1) {
-        // Clear the screen before drawing the grid
         clearScreen();
-        // Print column headers
-        printf("   ");
+        
+        // Print column headers: Reserve 4 spaces for row labels, then print each header in a 12-character field.
+        printf("    "); // 4 spaces for the row labels
         int colt = sheet->coltop;
         int rowt = sheet->rowtop;
         int numcols = sheet->cols;
@@ -66,25 +68,35 @@ void display_sheet(struct Sheet* sheet) { // args: The sheet itself
             free(colStr);
         }
         printf("\n");
-        // Print each row of the grid
+        
+        // Print each row
         for (int i = rowt; i < min(rowt + 10, numrows); i++) {
-            printf("%3d", i + 1);
+            // Print row number label in a fixed-width field (4 characters)
+            printf("%3d ", i + 1);
             for (int j = colt; j < min(colt + 10, numcols); j++) {
                 Node* node = sheet->matrix + i * numcols + j;
                 // Check if this cell is the active cell
                 if (i == sheet->activeRow && j == sheet->activeCol) {
-                    // Highlight the active cell using reverse video
-                    printf("\033[7m");
-                    if (node->isValid == 1)
+                    // Active cell: use green background (42) with black text (30)
+                    if (node->isValid == 1) {
+                        printf("\033[42;30m");  // Green background, black text
                         printf("%12d", node->val);
-                    else
-                        printf("         ERR");
-                    printf("\033[0m");
+                    } else {
+                        // Active cell with error: green background, red text
+                        printf("\033[42;31m");  // Green background, red text
+                        printf("%12s", "ERR");
+                    }
+                    printf("\033[0m");  // Reset attributes
                 } else {
-                    if (node->isValid == 1)
+                    // Non-active cell: print normally
+                    if (node->isValid == 1) {
                         printf("%12d", node->val);
-                    else
-                        printf("         ERR");
+                    } else {
+                        // Print ERR in red text
+                        printf("\033[31m");  // Red text
+                        printf("%12s", "ERR");
+                        printf("\033[0m");
+                    }
                 }
             }
             printf("\n");
@@ -93,43 +105,43 @@ void display_sheet(struct Sheet* sheet) { // args: The sheet itself
 }
 
 // Scrolls the sheet view up by 10 rows
-void scroll_up(Sheet* sheet) {
+void scroll_up(struct Sheet* sheet) {
     sheet->rowtop = max(sheet->rowtop - 10, 0);
 }
     
 // Scrolls the sheet view down by 10 rows
-void scroll_down(Sheet* sheet) {
+void scroll_down(struct Sheet* sheet) {
     sheet->rowtop = min(sheet->rowtop + 10, max(sheet->rows - 10, 0));   
 }
 
 // Scrolls the sheet view right by 10 columns
-void scroll_right(Sheet* sheet) {
+void scroll_right(struct Sheet* sheet) {
     sheet->coltop = min(sheet->coltop + 10, max(sheet->cols - 10, 0));
 }
 
 // Scrolls the sheet view left by 10 columns
-void scroll_left(Sheet* sheet) {
+void scroll_left(struct Sheet* sheet) {
     sheet->coltop = max(sheet->coltop - 10, 0);
 }
 
 // Disables the display of the sheet
-void disable_display(Sheet* sheet) {
+void disable_display(struct Sheet* sheet) {
     sheet->display = 0;
 }
 
 // Enables the display of the sheet
-void enable_display(Sheet* sheet) {
+void enable_display(struct Sheet* sheet) {
     sheet->display = 1;
 }
 
 // Scrolls the sheet view to a specific cell (e.g., "A1", "B2")
-void scroll_to(char* cell, Sheet* sheet) {
+void scroll_to(char* cell, struct Sheet* sheet) {
     char letters[4];
     char numbers[4];
     separate_cell(cell, letters, numbers);
     int row = atoi(numbers) - 1;
     int col = get_column(letters) - 1;
-
+    
     sheet->rowtop = row;
     sheet->coltop = col;
 }
