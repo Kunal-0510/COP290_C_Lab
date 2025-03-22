@@ -39,8 +39,6 @@ bool parse(char* input, char** first, char** second, char symbol) {
 }
 
 /*
-
-
     Constant Assignment = 0 // set op_val to the assignment value. All the operations of cell= value + - * / value are included in this type
 
     Arithmetic operation = 1 
@@ -57,7 +55,6 @@ bool parse(char* input, char** first, char** second, char symbol) {
     SLEEP = 7
     cell = SLEEP(c1)-> cell1= hash(c1)  cell2=-1
     cell= SLEEP(val)-> cell1=cell2=-1 op_val=val
-
 */
 
 // Parses an expression and separates it into operator and operands
@@ -115,6 +112,7 @@ Node* str_to_node(char* cellAddress,Sheet* sheet){
 
 // Assigns the properties of the cell and then calls the check_cycle function, if the cycleis found,  returns false
 // else it it calls the delete_edge function and assigns the properties, calls the add edge function and then the recalculate_node function
+
 bool assign_cell(char* cellAddress, char* expr, Sheet* sheet) {
 
     Node* cell = str_to_node(cellAddress, sheet);
@@ -230,6 +228,7 @@ bool assign_cell(char* cellAddress, char* expr, Sheet* sheet) {
                     else if (strcmp(val1, "AVG") == 0) type = 4;
                     else if (strcmp(val1, "SUM") == 0) type = 5;
                     else if (strcmp(val1, "STDEV") == 0) type = 6;
+                    else return false;
 
                     cell1 = get_hash(first, sheet->cols);
                     cell2 = get_hash(second, sheet->cols);
