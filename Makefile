@@ -8,14 +8,14 @@ TARGET = target/release/spreadsheet
 
 # Source files
 SRC_DIR = src
-SRC = $(addprefix $(SRC_DIR)/, Node.c Sheet.c linkedlist.c linked_stack.c hash.c validity.c parsing.c Functions.c display.c main.c stack.c )
+SRC = $(addprefix $(SRC_DIR)/, Node.c Sheet.c linkedlist.c linked_stack.c hash.c validity.c parsing.c Functions.c display.c main.c stack.c set.c moveCursor.c)
 
 # Object files (replace .c with .o for each source file)
 OBJ = $(SRC:.c=.o)
 
 # Header files directory
 HEADER_DIR = headers
-HEADERS = $(addprefix $(HEADER_DIR)/, Node.h Sheet.h linkedlist.h linked_stack.h hash.h validity.h parsing.h Functions.h display.h stack.h )
+HEADERS = $(addprefix $(HEADER_DIR)/, Node.h Sheet.h linkedlist.h linked_stack.h hash.h validity.h parsing.h Functions.h display.h stack.h set.h moveCursor.h)	
 
 # Default target
 all: $(TARGET)
@@ -36,6 +36,9 @@ linkedlist.o: $(SRC_DIR)/linkedlist.c $(HEADER_DIR)/linkedlist.h
 	$(CC) $(CFLAGS) -c $< -o $@
 
 linked_stack.o: $(SRC_DIR)/linked_stack.c $(HEADER_DIR)/linked_stack.h $(HEADER_DIR)/linkedlist.h
+	$(CC) $(CFLAGS) -c $< -o $@
+
+set.o: $(SRC_DIR)/set.c $(HEADER_DIR)/set.h
 	$(CC) $(CFLAGS) -c $< -o $@
 
 hash.o: $(SRC_DIR)/hash.c $(HEADER_DIR)/hash.h
@@ -59,6 +62,9 @@ stack.o: $(SRC_DIR)/stack.c $(HEADER_DIR)/stack.h
 main.o: $(SRC_DIR)/main.c $(HEADERS)
 	$(CC) $(CFLAGS) -c $< -o $@
 
+moveCursor.o: $(SRC_DIR)/moveCursor.c $(HEADER_DIR)/Sheet.h $(HEADER_DIR)/display.h
+	$(CC) $(CFLAGS) -c $< -o $@
+
 # --- Test Suite Section ---
 TEST_DIR = testcase
 TEST_SRC = $(TEST_DIR)/test_suite.c
@@ -67,15 +73,14 @@ TEST_TARGET = $(TEST_DIR)/test_suite
 
 # Compile the test suite source into an object file.
 $(TEST_OBJ): $(TEST_SRC)
-	$(CC) $(CFLAGS) -c -o $@ $<
+	$(CC) $(CFLAGS) -c -o $(TEST_OBJ) $(TEST_SRC)
 
 # Link the test suite object file into an executable.
-# Exclude main.o from $(OBJ) to avoid duplicate symbols.
-$(TEST_TARGET): $(TEST_OBJ) $(filter-out src/main.o, $(OBJ))
-	$(CC) $(CFLAGS) -o $@ $^ $(LDFLAGS)
+$(TEST_TARGET): $(TEST_OBJ) $(TARGET)
+	$(CC) $(CFLAGS) -o $(TEST_TARGET) $(TEST_OBJ)
 
 # Target to run the test suite.
-test: all $(TEST_TARGET)
+test: $(TEST_TARGET)
 	@echo "Running tests..."
 	$(TEST_TARGET)
 
@@ -88,8 +93,7 @@ report: report.pdf
 
 # Clean up build artifacts
 clean:
-	rm -f $(OBJ) $(TARGET) report.pdf report.aux report.log report.out report.toc report.synctex.gz report.fdb_latexmk report.fls
-	rm -f $(TEST_OBJ) $(TEST_TARGET)
+	rm -f $(OBJ) $(TARGET) test_suite.o report.pdf report.aux report.log report.out report.toc report.synctex.gz
 
 # Phony targets (not actual files)
 .PHONY: all clean report
